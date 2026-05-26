@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I'm Sorry, Anje Baby 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        
+        :root {
+            --pink-light: #fff0f3;
+            --pink-soft: #ffccd5;
+            --pink-medium: #ff8fa3;
+            --pink-deep: #ff4d6d;
+            --lavender: #e8d5f5;
+            --cream: #fef9ef;
+            --warm-white: #fffaf5;
+            --text-dark: #4a3040;
+            --text-soft: #6b4f5f;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--warm-white);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(255, 204, 213, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(232, 213, 245, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(255, 143, 163, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0;
+            animation: floatHeart linear infinite;
+            user-select: none;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10vh) rotate(360deg) scale(1);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        /* ─── Header ─── */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 20px;
+        }
+
+        .header-heart {
+            font-size: 3rem;
+            display: inline-block;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .header h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.2rem, 7vw, 3.5rem);
+            font-weight: 700;
+            color: var(--pink-deep);
+            line-height: 1.3;
+            margin: 16px 0 8px;
+            text-shadow: 0 2px 20px rgba(255, 77, 109, 0.15);
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            color: var(--text-soft);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── Letter Card ─── */
+        .letter-card {
+            background: white;
+            border-radius: 24px;
+            padding: 44px 36px;
+            margin-bottom: 50px;
+            box-shadow:
+                0 4px 24px rgba(255, 77, 109, 0.08),
+                0 1px 3px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 204, 213, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-card::before {
+            content: '💌';
+            position: absolute;
+            top: -8px;
+            right: 24px;
+            font-size: 2.5rem;
+            transform: rotate(12deg);
+            opacity: 0.8;
+        }
+
+        .letter-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--pink-soft), var(--pink-medium), var(--lavender), var(--pink-soft));
+            background-size: 200% 100%;
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .letter-greeting {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.6rem;
+            color: var(--pink-deep);
+            margin-bottom: 20px;
+        }
+
+        .letter-body p {
+            font-size: 0.95rem;
+            line-height: 1.85;
+            color: var(--text-soft);
+            margin-bottom: 16px;
+            font-weight: 300;
+        }
+
+        .letter-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .letter-closing {
+            margin-top: 28px;
+            text-align: right;
+        }
+
+        .letter-closing .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: var(--pink-deep);
+            display: block;
+            margin-top: 6px;
+        }
+
+        .letter-closing .closing-text {
+            font-size: 0.9rem;
+            color: var(--text-soft);
+            font-weight: 300;
+        }
+
+        /* ─── Forgive Me Section ─── */
+        .forgive-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .forgive-section h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: var(--pink-deep);
+            margin-bottom: 32px;
+        }
+
+        .buttons-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            min-height: 80px;
+            position: relative;
+        }
+
+        .btn {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            padding: 14px 42px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.3px;
+            position: relative;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, var(--pink-medium), var(--pink-deep));
+            color: white;
+            box-shadow: 0 4px 20px rgba(255, 77, 109, 0.35);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 28px rgba(255, 77, 109, 0.5);
+        }
+
+        .btn-yes:active {
+            transform: scale(1.02);
+        }
+
+        .btn-no {
+            background: white;
+            color: var(--text-soft);
+            border: 2px solid var(--pink-soft);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.15s ease;
+        }
+
+        /* ─── Forgiven Overlay ─── */
+        .forgiven-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 240, 243, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .forgiven-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .forgiven-content {
+            text-align: center;
+            padding: 40px;
+            animation: scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .forgiven-content .big-heart {
+            font-size: 5rem;
+            display: block;
+            margin-bottom: 20px;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .forgiven-content h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2rem, 6vw, 3rem);
+            color: var(--pink-deep);
+            margin-bottom: 12px;
+        }
+
+        .forgiven-content p {
+            font-size: 1.05rem;
+            color: var(--text-soft);
+            font-weight: 300;
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ─── Confetti Canvas ─── */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1001;
+        }
+
+        /* ─── Footer ─── */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            opacity: 0.5;
+            font-size: 0.8rem;
+            color: var(--text-soft);
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px 16px 48px;
+            }
+
+            .letter-card {
+                padding: 32px 24px;
+                border-radius: 20px;
+            }
+
+            .buttons-wrapper {
+                gap: 16px;
+            }
+
+            .btn {
+                padding: 12px 36px;
+                font-size: 1rem;
+            }
+
+            .header {
+                margin-bottom: 36px;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .letter-card {
+                padding: 28px 20px;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Hearts Background -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <span class="header-heart">💗</span>
+            <h1>I'm Really Sorry, Anje Baby</h1>
+            <p>Please read this with an open heart</p>
+        </header>
+
+        <!-- Apology Letter -->
+        <section class="letter-card">
+            <p class="letter-greeting">My Princess,</p>
+            <div class="letter-body">
+                <p>
+                    I know I messed up, and I'm not going to pretend otherwise. You deserve
+                    so much better than what I gave you, and I'm truly, deeply sorry for
+                    hurting you. That was never my intention sayang.
+                </p>
+                <p>
+                    You are the best thing to ever happend in my life. Everyday I get up, my first thought
+                    is you sayang, and my last thought is also you. Seeing you smile, knowing you are smiling makes me happy
+                    and the thought I am the reason it faded, even for a moment, breaks my heart.
+                </p>
+                <p>
+                    I promise to do better. Not just saying it, I want to be better and show it to you, every single day that you are my priority.
+                    You are my favourite person sasyang, my safe place and my biggest blessing. I never want to take for granted.
+                </p>
+                <p>
+                    I'm asking for your forgiveness, not because I deserve it, but because a world without your wamrth is one I never want to live in. I love you
+                    more than words on a screen could ever capture and I am sorry for everything sayang. 💕
+                </p>
+            </div>
+            <div class="letter-closing">
+                <span class="closing-text">Forever yours,</span>
+                <span class="signature">Khairul 💕</span>
+            </div>
+        </section>
+
+        <!-- Forgive Me Section -->
+        <section class="forgive-section">
+            <h2>So... Forgive Me? 🥺</h2>
+            <div class="buttons-wrapper">
+                <button class="btn btn-yes" id="yesBtn" onclick="handleYes()">Yes 💖</button>
+                <button class="btn btn-no" id="noBtn">No 😤</button>
+            </div>
+        </section>
+
+        <div class="footer">Made with all the love in my heart 💕</div>
+    </div>
+
+    <!-- Forgiven Overlay -->
+    <div class="forgiven-overlay" id="forgivenOverlay">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="forgiven-content">
+            <span class="big-heart">💖</span>
+            <h2>I Love You Sayang!</h2>
+            <p>I promise I'll spend every day making sure you never regret this. I love you endlessly, Anje Baby. 🥹💕</p>
+        </div>
+    </div>
+
+    <script>
+        // ─── Floating Hearts ───
+        (function createFloatingHearts() {
+            const container = document.getElementById('floatingHearts');
+            const hearts = ['💗', '💕', '💖', '🩷', '♥', '✨', '🤍'];
+            const count = 15;
+
+            for (let i = 0; i < count; i++) {
+                const heart = document.createElement('span');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+                heart.style.animationDuration = (8 + Math.random() * 12) + 's';
+                heart.style.animationDelay = (Math.random() * 10) + 's';
+                container.appendChild(heart);
+            }
+        })();
+
+        // ─── Runaway "No" Button ───
+        const noBtn = document.getElementById('noBtn');
+        let noAttempts = 0;
+        const noMessages = [
+            "Nope, try again! 😏",
+            "Can't click this! 💅",
+            "Nice try, babe 😘",
+            "Not an option! 🙅‍♂️",
+            "You know you want to forgive me 🥺",
+            "This button doesn't work 😇",
+            "Just press Yes already! 💕"
+        ];
+
+        function moveNoButton() {
+            noAttempts++;
+
+            const wrapper = noBtn.closest('.buttons-wrapper');
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+
+            const maxX = window.innerWidth - btnRect.width - 20;
+            const maxY = window.innerHeight - btnRect.height - 20;
+
+            let newX = Math.random() * maxX;
+            let newY = Math.random() * maxY;
+
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+            noBtn.style.zIndex = '999';
+            noBtn.style.transition = 'all 0.2s ease';
+            noBtn.textContent = noMessages[noAttempts % noMessages.length];
+
+            if (noAttempts >= 5) {
+                noBtn.style.fontSize = '0.8rem';
+                noBtn.style.opacity = '0.6';
+                noBtn.style.padding = '8px 20px';
+            }
+
+            if (noAttempts >= 8) {
+                noBtn.textContent = "Fine... just press Yes 💖";
+                noBtn.style.opacity = '0.3';
+            }
+        }
+
+        noBtn.addEventListener('mouseenter', moveNoButton);
+        noBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            moveNoButton();
+        }, { passive: false });
+
+        // ─── Yes Button & Confetti ───
+        function handleYes() {
+            const overlay = document.getElementById('forgivenOverlay');
+            overlay.classList.add('active');
+            launchConfetti();
+        }
+
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const pieces = [];
+            const colors = ['#ff4d6d', '#ff8fa3', '#ffccd5', '#e8d5f5', '#fff0f3', '#ff69b4', '#ffd700', '#ff6b9d'];
+            const shapes = ['circle', 'rect', 'heart'];
+            const total = 150;
+
+            for (let i = 0; i < total; i++) {
+                pieces.push({
+                    x: canvas.width / 2 + (Math.random() - 0.5) * 200,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 16,
+                    vy: (Math.random() - 1) * 18 - 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 8 + 4,
+                    shape: shapes[Math.floor(Math.random() * shapes.length)],
+                    rotation: Math.random() * 360,
+                    rotationSpeed: (Math.random() - 0.5) * 12,
+                    gravity: 0.12 + Math.random() * 0.08,
+                    opacity: 1,
+                    decay: 0.003 + Math.random() * 0.004
+                });
+            }
+
+            function drawHeart(ctx, x, y, size) {
+                ctx.beginPath();
+                const topCurveHeight = size * 0.3;
+                ctx.moveTo(x, y + topCurveHeight);
+                ctx.bezierCurveTo(x, y, x - size / 2, y, x - size / 2, y + topCurveHeight);
+                ctx.bezierCurveTo(x - size / 2, y + (size + topCurveHeight) / 2, x, y + (size + topCurveHeight) / 1.2, x, y + size);
+                ctx.bezierCurveTo(x, y + (size + topCurveHeight) / 1.2, x + size / 2, y + (size + topCurveHeight) / 2, x + size / 2, y + topCurveHeight);
+                ctx.bezierCurveTo(x + size / 2, y, x, y, x, y + topCurveHeight);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                let alive = false;
+                for (const p of pieces) {
+                    if (p.opacity <= 0) continue;
+                    alive = true;
+
+                    p.x += p.vx;
+                    p.vy += p.gravity;
+                    p.y += p.vy;
+                    p.vx *= 0.99;
+                    p.rotation += p.rotationSpeed;
+                    p.opacity -= p.decay;
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.globalAlpha = Math.max(0, p.opacity);
+                    ctx.fillStyle = p.color;
+
+                    if (p.shape === 'circle') {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else if (p.shape === 'rect') {
+                        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                    } else {
+                        drawHeart(ctx, 0, 0, p.size);
+                    }
+
+                    ctx.restore();
+                }
+
+                if (alive) {
+                    requestAnimationFrame(animate);
+                }
+            }
+
+            animate();
+
+            // Second wave after a short delay
+            setTimeout(() => {
+                for (let i = 0; i < 80; i++) {
+                    pieces.push({
+                        x: Math.random() * canvas.width,
+                        y: -20,
+                        vx: (Math.random() - 0.5) * 6,
+                        vy: Math.random() * 4 + 2,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        size: Math.random() * 8 + 4,
+                        shape: shapes[Math.floor(Math.random() * shapes.length)],
+                        rotation: Math.random() * 360,
+                        rotationSpeed: (Math.random() - 0.5) * 10,
+                        gravity: 0.06,
+                        opacity: 1,
+                        decay: 0.002
+                    });
+                }
+                animate();
+            }, 800);
+        }
+
+        // Handle window resize for confetti canvas
+        window.addEventListener('resize', function () {
+            const canvas = document.getElementById('confetti-canvas');
+            if (canvas) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+        });
+    </script>
+</body>
+</html>
