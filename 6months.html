@@ -1067,17 +1067,17 @@ function toggleMusic() {
     bgMusic.play().then(() => {
       setPlaying();
     }).catch(() => {
-      bgMusic.src = 'Imagess/PalletTown.mp3';
-      bgMusic.load();
-      bgMusic.addEventListener('canplaythrough', function retry() {
-        bgMusic.removeEventListener('canplaythrough', retry);
-        bgMusic.play().then(() => setPlaying()).catch(() => {
-          musicLabel.textContent = 'TAP AGAIN';
-        });
-      });
+      musicLabel.textContent = 'TAP AGAIN';
     });
   }
 }
+
+document.addEventListener('click', function firstInteraction() {
+  document.removeEventListener('click', firstInteraction);
+  if (bgMusic.paused) {
+    bgMusic.play().then(() => setPlaying()).catch(() => {});
+  }
+}, { once: true });
 
 function changeVolume(val) {
   const v = val / 100;
