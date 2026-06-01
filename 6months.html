@@ -363,126 +363,6 @@
     to { opacity: 1; filter: brightness(1) saturate(1); }
   }
 
-  /* ─── Music Player (top right) ─── */
-  .music-player {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: linear-gradient(145deg, #DC0A2D, #A0071E);
-    border-radius: 14px;
-    padding: 10px 16px;
-    box-shadow:
-      0 0 0 2px #7A0517,
-      0 0 0 4px #5A0410,
-      0 4px 20px rgba(0,0,0,0.5);
-  }
-  .music-player::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.12) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .music-play-btn {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(145deg, #333, #1a1a1a);
-    border: 2px solid #555;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
-    transition: all 0.15s;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 1;
-  }
-  .music-play-btn:hover {
-    background: linear-gradient(145deg, #444, #2a2a2a);
-    transform: scale(1.05);
-  }
-  .music-play-btn:active {
-    transform: scale(0.95);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.5), inset 0 1px 3px rgba(0,0,0,0.3);
-  }
-  .music-play-btn svg { position: relative; z-index: 1; }
-
-  .music-label {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: #FFD700;
-    text-shadow: 0 0 6px rgba(255,215,0,0.4);
-    white-space: nowrap;
-    max-width: 110px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    position: relative;
-    z-index: 1;
-  }
-  .music-label.playing {
-    animation: musicPulse 2s ease-in-out infinite;
-  }
-
-  .volume-group {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .volume-slider {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 70px;
-    height: 6px;
-    border-radius: 3px;
-    background: linear-gradient(90deg, #333 0%, #333 100%);
-    outline: none;
-    cursor: pointer;
-    position: relative;
-  }
-  .volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: linear-gradient(145deg, #FFD700, #CC9900);
-    box-shadow: 0 0 6px rgba(255,215,0,0.5), 0 2px 4px rgba(0,0,0,0.4);
-    cursor: pointer;
-    transition: transform 0.1s;
-  }
-  .volume-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.15);
-  }
-  .volume-slider::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: linear-gradient(145deg, #FFD700, #CC9900);
-    box-shadow: 0 0 6px rgba(255,215,0,0.5), 0 2px 4px rgba(0,0,0,0.4);
-    border: none;
-    cursor: pointer;
-  }
-
-  .vol-icon {
-    flex-shrink: 0;
-    cursor: pointer;
-    transition: transform 0.15s;
-  }
-  .vol-icon:hover { transform: scale(1.15); }
-
-  @keyframes musicPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
-  }
-
   /* ─── Responsive ─── */
   @media (max-width: 768px) {
     .screens { flex-direction: column; }
@@ -492,49 +372,16 @@
     .header h1 { font-size: 9px; }
     .pokedex { padding: 16px; }
     .controls { gap: 24px; }
-    .music-player { top: 10px; right: 10px; padding: 8px 12px; gap: 8px; }
-    .music-label { max-width: 70px; font-size: 6px; }
-    .volume-slider { width: 50px; }
-    .wrapper { padding-top: 52px; }
   }
   @media (max-width: 480px) {
     body { padding: 8px; }
     .header h2 { font-size: 26px; }
     .icon-grid { gap: 6px; }
     .icon-btn { padding: 6px 2px; }
-    .music-player { padding: 6px 10px; gap: 6px; border-radius: 10px; }
-    .music-play-btn { width: 30px; height: 30px; }
-    .volume-slider { width: 40px; }
   }
 </style>
 </head>
 <body>
-
-<!-- Background Music -->
-<audio id="bgMusic" loop preload="auto">
-  <source src="Imagess/PalletTown.mp3" type="audio/mpeg">
-</audio>
-
-<!-- Music Player - Top Right -->
-<div class="music-player" id="musicPlayer">
-  <button class="music-play-btn" id="playBtn" onclick="toggleMusic()" title="Play / Pause">
-    <svg id="playIcon" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="none">
-      <polygon points="6 3 20 12 6 21 6 3"/>
-    </svg>
-    <svg id="pauseIcon" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="none" style="display:none">
-      <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
-    </svg>
-  </button>
-  <span class="music-label" id="musicLabel">PALLET TOWN</span>
-  <div class="volume-group">
-    <svg class="vol-icon" id="volIcon" onclick="toggleMute()" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-    </svg>
-    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="40" oninput="changeVolume(this.value)">
-  </div>
-</div>
 
 <div class="wrapper">
   <!-- Header -->
@@ -946,7 +793,7 @@ function renderButtons() {
     { label: 'ENTRY', tab: 'data' },
     { label: 'STATS', tab: 'stats' },
     { label: 'EVOL', tab: 'evolution' },
-    { label: soundOn ? 'SND ON' : 'SND OFF', tab: 'sound' },
+    { label: soundOn ? 'SFX ON' : 'SFX OFF', tab: 'sound' },
   ];
   const tabBtns = document.getElementById('tabButtons');
   tabBtns.innerHTML = '';
@@ -1024,103 +871,6 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'ArrowLeft') { e.preventDefault(); switchTab('prev'); }
   else if (e.key === 'ArrowRight') { e.preventDefault(); switchTab('next'); }
 });
-
-/* ════════════════════════════════════════════
-   MUSIC PLAYER
-   ════════════════════════════════════════════ */
-const bgMusic = document.getElementById('bgMusic');
-const playIcon = document.getElementById('playIcon');
-const pauseIcon = document.getElementById('pauseIcon');
-const musicLabel = document.getElementById('musicLabel');
-const volumeSlider = document.getElementById('volumeSlider');
-let musicPlaying = false;
-let savedVolume = 0.4;
-
-bgMusic.volume = 0.4;
-
-function updateVolumeSliderTrack() {
-  const val = volumeSlider.value;
-  volumeSlider.style.background = `linear-gradient(90deg, #FFD700 0%, #CC9900 ${val}%, #333 ${val}%, #333 100%)`;
-}
-updateVolumeSliderTrack();
-
-function setPlaying() {
-  musicPlaying = true;
-  playIcon.style.display = 'none';
-  pauseIcon.style.display = '';
-  musicLabel.classList.add('playing');
-  musicLabel.textContent = 'NOW PLAYING';
-}
-function setPaused() {
-  musicPlaying = false;
-  playIcon.style.display = '';
-  pauseIcon.style.display = 'none';
-  musicLabel.classList.remove('playing');
-  musicLabel.textContent = 'PALLET TOWN';
-}
-
-function toggleMusic() {
-  if (musicPlaying) {
-    bgMusic.pause();
-    setPaused();
-  } else {
-    bgMusic.play().then(() => {
-      setPlaying();
-    }).catch(() => {
-      musicLabel.textContent = 'TAP AGAIN';
-    });
-  }
-}
-
-document.addEventListener('click', function firstInteraction() {
-  document.removeEventListener('click', firstInteraction);
-  if (bgMusic.paused) {
-    bgMusic.play().then(() => setPlaying()).catch(() => {});
-  }
-}, { once: true });
-
-function changeVolume(val) {
-  const v = val / 100;
-  bgMusic.volume = v;
-  savedVolume = v;
-  updateVolumeSliderTrack();
-  updateVolIcon(v);
-  if (v === 0 && musicPlaying) {
-    bgMusic.muted = true;
-  } else {
-    bgMusic.muted = false;
-  }
-}
-
-function toggleMute() {
-  if (bgMusic.muted || bgMusic.volume === 0) {
-    bgMusic.muted = false;
-    const restoreVol = savedVolume > 0 ? savedVolume : 0.4;
-    bgMusic.volume = restoreVol;
-    volumeSlider.value = restoreVol * 100;
-    updateVolumeSliderTrack();
-    updateVolIcon(restoreVol);
-  } else {
-    savedVolume = bgMusic.volume;
-    bgMusic.muted = true;
-    volumeSlider.value = 0;
-    updateVolumeSliderTrack();
-    updateVolIcon(0);
-  }
-}
-
-function updateVolIcon(v) {
-  const icon = document.getElementById('volIcon');
-  if (v === 0 || bgMusic.muted) {
-    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/>';
-  } else if (v < 0.5) {
-    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>';
-  } else {
-    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>';
-  }
-}
-
-bgMusic.addEventListener('ended', setPaused);
 
 /* ════════════════════════════════════════════
    INIT
