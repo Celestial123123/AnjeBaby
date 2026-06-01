@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy 6th Monthiversary - Love Pokedex</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    font-family: 'VT323', monospace;
+  }
+
+  .wrapper { width: 100%; max-width: 1050px; animation: fadeIn 1s ease-out; }
+
+  /* ─── Header ─── */
+  .header { text-align: center; margin-bottom: 24px; }
+  .header h1 {
+    font-family: 'Press Start 2P', monospace;
+    color: #FFD700;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(255,215,0,0.5);
+  }
+  .header h2 {
+    font-family: 'VT323', monospace;
+    color: #fff;
+    font-size: 48px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(220,10,45,0.5);
+  }
+  .header p {
+    color: #888;
+    font-size: 22px;
+    margin-top: 4px;
+  }
+
+  /* ─── Pokedex Shell ─── */
+  .pokedex {
+    background: linear-gradient(145deg, #DC0A2D 0%, #C0091F 40%, #A0071E 70%, #DC0A2D 100%);
+    border-radius: 24px;
+    padding: 24px;
+    position: relative;
+    box-shadow:
+      0 0 0 3px #7A0517,
+      0 0 0 6px #5A0410,
+      0 10px 40px rgba(0,0,0,0.6),
+      inset 0 2px 4px rgba(255,255,255,0.1);
+  }
+  .pokedex::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(0,0,0,0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* ─── Status Lights ─── */
+  .status-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; margin-left: 8px; position: relative; z-index: 1; }
+  .camera-lens {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #AADDFF, #0088CC 40%, #005588 70%, #003355);
+    box-shadow:
+      0 0 0 4px #666,
+      0 0 0 6px #444,
+      0 0 20px 6px rgba(0,136,204,0.5),
+      inset 0 0 15px rgba(0,180,255,0.4);
+    animation: glowPulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .mini-lights { display: flex; gap: 8px; margin-top: 8px; }
+  .mini-light {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+  .mini-light.red   { background: #FF4444; box-shadow: 0 0 6px #f55; animation: statusBlink 3s ease-in-out infinite; }
+  .mini-light.yellow { background: #FFCC00; box-shadow: 0 0 6px #fa0; animation: statusBlink 3s ease-in-out infinite 0.5s; }
+  .mini-light.green  { background: #44FF44; box-shadow: 0 0 6px #4f4; animation: statusBlink 3s ease-in-out infinite 1s; }
+
+  /* ─── Layout ─── */
+  .screens { display: flex; gap: 24px; position: relative; z-index: 1; }
+  .left-panel, .right-panel { flex: 1; min-width: 0; }
+
+  .hinge-v {
+    width: 4px; border-radius: 4px; align-self: stretch; margin: 16px 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+  }
+  .hinge-h {
+    height: 4px; border-radius: 4px; margin: 0 32px;
+    background: linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+    display: none;
+  }
+
+  /* ─── Screen Bezel ─── */
+  .screen-bezel {
+    background: linear-gradient(145deg, #555, #333);
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  /* ─── Left Screen (green Game Boy) ─── */
+  .left-screen {
+    background: linear-gradient(135deg, #88BB88 0%, #98CB98 30%, #A8DB88 60%, #98CB98 100%);
+    border-radius: 8px;
+    padding: 14px;
+    min-height: 270px;
+    position: relative;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.25), inset 0 0 60px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .left-screen::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px);
+    pointer-events: none;
+  }
+
+  /* ─── Icon Grid ─── */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 6px;
+  }
+  .icon-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 10px 4px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
+  }
+  .icon-btn:hover {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(0,0,0,0.2);
+    transform: scale(1.1);
+    filter: brightness(1.1);
+  }
+  .icon-btn.selected {
+    background: rgba(255,255,255,0.4);
+    border-color: #555;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transform: scale(1.1);
+    animation: iconFloat 2.5s ease-in-out infinite;
+  }
+  .icon-btn svg { transition: all 0.2s; }
+  .icon-btn span {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: #4A5A4A;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .icon-btn.selected span { color: #333; }
+
+  .page-indicator {
+    position: absolute; bottom: 6px; right: 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px; color: #6A7A6A; z-index: 1;
+  }
+
+  /* ─── D-Pad & Buttons ─── */
+  .controls { display: flex; align-items: center; justify-content: center; gap: 40px; margin-top: 20px; }
+
+  .dpad {
+    position: relative; width: 96px; height: 96px;
+  }
+  .dpad-center {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 32px; height: 32px; background: #222; border-radius: 4px;
+  }
+  .dpad-btn {
+    position: absolute;
+    width: 32px; height: 32px;
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #888;
+    transition: all 0.1s;
+  }
+  .dpad-btn:hover { color: #fff; }
+  .dpad-btn:active { background: linear-gradient(145deg, #1a1a1a, #2a2a2a); transform: scale(0.93); }
+  .dpad-up    { top: 0; left: 50%; transform: translateX(-50%); border-radius: 6px 6px 0 0; }
+  .dpad-down  { bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 6px 6px; }
+  .dpad-left  { left: 0; top: 50%; transform: translateY(-50%); border-radius: 6px 0 0 6px; }
+  .dpad-right { right: 0; top: 50%; transform: translateY(-50%); border-radius: 0 6px 6px 0; }
+
+  .ab-buttons { display: flex; flex-direction: column; gap: 12px; }
+  .round-btn {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: linear-gradient(145deg, #333, #222);
+    border: none; cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    transition: all 0.1s;
+  }
+  .round-btn:active {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5), inset 0 1px 3px rgba(0,0,0,0.3);
+    transform: translateY(1px);
+  }
+  .round-btn.a-btn { color: #FF6B6B; }
+  .round-btn.b-btn { color: #6B9FFF; }
+
+  /* ─── Right Screen (dark CRT) ─── */
+  .right-screen {
+    background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%);
+    border-radius: 8px;
+    padding: 18px;
+    min-height: 310px;
+    position: relative;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.5), inset 0 0 60px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+  .right-screen::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(transparent 50%, rgba(0,255,100,0.012) 50%);
+    background-size: 100% 4px;
+    pointer-events: none; z-index: 1;
+  }
+  .right-screen::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none; z-index: 2;
+  }
+
+  .entry-text {
+    font-family: 'VT323', monospace;
+    color: #33FF66;
+    text-shadow: 0 0 6px rgba(51,255,102,0.4);
+    position: relative; z-index: 3;
+  }
+  .entry-dim { opacity: 0.6; }
+  .entry-gold { color: #FFD700; text-shadow: 0 0 8px rgba(255,215,0,0.5); }
+  .divider { border: none; border-top: 1px solid rgba(0,80,0,0.3); margin: 8px 0; position: relative; z-index: 3; }
+  .cursor-blink { animation: blink 1s step-end infinite; }
+
+  .screen-content {
+    animation: powerOn 0.5s ease-out;
+    position: relative; z-index: 3;
+  }
+
+  /* ─── Stat Bars ─── */
+  .stat-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .stat-label { width: 42px; text-align: right; font-size: 16px; text-transform: uppercase; opacity: 0.7; }
+  .stat-track {
+    flex: 1; height: 10px; background: #1a1a1a; border-radius: 5px; overflow: hidden;
+    border: 1px solid #333;
+  }
+  .stat-fill {
+    height: 100%; border-radius: 5px; transition: width 1s ease-out;
+  }
+  .stat-val { width: 32px; font-size: 16px; opacity: 0.7; }
+
+  /* ─── Evolution Chain ─── */
+  .evo-step { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .evo-circle {
+    width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    border: 1px solid;
+    flex-shrink: 0;
+  }
+  .evo-circle.active { background: rgba(51,255,102,0.15); border-color: #33FF66; }
+  .evo-circle.inactive { background: rgba(255,255,255,0.03); border-color: #333; }
+  .evo-name { font-size: 20px; }
+  .evo-month { font-size: 16px; opacity: 0.5; margin-left: 4px; }
+  .evo-desc { font-size: 16px; opacity: 0.4; margin-left: auto; }
+
+  /* ─── Blue Buttons ─── */
+  .blue-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 16px; position: relative; z-index: 1; }
+  .blue-btn {
+    background: linear-gradient(145deg, #4488CC, #336699);
+    border: none; border-radius: 6px;
+    padding: 8px 4px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px; letter-spacing: 0.5px;
+    color: #fff; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .blue-btn:hover {
+    background: linear-gradient(145deg, #5599DD, #4488CC);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(68,136,204,0.4);
+  }
+  .blue-btn:active { transform: translateY(1px) scale(0.97); box-shadow: none; }
+  .blue-btn.active { box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
+
+  .nav-btns { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 8px; position: relative; z-index: 1; }
+  .nav-btn {
+    background: linear-gradient(145deg, #4488CC, #336699);
+    border: none; border-radius: 4px;
+    padding: 6px; cursor: pointer;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px; color: #fff;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover { background: linear-gradient(145deg, #5599DD, #4488CC); }
+  .nav-btn.active { box-shadow: 0 0 0 2px rgba(255,215,0,0.5); filter: brightness(1.2); }
+
+  /* ─── Footer ─── */
+  .footer-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 16px; padding: 0 8px; position: relative; z-index: 1;
+  }
+  .footer-left { display: flex; align-items: center; gap: 6px; }
+  .footer-dot { width: 8px; height: 8px; border-radius: 50%; background: #44FF44; box-shadow: 0 0 4px #4f4; }
+  .footer-text { font-family: 'Press Start 2P', monospace; font-size: 7px; color: rgba(255,255,255,0.5); }
+  .footer-lines { display: flex; gap: 4px; }
+  .footer-line { width: 24px; height: 4px; border-radius: 2px; background: rgba(120,5,23,0.5); }
+
+  .bottom-text { text-align: center; margin-top: 24px; }
+  .bottom-text p { color: #666; font-size: 20px; }
+  .bottom-text .tiny { font-family: 'Press Start 2P', monospace; font-size: 8px; color: #444; margin-top: 8px; }
+
+  /* ─── SVG Icons ─── */
+  .icon-svg { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ─── Animations ─── */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 0 4px #666, 0 0 0 6px #444, 0 0 8px 2px rgba(0,136,204,0.5), inset 0 0 6px rgba(0,180,255,0.3); }
+    50%      { box-shadow: 0 0 0 4px #666, 0 0 0 6px #444, 0 0 20px 6px rgba(0,136,204,0.8), inset 0 0 12px rgba(0,180,255,0.5); }
+  }
+  @keyframes statusBlink { 0%,40% { opacity: 1; } 50%,90% { opacity: 0.3; } 100% { opacity: 1; } }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+  @keyframes iconFloat { 0%,100% { transform: scale(1.1) translateY(0); } 50% { transform: scale(1.1) translateY(-4px); } }
+  @keyframes powerOn { 0% { opacity: 0; filter: brightness(3); } 30% { opacity: 1; filter: brightness(1.8); } 100% { opacity: 1; filter: brightness(1); } }
+
+  /* ─── Memory Image ─── */
+  .memory-image {
+    max-height: 180px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 2px solid #33FF6633;
+    box-shadow: 0 0 12px rgba(51,255,102,0.15);
+    margin: 0 auto 10px;
+    display: block;
+    image-rendering: auto;
+    opacity: 0;
+    animation: imgFadeIn 0.6s ease-out forwards;
+  }
+  @keyframes imgFadeIn {
+    from { opacity: 0; filter: brightness(2) saturate(0); }
+    50% { opacity: 1; filter: brightness(1.3) saturate(0.5); }
+    to { opacity: 1; filter: brightness(1) saturate(1); }
+  }
+
+  /* ─── Music Player (top right) ─── */
+  .music-player {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(145deg, #DC0A2D, #A0071E);
+    border-radius: 14px;
+    padding: 10px 16px;
+    box-shadow:
+      0 0 0 2px #7A0517,
+      0 0 0 4px #5A0410,
+      0 4px 20px rgba(0,0,0,0.5);
+  }
+  .music-player::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .music-play-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #333, #1a1a1a);
+    border: 2px solid #555;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+    transition: all 0.15s;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .music-play-btn:hover {
+    background: linear-gradient(145deg, #444, #2a2a2a);
+    transform: scale(1.05);
+  }
+  .music-play-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5), inset 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .music-play-btn svg { position: relative; z-index: 1; }
+
+  .music-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #FFD700;
+    text-shadow: 0 0 6px rgba(255,215,0,0.4);
+    white-space: nowrap;
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    z-index: 1;
+  }
+  .music-label.playing {
+    animation: musicPulse 2s ease-in-out infinite;
+  }
+
+  .volume-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 70px;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #333 0%, #333 100%);
+    outline: none;
+    cursor: pointer;
+    position: relative;
+  }
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #FFD700, #CC9900);
+    box-shadow: 0 0 6px rgba(255,215,0,0.5), 0 2px 4px rgba(0,0,0,0.4);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+  .volume-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #FFD700, #CC9900);
+    box-shadow: 0 0 6px rgba(255,215,0,0.5), 0 2px 4px rgba(0,0,0,0.4);
+    border: none;
+    cursor: pointer;
+  }
+
+  .vol-icon {
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .vol-icon:hover { transform: scale(1.15); }
+
+  @keyframes musicPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 768px) {
+    .screens { flex-direction: column; }
+    .hinge-v { display: none; }
+    .hinge-h { display: block; }
+    .header h2 { font-size: 32px; }
+    .header h1 { font-size: 9px; }
+    .pokedex { padding: 16px; }
+    .controls { gap: 24px; }
+    .music-player { top: 10px; right: 10px; padding: 8px 12px; gap: 8px; }
+    .music-label { max-width: 70px; font-size: 6px; }
+    .volume-slider { width: 50px; }
+    .wrapper { padding-top: 52px; }
+  }
+  @media (max-width: 480px) {
+    body { padding: 8px; }
+    .header h2 { font-size: 26px; }
+    .icon-grid { gap: 6px; }
+    .icon-btn { padding: 6px 2px; }
+    .music-player { padding: 6px 10px; gap: 6px; border-radius: 10px; }
+    .music-play-btn { width: 30px; height: 30px; }
+    .volume-slider { width: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="Imagess/PalletTown.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Music Player - Top Right -->
+<div class="music-player" id="musicPlayer">
+  <button class="music-play-btn" id="playBtn" onclick="toggleMusic()" title="Play / Pause">
+    <svg id="playIcon" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="none">
+      <polygon points="6 3 20 12 6 21 6 3"/>
+    </svg>
+    <svg id="pauseIcon" width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="none" style="display:none">
+      <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+    </svg>
+  </button>
+  <span class="music-label" id="musicLabel">PALLET TOWN</span>
+  <div class="volume-group">
+    <svg class="vol-icon" id="volIcon" onclick="toggleMute()" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    </svg>
+    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="40" oninput="changeVolume(this.value)">
+  </div>
+</div>
+
+<div class="wrapper">
+  <!-- Header -->
+  <div class="header">
+    <h1>PROFESSOR OAK'S LOVE LAB PRESENTS</h1>
+    <h2>Our Love Pokedex</h2>
+    <p>6 Months of Captured Memories</p>
+  </div>
+
+  <!-- Pokedex Body -->
+  <div class="pokedex">
+    <!-- Status Lights -->
+    <div class="status-bar">
+      <div class="camera-lens"></div>
+      <div class="mini-lights">
+        <div class="mini-light red"></div>
+        <div class="mini-light yellow"></div>
+        <div class="mini-light green"></div>
+      </div>
+    </div>
+
+    <!-- Screens -->
+    <div class="screens">
+      <!-- Left Panel -->
+      <div class="left-panel">
+        <div class="screen-bezel">
+          <div class="left-screen" id="leftScreen">
+            <div class="icon-grid" id="iconGrid"></div>
+            <div class="page-indicator" id="pageIndicator">1/6</div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="dpad">
+            <div class="dpad-center"></div>
+            <button class="dpad-btn dpad-up" onclick="navigate('up')" aria-label="Up">
+              <svg width="14" height="14" viewBox="0 0 24 24" class="icon-svg" stroke="currentColor"><polyline points="18 15 12 9 6 15"/></svg>
+            </button>
+            <button class="dpad-btn dpad-down" onclick="navigate('down')" aria-label="Down">
+              <svg width="14" height="14" viewBox="0 0 24 24" class="icon-svg" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <button class="dpad-btn dpad-left" onclick="switchTab('prev')" aria-label="Left">
+              <svg width="14" height="14" viewBox="0 0 24 24" class="icon-svg" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="dpad-btn dpad-right" onclick="switchTab('next')" aria-label="Right">
+              <svg width="14" height="14" viewBox="0 0 24 24" class="icon-svg" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div class="ab-buttons">
+            <button class="round-btn a-btn" onclick="setTab('data')" title="Entry">A</button>
+            <button class="round-btn b-btn" onclick="setTab('stats')" title="Stats">B</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hinge -->
+      <div class="hinge-v"></div>
+      <div class="hinge-h"></div>
+
+      <!-- Right Panel -->
+      <div class="right-panel">
+        <div class="screen-bezel">
+          <div class="right-screen" id="rightScreen"></div>
+        </div>
+
+        <div class="blue-btns" id="tabButtons"></div>
+        <div class="nav-btns" id="navButtons"></div>
+      </div>
+    </div>
+
+    <!-- Footer Bar -->
+    <div class="footer-bar">
+      <div class="footer-left">
+        <div class="footer-dot"></div>
+        <span class="footer-text">SYSTEM OK</span>
+      </div>
+      <div class="footer-lines">
+        <div class="footer-line"></div>
+        <div class="footer-line"></div>
+        <div class="footer-line"></div>
+        <div class="footer-line"></div>
+      </div>
+      <span class="footer-text">v6.0 &#9829;</span>
+    </div>
+  </div>
+
+  <!-- Bottom Quote -->
+  <div class="bottom-text">
+    <p>"I choose you. Every single day."</p>
+    <p class="tiny">MADE WITH LOVE &#9829; HAPPY 6 MONTH ANNIVERSARY</p>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   DATA
+   ════════════════════════════════════════════ */
+const MEMORIES = [
+  {
+    id: 1,
+    icon: 'heart',
+    iconColor: '#FF6B8A',
+    image: 'Imagess/image11.jpg',
+    name: 'FIRST DATE',
+    species: 'The First Date Pokemon',
+    type: 'LOVE / SURPRISE',
+    height: 'One magical evening',
+    weight: 'Immeasurable butterflies',
+    entry: 'Discovered 6 months ago in the wild. Caught completely off guard by how amazing they were. This rare encounter had a 100% capture rate on my heart. Known to cause permanent smile status effect.',
+    stats: { HP: 100, ATK: 95, DEF: 80, SPD: 90, LOVE: 100 },
+    statColors: { HP: '#FF6B6B', ATK: '#FFD93D', DEF: '#4ECDC4', SPD: '#45B7D1', LOVE: '#FF6B8A' },
+  },
+  {
+    id: 2,
+    icon: 'flower',
+    iconColor: '#FF85A2',
+    image: 'Imagess/image17.jpg',
+    name: 'FIRST FLOWERS',
+    species: 'The First Bouquet Pokemon',
+    type: 'LOVE / ROMANCE',
+    height: 'One bouquet tall',
+    weight: 'Light as her smile',
+    entry: 'The trainer presented a wild bouquet for the very first time. Critical hit! The receiver used HAPPY TEARS. It was super effective! This memory is preserved forever. These crocheted flowers will never wilt. Just like this relationship.',
+    stats: { HP: 90, ATK: 85, DEF: 75, SPD: 80, LOVE: 100 },
+    statColors: { HP: '#FF6B6B', ATK: '#FFD93D', DEF: '#4ECDC4', SPD: '#45B7D1', LOVE: '#FF6B8A' },
+  },
+  {
+    id: 3,
+    icon: 'gamepad',
+    iconColor: '#6BCB77',
+    image: 'Imagess/image13.png',
+    name: 'COBBLEMON',
+    species: 'The Cobblemon Pokemon',
+    type: 'ADVENTURE / GAMING',
+    height: 'Infinite blocks tall',
+    weight: 'One full Pokedex',
+    entry: 'Two trainers discovered a wild Cobblemon world together. Hours disappeared as they explored, battled, and caught Pokemon side by side. This adventure forged an unbreakable co-op bond. No legendary was as rare as the moments spent building our team together.',
+    stats: { HP: 90, ATK: 85, DEF: 75, SPD: 95, LOVE: 98 },
+    statColors: { HP: '#FF6B6B', ATK: '#FFD93D', DEF: '#4ECDC4', SPD: '#45B7D1', LOVE: '#FF6B8A' },
+  },
+  {
+    id: 4,
+    icon: 'trophy',
+    iconColor: '#FFD700',
+    image: 'Imagess/image18.jpg',
+    name: '6 MONTH MILESTONE',
+    species: 'The Milestone Pokemon',
+    type: 'LEGENDARY / ETERNAL',
+    height: 'Half a year tall',
+    weight: '183 days of love',
+    entry: 'EVOLUTION COMPLETE! Relationship leveled up to Month 6. HP and Happiness stats at MAXIMUM capacity. This legendary Pokemon only appears to trainers with a TRUE CONNECTION. Cannot be traded. Ever.',
+    stats: { HP: 100, ATK: 100, DEF: 100, SPD: 100, LOVE: 100 },
+    statColors: { HP: '#FF6B6B', ATK: '#FFD93D', DEF: '#4ECDC4', SPD: '#45B7D1', LOVE: '#FF6B8A' },
+  },
+  {
+    id: 5,
+    icon: 'leaf',
+    iconColor: '#4CAF50',
+    image: 'Imagess/image16.jpg',
+    name: 'HER SNIVY',
+    species: 'The Snivy-Obsessed Pokemon',
+    type: 'GRASS / ADORABLE',
+    height: '0.6m of pure sass',
+    weight: '8.1kg of smugness',
+    entry: 'This trainer has an unbreakable bond with Snivy. Will defend Snivy as the BEST starter in any argument. Has been known to squeal at any Snivy merch spotted in the wild. Her love for this smug little grass snake is matched only by her love for her partner. Maybe.',
+    stats: { HP: 90, ATK: 75, DEF: 85, SPD: 95, LOVE: 100 },
+    statColors: { HP: '#FF6B6B', ATK: '#FFD93D', DEF: '#4ECDC4', SPD: '#45B7D1', LOVE: '#FF6B8A' },
+  },
+  {
+    id: 6,
+    icon: 'heart',
+    iconColor: '#FF85A2',
+    image: 'Imagess/image19.png',
+    name: 'OUR FUTURE',
+    species: 'The Forever Pokemon',
+    type: 'LOVE / ETERNAL',
+    height: 'A lifetime ahead',
+    weight: 'Infinite love',
+    entry: 'My Anje Baby, as I am writing this at 6 months together, I want you to know that everyday with you has been a gift that I dont ever want to stop unwrapping. You make the ordinary feel extraordinary. I look forward to every adventure, every late night, every quiet moment still waiting for us. I don\'t know what the future holds, but I know I want you in every version of it. I love you so so much sayang, I will always love you.',
+    stats: { HP: 100, ATK: 100, DEF: 100, SPD: 100, LOVE: 100 },
+    statColors: { HP: '#FF6B6B', ATK: '#FFD93D', DEF: '#4ECDC4', SPD: '#45B7D1', LOVE: '#FF6B8A' },
+  },
+];
+
+const EVOLUTION = [
+  { month: 1, name: 'Crushling',  desc: 'First sparks',    icon: 'sparkles' },
+  { month: 2, name: 'Datesworth', desc: 'Getting closer',  icon: 'heart' },
+  { month: 3, name: 'Bondeon',    desc: 'Real connection', icon: 'shield' },
+  { month: 4, name: 'Trustara',   desc: 'Deep trust',      icon: 'star' },
+  { month: 5, name: 'Devotion',   desc: 'Fully devoted',   icon: 'trending' },
+  { month: 6, name: 'SOULMATE',   desc: 'Final form!',     icon: 'trophy' },
+];
+
+const ICONS = {
+  heart:    '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+  smile:    '<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>',
+  map:      '<polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>',
+  trophy:   '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+  coffee:   '<path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/>',
+  music:    '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  flower:   '<path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 0 4.5 4.5M7.5 12H9m7.5 0a4.5 4.5 0 1 1-4.5 4.5m4.5-4.5H15m-3 4.5V15"/><circle cx="12" cy="12" r="3"/><path d="m8 16 1.5-1.5"/><path d="M14.5 9.5 16 8"/><path d="m8 8 1.5 1.5"/><path d="M14.5 14.5 16 16"/>',
+  gamepad:  '<line x1="6" y1="11" x2="10" y2="11"/><line x1="8" y1="9" x2="8" y2="13"/><line x1="15" y1="12" x2="15.01" y2="12"/><line x1="18" y1="10" x2="18.01" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5Z"/>',
+  leaf:     '<path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  sparkles: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>',
+  shield:   '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>',
+  star:     '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  trending: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  volume:   '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>',
+  mute:     '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/>',
+};
+
+function makeSVG(name, size, color, filled) {
+  const inner = ICONS[name] || '';
+  const fillAttr = filled ? color + '33' : 'none';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${fillAttr}" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+}
+
+/* ════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════ */
+let selected = 0;
+let currentTab = 'data';
+let soundOn = true;
+let typingTimer = null;
+
+/* ════════════════════════════════════════════
+   AUDIO
+   ════════════════════════════════════════════ */
+let audioCtx = null;
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playBeep(freq, dur) {
+  if (!soundOn) return;
+  try {
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'square';
+    osc.frequency.value = freq;
+    gain.gain.value = 0.06;
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + dur);
+  } catch (e) {}
+}
+function selectSound() { playBeep(600, 0.06); setTimeout(() => playBeep(900, 0.08), 60); }
+function navSound() { playBeep(440, 0.04); }
+
+/* ════════════════════════════════════════════
+   RENDER: LEFT SCREEN
+   ════════════════════════════════════════════ */
+function renderLeftScreen() {
+  const grid = document.getElementById('iconGrid');
+  grid.innerHTML = '';
+  MEMORIES.forEach((m, idx) => {
+    const isSelected = idx === selected;
+    const btn = document.createElement('button');
+    btn.className = 'icon-btn' + (isSelected ? ' selected' : '');
+    btn.onclick = () => selectMemory(idx);
+    btn.innerHTML = `
+      ${makeSVG(m.icon, isSelected ? 28 : 24, isSelected ? m.iconColor : '#4A5A4A', isSelected)}
+      <span>${m.name}</span>
+    `;
+    grid.appendChild(btn);
+  });
+  document.getElementById('pageIndicator').textContent = `${selected + 1}/${MEMORIES.length}`;
+}
+
+/* ════════════════════════════════════════════
+   RENDER: RIGHT SCREEN
+   ════════════════════════════════════════════ */
+function renderRightScreen() {
+  const screen = document.getElementById('rightScreen');
+  const m = MEMORIES[selected];
+
+  if (currentTab === 'data') {
+    screen.innerHTML = `
+      <div class="screen-content">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span class="entry-text" style="font-size:22px;letter-spacing:3px">ENTRY NO. ${String(m.id).padStart(3, '0')}</span>
+          ${makeSVG(m.icon, 20, m.iconColor, false)}
+        </div>
+        <hr class="divider">
+        ${m.image ? `<img src="${m.image}" alt="${m.name}" class="memory-image">` : ''}
+        <div style="margin-bottom:6px">
+          <span class="entry-text entry-dim" style="font-size:14px;letter-spacing:2px">SPECIES</span>
+          <p class="entry-text" style="font-size:20px;margin-top:2px">${m.species}</p>
+        </div>
+        <div style="margin-bottom:6px">
+          <span class="entry-text entry-dim" style="font-size:14px;letter-spacing:2px">TYPE</span>
+          <p class="entry-text" style="font-size:18px">${m.type}</p>
+        </div>
+        <div style="display:flex;gap:20px;margin-bottom:10px">
+          <div>
+            <span class="entry-text entry-dim" style="font-size:14px;letter-spacing:2px">HEIGHT</span>
+            <p class="entry-text" style="font-size:17px">${m.height}</p>
+          </div>
+          <div>
+            <span class="entry-text entry-dim" style="font-size:14px;letter-spacing:2px">WEIGHT</span>
+            <p class="entry-text" style="font-size:17px">${m.weight}</p>
+          </div>
+        </div>
+        <hr class="divider">
+        <div>
+          <span class="entry-text entry-dim" style="font-size:14px;letter-spacing:2px">DESCRIPTION</span>
+          <p class="entry-text" style="font-size:18px;margin-top:4px;line-height:1.5" id="typingTarget"></p>
+        </div>
+      </div>
+    `;
+    typeText(m.entry);
+  } else if (currentTab === 'stats') {
+    const total = Object.values(m.stats).reduce((a, b) => a + b, 0);
+    let barsHTML = '';
+    for (const [key, val] of Object.entries(m.stats)) {
+      barsHTML += `
+        <div class="stat-row">
+          <span class="entry-text stat-label">${key}</span>
+          <div class="stat-track">
+            <div class="stat-fill" style="width:0%;background:linear-gradient(90deg,${m.statColors[key]},${m.statColors[key]}CC);box-shadow:0 0 6px ${m.statColors[key]}66" data-target="${val}"></div>
+          </div>
+          <span class="entry-text stat-val">${val}</span>
+        </div>
+      `;
+    }
+    screen.innerHTML = `
+      <div class="screen-content">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span class="entry-text" style="font-size:22px;letter-spacing:3px">BASE STATS</span>
+          ${makeSVG(m.icon, 20, m.iconColor, false)}
+        </div>
+        <hr class="divider">
+        <p class="entry-text" style="font-size:20px;margin-bottom:10px">${m.name}</p>
+        ${barsHTML}
+        <hr class="divider">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="entry-text entry-dim" style="font-size:16px">TOTAL PWR</span>
+          <span class="entry-text entry-gold" style="font-size:24px">${total}</span>
+        </div>
+      </div>
+    `;
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.stat-fill').forEach(bar => {
+        bar.style.width = bar.dataset.target + '%';
+      });
+    });
+  } else if (currentTab === 'evolution') {
+    let stepsHTML = '';
+    EVOLUTION.forEach((stage, idx) => {
+      stepsHTML += `
+        <div class="evo-step">
+          <div class="evo-circle active">
+            ${makeSVG(stage.icon, 13, '#33FF66', false)}
+          </div>
+          <div>
+            <span class="entry-text evo-name">${stage.name}</span>
+            <span class="entry-text evo-month">M${stage.month}</span>
+          </div>
+          <span class="entry-text evo-desc">${stage.desc}</span>
+        </div>
+      `;
+    });
+    screen.innerHTML = `
+      <div class="screen-content">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span class="entry-text" style="font-size:22px;letter-spacing:3px">EVOLUTION</span>
+          ${makeSVG('sparkles', 20, '#FFD700', false)}
+        </div>
+        <hr class="divider">
+        <span class="entry-text entry-dim" style="font-size:14px;letter-spacing:2px">OUR GROWTH - 6 MONTHS</span>
+        <div style="margin-top:10px">
+          ${stepsHTML}
+        </div>
+        <hr class="divider">
+        <p class="entry-text" style="font-size:16px;opacity:0.7;line-height:1.5">
+          Current form: <span class="entry-gold">SOULMATE</span> (FINAL EVOLUTION). This form is permanent and only grows stronger.
+        </p>
+      </div>
+    `;
+  }
+}
+
+function typeText(text) {
+  if (typingTimer) clearInterval(typingTimer);
+  const el = document.getElementById('typingTarget');
+  if (!el) return;
+  let i = 0;
+  el.innerHTML = '<span class="cursor-blink">_</span>';
+  typingTimer = setInterval(() => {
+    if (i < text.length) {
+      el.innerHTML = text.substring(0, i + 1) + '<span class="cursor-blink">_</span>';
+      i++;
+    } else {
+      el.innerHTML = text;
+      clearInterval(typingTimer);
+      typingTimer = null;
+    }
+  }, 18);
+}
+
+/* ════════════════════════════════════════════
+   RENDER: BOTTOM BUTTONS
+   ════════════════════════════════════════════ */
+function renderButtons() {
+  const tabs = [
+    { label: 'ENTRY', tab: 'data' },
+    { label: 'STATS', tab: 'stats' },
+    { label: 'EVOL', tab: 'evolution' },
+    { label: soundOn ? 'SND ON' : 'SND OFF', tab: 'sound' },
+  ];
+  const tabBtns = document.getElementById('tabButtons');
+  tabBtns.innerHTML = '';
+  tabs.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'blue-btn' + (t.tab === currentTab ? ' active' : '');
+    btn.textContent = t.label;
+    btn.onclick = () => {
+      navSound();
+      if (t.tab === 'sound') { soundOn = !soundOn; renderButtons(); }
+      else { setTab(t.tab); }
+    };
+    tabBtns.appendChild(btn);
+  });
+
+  const navBtns = document.getElementById('navButtons');
+  navBtns.innerHTML = '';
+  MEMORIES.forEach((m, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-btn' + (idx === selected ? ' active' : '');
+    btn.textContent = String(m.id).padStart(3, '0');
+    btn.onclick = () => selectMemory(idx);
+    navBtns.appendChild(btn);
+  });
+}
+
+/* ════════════════════════════════════════════
+   ACTIONS
+   ════════════════════════════════════════════ */
+function selectMemory(idx) {
+  if (idx === selected) return;
+  selected = idx;
+  currentTab = 'data';
+  selectSound();
+  renderAll();
+}
+
+function navigate(dir) {
+  navSound();
+  const total = MEMORIES.length;
+  if (dir === 'up') selected = (selected - 1 + total) % total;
+  else selected = (selected + 1) % total;
+  currentTab = 'data';
+  renderAll();
+}
+
+function switchTab(dir) {
+  navSound();
+  const tabs = ['data', 'stats', 'evolution'];
+  let idx = tabs.indexOf(currentTab);
+  if (dir === 'next') idx = (idx + 1) % tabs.length;
+  else idx = (idx - 1 + tabs.length) % tabs.length;
+  currentTab = tabs[idx];
+  renderAll();
+}
+
+function setTab(tab) {
+  navSound();
+  currentTab = tab;
+  renderAll();
+}
+
+function renderAll() {
+  renderLeftScreen();
+  renderRightScreen();
+  renderButtons();
+}
+
+/* ════════════════════════════════════════════
+   KEYBOARD SUPPORT
+   ════════════════════════════════════════════ */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowUp') { e.preventDefault(); navigate('up'); }
+  else if (e.key === 'ArrowDown') { e.preventDefault(); navigate('down'); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); switchTab('prev'); }
+  else if (e.key === 'ArrowRight') { e.preventDefault(); switchTab('next'); }
+});
+
+/* ════════════════════════════════════════════
+   MUSIC PLAYER
+   ════════════════════════════════════════════ */
+const bgMusic = document.getElementById('bgMusic');
+const playIcon = document.getElementById('playIcon');
+const pauseIcon = document.getElementById('pauseIcon');
+const musicLabel = document.getElementById('musicLabel');
+const volumeSlider = document.getElementById('volumeSlider');
+let musicPlaying = false;
+let savedVolume = 0.4;
+
+bgMusic.volume = 0.4;
+
+function updateVolumeSliderTrack() {
+  const val = volumeSlider.value;
+  volumeSlider.style.background = `linear-gradient(90deg, #FFD700 0%, #CC9900 ${val}%, #333 ${val}%, #333 100%)`;
+}
+updateVolumeSliderTrack();
+
+function setPlaying() {
+  musicPlaying = true;
+  playIcon.style.display = 'none';
+  pauseIcon.style.display = '';
+  musicLabel.classList.add('playing');
+  musicLabel.textContent = 'NOW PLAYING';
+}
+function setPaused() {
+  musicPlaying = false;
+  playIcon.style.display = '';
+  pauseIcon.style.display = 'none';
+  musicLabel.classList.remove('playing');
+  musicLabel.textContent = 'PALLET TOWN';
+}
+
+function toggleMusic() {
+  if (musicPlaying) {
+    bgMusic.pause();
+    setPaused();
+  } else {
+    bgMusic.load();
+    const p = bgMusic.play();
+    if (p !== undefined) {
+      p.then(() => setPlaying()).catch((err) => {
+        console.warn('Play failed:', err);
+        musicLabel.textContent = 'TAP AGAIN';
+      });
+    }
+  }
+}
+
+bgMusic.addEventListener('playing', setPlaying);
+bgMusic.addEventListener('pause', () => { if (!bgMusic.ended) setPaused(); });
+
+function changeVolume(val) {
+  const v = val / 100;
+  bgMusic.volume = v;
+  savedVolume = v;
+  updateVolumeSliderTrack();
+  updateVolIcon(v);
+  if (v === 0 && musicPlaying) {
+    bgMusic.muted = true;
+  } else {
+    bgMusic.muted = false;
+  }
+}
+
+function toggleMute() {
+  if (bgMusic.muted || bgMusic.volume === 0) {
+    bgMusic.muted = false;
+    const restoreVol = savedVolume > 0 ? savedVolume : 0.4;
+    bgMusic.volume = restoreVol;
+    volumeSlider.value = restoreVol * 100;
+    updateVolumeSliderTrack();
+    updateVolIcon(restoreVol);
+  } else {
+    savedVolume = bgMusic.volume;
+    bgMusic.muted = true;
+    volumeSlider.value = 0;
+    updateVolumeSliderTrack();
+    updateVolIcon(0);
+  }
+}
+
+function updateVolIcon(v) {
+  const icon = document.getElementById('volIcon');
+  if (v === 0 || bgMusic.muted) {
+    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/>';
+  } else if (v < 0.5) {
+    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>';
+  } else {
+    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>';
+  }
+}
+
+bgMusic.addEventListener('ended', setPaused);
+
+/* ════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════ */
+renderAll();
+</script>
+</body>
+</html>
