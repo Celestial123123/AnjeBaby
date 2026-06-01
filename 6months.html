@@ -1064,19 +1064,20 @@ function toggleMusic() {
     bgMusic.pause();
     setPaused();
   } else {
-    bgMusic.load();
-    const p = bgMusic.play();
-    if (p !== undefined) {
-      p.then(() => setPlaying()).catch((err) => {
-        console.warn('Play failed:', err);
-        musicLabel.textContent = 'TAP AGAIN';
+    bgMusic.play().then(() => {
+      setPlaying();
+    }).catch(() => {
+      bgMusic.src = 'Imagess/PalletTown.mp3';
+      bgMusic.load();
+      bgMusic.addEventListener('canplaythrough', function retry() {
+        bgMusic.removeEventListener('canplaythrough', retry);
+        bgMusic.play().then(() => setPlaying()).catch(() => {
+          musicLabel.textContent = 'TAP AGAIN';
+        });
       });
-    }
+    });
   }
 }
-
-bgMusic.addEventListener('playing', setPlaying);
-bgMusic.addEventListener('pause', () => { if (!bgMusic.ended) setPaused(); });
 
 function changeVolume(val) {
   const v = val / 100;
