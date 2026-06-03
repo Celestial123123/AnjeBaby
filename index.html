@@ -383,13 +383,6 @@ body {
   color: var(--text);
 }
 
-.card-desc {
-  font-size: 0.82rem;
-  color: var(--text-soft);
-  line-height: 1.55;
-  margin-bottom: 18px;
-}
-
 .card-link {
   display: inline-flex;
   align-items: center;
@@ -575,7 +568,6 @@ body {
         </div>
       </div>
       <div class="card-title">Happy 1 Month</div>
-      <p class="card-desc">Our very first monthiversary celebration page — floating planes, love letter, and sweet memories.</p>
       <a href="1month.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -588,7 +580,6 @@ body {
         </div>
       </div>
       <div class="card-title">Happy 2 Months</div>
-      <p class="card-desc">Floating hearts and an elegant love letter marking two beautiful months together.</p>
       <a href="2months.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -601,7 +592,6 @@ body {
         </div>
       </div>
       <div class="card-title">Happy 3 Months</div>
-      <p class="card-desc">A timeline-style accordion card reliving every precious milestone from month three.</p>
       <a href="3Months.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -614,7 +604,6 @@ body {
         </div>
       </div>
       <div class="card-title">Happy 4 Months</div>
-      <p class="card-desc">Photo slideshow card with floating hearts and a collage background — four months of us.</p>
       <a href="4months.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -627,7 +616,6 @@ body {
         </div>
       </div>
       <div class="card-title">Happy 5 Months</div>
-      <p class="card-desc">Falling petals and glowing orbs surround a beautifully written love celebration page.</p>
       <a href="5months.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -640,7 +628,6 @@ body {
         </div>
       </div>
       <div class="card-title">Happy 6 Months — Love Pokédex</div>
-      <p class="card-desc">A retro Pokédex-themed anniversary page with pixel fonts, status lights, and dual-screen layout.</p>
       <a href="6months.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -655,7 +642,6 @@ body {
         </div>
       </div>
       <div class="card-title">Valentine's Day</div>
-      <p class="card-desc">A multi-page Valentine's experience with Our Story, Gallery, and Love Letter sections. Desktop layout only.</p>
       <a href="Valentines.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -668,7 +654,6 @@ body {
         </div>
       </div>
       <div class="card-title">LoveLines Boarding Pass</div>
-      <p class="card-desc">A beautiful airline boarding pass styled ticket — specifically optimized for iPhone with safe-area support.</p>
       <a href="ticket.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -681,7 +666,6 @@ body {
         </div>
       </div>
       <div class="card-title">Our Memories Gallery</div>
-      <p class="card-desc">A glowing neon photo frame slideshow with floating hearts on a dark cinematic backdrop.</p>
       <a href="15.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -693,7 +677,6 @@ body {
         </div>
       </div>
       <div class="card-title">Heart Animation</div>
-      <p class="card-desc">A mesmerizing full-screen canvas heart animation with sparkles and floating mini-hearts. Best on desktop.</p>
       <a href="heart.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -709,7 +692,6 @@ body {
         </div>
       </div>
       <div class="card-title">I Love You, Sayang</div>
-      <p class="card-desc">An immersive flight-themed digital comfort sanctuary with animated sky, stars, and sunrise transitions.</p>
       <a href="ILoveYouSayang.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -722,7 +704,6 @@ body {
         </div>
       </div>
       <div class="card-title">Us</div>
-      <p class="card-desc">Floating polaroid memories drift around an intimate love letter on a warm twilight canvas.</p>
       <a href="Us.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -735,7 +716,6 @@ body {
         </div>
       </div>
       <div class="card-title">Get Well Soon</div>
-      <p class="card-desc">A gentle, calming get-well page with soft ambient orbs, lavender tones, and safe-area iPhone support.</p>
       <a href="GetWell.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -751,7 +731,6 @@ body {
         </div>
       </div>
       <div class="card-title">I'm Sorry</div>
-      <p class="card-desc">A Cadbury-themed apology page with purple gradients, floating chocolate & almond pieces, and a heartfelt note.</p>
       <a href="imSorry.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -764,7 +743,6 @@ body {
         </div>
       </div>
       <div class="card-title">I'm So Sorry</div>
-      <p class="card-desc">Soft pink floating hearts surround a deeply personal apology letter with warm pastel gradients.</p>
       <a href="ImSoSorry.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
@@ -795,14 +773,13 @@ body {
       const cat = card.dataset.category;
       const device = card.dataset.device;
       const title = (card.dataset.title || '').toLowerCase();
-      const desc = (card.querySelector('.card-desc')?.textContent || '').toLowerCase();
 
       let matchFilter = activeFilter === 'all'
         || activeFilter === cat
         || (activeFilter === 'phone' && (device === 'phone' || device === 'both'))
         || (activeFilter === 'desktop' && (device === 'desktop' || device === 'both'));
 
-      let matchSearch = !query || title.includes(query) || desc.includes(query);
+      let matchSearch = !query || title.includes(query);
 
       if (matchFilter && matchSearch) {
         card.style.display = '';
