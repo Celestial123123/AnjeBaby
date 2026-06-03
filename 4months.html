@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 4 Months ❤️</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background: #f8e8ec url('4months/Collage.jpg') center center / contain fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Floating hearts animation */
+        .heart-float {
+            position: fixed;
+            bottom: -20px;
+            font-size: 24px;
+            animation: floatUp 6s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-120vh) scale(1.8);
+                opacity: 0;
+            }
+        }
+
+        /* Card container */
+        .card {
+            background: white;
+            width: 90%;
+            max-width: 450px;
+            padding: 25px;
+            border-radius: 18px;
+            border: 3px solid #e898a8;
+            /* border added */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            animation: fadeIn 1.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* All slideshow images */
+        .slide-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .active {
+            opacity: 1;
+        }
+
+        h1 {
+            color: #e54766;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .hidden-msg {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .reveal-btn {
+            margin-top: 15px;
+            background: #e54766;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .heart {
+            font-size: 24px;
+            color: #e54766;
+            margin-top: 15px;
+        }
+
+        /* Container for the images - now a simple rectangle */
+        .heart-frame {
+            width: 100%;
+            height: 350px;
+            margin: 0 auto 20px auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background-color: #fce4ec;
+        }
+
+        /* Slideshow container fits the full width */
+        .slideshow-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* All slideshow images */
+        .slide-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* This ensures the photo fits inside the box without cropping */
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        /* Visible slide */
+        .slide-img.active {
+            opacity: 1;
+        }
+
+        /* Relationship timer */
+        .timer-section {
+            background: linear-gradient(135deg, #ffe0e9, #fce4ec);
+            border: 2px solid #e898a8;
+            border-radius: 14px;
+            padding: 14px 10px;
+            margin: 16px 0;
+        }
+
+        .timer-label {
+            font-size: 13px;
+            color: #e54766;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .timer-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .timer-unit {
+            background: white;
+            border-radius: 10px;
+            padding: 8px 12px;
+            min-width: 56px;
+            box-shadow: 0 2px 6px rgba(229,71,102,0.15);
+        }
+
+        .timer-unit span {
+            display: block;
+            font-size: 22px;
+            font-weight: 700;
+            color: #e54766;
+            line-height: 1;
+        }
+
+        .timer-unit small {
+            font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Boarding pass */
+        .boarding-pass {
+            display: none;
+            margin-top: 15px;
+            background: #fffaf9;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            text-align: left;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .bp-header {
+            background: linear-gradient(135deg, #e54766, #c73558);
+            color: white;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bp-airline {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .bp-title {
+            font-size: 11px;
+            letter-spacing: 3px;
+            opacity: 0.9;
+        }
+
+        .bp-route {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px 10px;
+            background: white;
+        }
+
+        .bp-city {
+            text-align: center;
+        }
+
+        .bp-code {
+            font-size: 28px;
+            font-weight: 700;
+            color: #e54766;
+            line-height: 1;
+        }
+
+        .bp-name {
+            font-size: 11px;
+            color: #999;
+            margin-top: 2px;
+        }
+
+        .bp-plane {
+            font-size: 22px;
+            color: #e898a8;
+        }
+
+        .bp-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            padding: 0 18px 12px;
+            background: white;
+        }
+
+        .bp-field {
+            padding: 6px 0;
+        }
+
+        .bp-label {
+            display: block;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        .bp-value {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .bp-tear {
+            border-top: 2px dashed #e898a8;
+            margin: 0 18px;
+            position: relative;
+        }
+
+        .bp-tear::before, .bp-tear::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            width: 14px;
+            height: 14px;
+            background: #f8e8ec;
+            border-radius: 50%;
+        }
+
+        .bp-tear::before { left: -26px; }
+        .bp-tear::after  { right: -26px; }
+
+        .bp-message-body {
+            padding: 14px 18px;
+            font-size: 14px;
+            color: #444;
+            line-height: 1.7;
+            background: white;
+        }
+
+        .bp-barcode {
+            background: #fce4ec;
+            padding: 10px 18px;
+            font-family: monospace;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: #e54766;
+            text-align: center;
+        }
+
+        /* Music button */
+        .music-btn {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background: #e54766;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .music-btn:hover {
+            background: #c73558;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Music -->
+    <audio id="bgMusic" src="4months/So Easy.mp3" loop></audio>
+    <button class="music-btn" onclick="toggleMusic()" id="musicBtn">▶ Play Music</button>
+
+    <!-- Floating hearts -->
+    <script>
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart-float");
+            heart.innerHTML = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (4 + Math.random() * 4) + "s";
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 7000);
+        }
+
+        setInterval(createHeart, 300);
+    </script>
+
+    <div class="card">
+
+        <!-- Heart-shaped slideshow -->
+        <div class="heart-frame">
+            <div class="slideshow-container">
+                <img class="slide-img active" src="4months/Collage.jpg">
+                <img class="slide-img" src="4months/image1.jpg">
+                <img class="slide-img" src="4months/image2.jpg">
+                <img class="slide-img" src="4months/image3.jpg">
+                <img class="slide-img" src="4months/image4.jpg">
+                <img class="slide-img" src="4months/image5.jpg">
+                <img class="slide-img" src="4months/image6.jpg">
+                <img class="slide-img" src="4months/image7.png">
+                <img class="slide-img" src="4months/image8.png">
+                <img class="slide-img" src="4months/image9.png">
+                <img class="slide-img" src="4months/image10.png">
+            </div>
+        </div>
+
+        <h1>Happy 4 Months, Sayang ❤️</h1>
+
+        <p>
+            Its been 4 months that we have been together sayang, and we still are going strong. Even though we have
+            some fights here and there, but we are able to get through it together because I know we want to make
+            this work. I love you with all my heart, Nur Liyana Jasmine. 💋
+        </p>
+
+        <!-- Relationship timer -->
+        <div class="timer-section">
+            <div class="timer-label">💕 Together for</div>
+            <div class="timer-display">
+                <div class="timer-unit"><span id="t-days">0</span><small>days</small></div>
+                <div class="timer-unit"><span id="t-hours">0</span><small>hours</small></div>
+                <div class="timer-unit"><span id="t-mins">0</span><small>mins</small></div>
+                <div class="timer-unit"><span id="t-secs">0</span><small>secs</small></div>
+            </div>
+        </div>
+
+        <!-- Reveal button -->
+        <button class="reveal-btn" onclick="showMessage()">Click to Reveal My Long Message ❤️</button>
+
+        <!-- Hidden message styled as boarding pass -->
+        <div class="boarding-pass" id="hiddenMsg">
+            <div class="bp-header">
+                <div class="bp-airline">✈ Love Airlines</div>
+                <div class="bp-title">BOARDING PASS</div>
+            </div>
+            <div class="bp-route">
+                <div class="bp-city">
+                    <div class="bp-code">KHR</div>
+                    <div class="bp-name">My Heart</div>
+                </div>
+                <div class="bp-plane">✈</div>
+                <div class="bp-city">
+                    <div class="bp-code">JSM</div>
+                    <div class="bp-name">Your Heart</div>
+                </div>
+            </div>
+            <div class="bp-fields">
+                <div class="bp-field">
+                    <span class="bp-label">Passenger</span>
+                    <span class="bp-value">Nur Liyana Jasmine</span>
+                </div>
+                <div class="bp-field">
+                    <span class="bp-label">Date</span>
+                    <span class="bp-value">02 DEC 2025</span>
+                </div>
+                <div class="bp-field">
+                    <span class="bp-label">Flight</span>
+                    <span class="bp-value">LV-0412</span>
+                </div>
+                <div class="bp-field">
+                    <span class="bp-label">Seat</span>
+                    <span class="bp-value">Forever ❤️</span>
+                </div>
+            </div>
+            <div class="bp-tear"></div>
+            <div class="bp-message-body">
+                So ini part yang akan ditulis panjang dan random sikit. Well I am sorry for last week sebab tak dapat
+                pergi NakNak date but thankfully we were able to go Plane Spotting and meeting up with your entire IC
+                family and makan ayam gepuk jugak. It wasnt what I planned but it was really enjoyable to me, and I know
+                you loved that we went plane spotting because it is one of your favourite activities.
+                <br><br>
+                Lately, kita dah start main Pokemon kat minecraft, and I have to say. I am having such a fun time playing
+                with you, doing all the random stuff battling the gyms, exploring with you. You ikut me masuk cave untuk
+                mining for Mega Stones, it makes me happy sebab you ada dengan me.
+                <br><br>
+                Our next date, 26/4/2026 (Ahad) will be a very fun date, I dah set aside haritu, I memang takkan join apa2
+                or do anything on that day, except for going to
+                the airport with you sayang. It will be the day for our NakNak date (finally after 4 months of waiting),
+                semalam you kata you nak try the burger, chicken, fries semua kan? Well, just order them
+                I will pay for it, I want you to try them because you bukan selalu boleh try NakNak. I want you to
+                experience it sebab you dah lama teringin. So dont worry about the price, and just order okie sayang?
+                I am able to pay for it so I will pay for it ❤️. I hope to make you always happy, always wanting to be with
+                me, and enjoy life no matter what. I love you sayang, I will always love you 😍
+            </div>
+            <div class="bp-barcode">| ||| || | || ||| | || ||| || |</div>
+        </div>
+
+        <div class="heart">💗</div>
+    </div>
+
+    <script>
+        /* Music toggle */
+        function toggleMusic() {
+            const audio = document.getElementById("bgMusic");
+            const btn = document.getElementById("musicBtn");
+            audio.volume = 0.3;
+            if (audio.paused) {
+                audio.play();
+                btn.textContent = "⏸ Pause Music";
+            } else {
+                audio.pause();
+                btn.textContent = "▶ Play Music";
+            }
+        }
+
+        /* Reveal hidden message */
+        function showMessage() {
+            document.getElementById("hiddenMsg").style.display = "block";
+        }
+
+        /* Relationship timer */
+        const startDate = new Date(2025, 11, 2); // 2 Dec 2025
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+            const days  = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs  = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById("t-days").textContent  = days;
+            document.getElementById("t-hours").textContent = hours;
+            document.getElementById("t-mins").textContent  = String(mins).padStart(2, "0");
+            document.getElementById("t-secs").textContent  = String(secs).padStart(2, "0");
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // Slideshow
+        let slideIndex = 0;
+        const slides = document.querySelectorAll(".slide-img");
+
+        function showSlides() {
+            slides.forEach((slide) => slide.classList.remove("active"));
+            slideIndex = (slideIndex + 1) % slides.length;
+            slides[slideIndex].classList.add("active");
+        }
+
+        setInterval(showSlides, 3000);
+    </script>
+
+</body>
+
+</html>

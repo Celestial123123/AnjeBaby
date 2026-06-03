@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#3a1530">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>LoveLines Airways · Boarding Pass · Nur Liyana Jasmine</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    /* Soft pinks reserved for backgrounds, borders, accents only */
+    --pink-50:  #fff5f8;
+    --pink-100: #ffeaf1;
+    --pink-200: #ffd5e3;
+    --pink-300: #ffbacf;
+    --cream:    #fffaf6;
+    --paper:    #ffffff;
+
+    /* High contrast text colors — used for ALL essential text */
+    --plum-mid:  #8a2e4c; /* labels, secondary text */
+    --plum-deep: #3b1422; /* primary text, headings, body */
+
+    /* Safe-area helpers (resolve to 0px on devices without notches) */
+    --safe-top:    env(safe-area-inset-top, 0px);
+    --safe-right:  env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left:   env(safe-area-inset-left, 0px);
+  }
+
+  html, body {
+    min-height: 100%;
+    /* Smooth elastic scroll on iOS */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  html {
+    /* Stop the page from text-zooming when iOS rotates */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* ==========================================================
+     SUNSET SKY — Deep Twilight Pink → Warm Dusty Rose
+     ========================================================== */
+  body {
+    font-family: 'Quicksand', sans-serif;
+    color: var(--plum-deep);
+    background:
+      radial-gradient(circle at 18% 8%,  rgba(255, 200, 220, 0.30), transparent 55%),
+      radial-gradient(circle at 82% 92%, rgba(255, 220, 200, 0.25), transparent 55%),
+      linear-gradient(180deg,
+        #3a1530 0%,    /* deep twilight pink */
+        #5d2244 22%,
+        #87385e 48%,
+        #b35e7d 72%,
+        #d99cb1 100%   /* warm dusty rose */
+      );
+    background-attachment: fixed;
+    min-height: 100vh;
+    /* Safe-area-aware padding so the ticket clears the iPhone notch + home indicator */
+    padding:
+      calc(50px + var(--safe-top))
+      calc(20px + var(--safe-right))
+      calc(50px + var(--safe-bottom))
+      calc(20px + var(--safe-left));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-weight: 500;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent iOS from inflating tiny font-sizes inside form-like elements */
+  input, textarea, select { font: inherit; }
+
+  /* ==========================================================
+     CLOUDS — full-sky parallax, drift + bob
+     ========================================================== */
+  .sky {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .cloud {
+    position: absolute;
+    width: 280px;
+    height: 80px;
+    will-change: transform, left;
+  }
+
+  .cloud .puff {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    border-radius: 100px;
+    filter: blur(0.5px) drop-shadow(0 10px 22px rgba(40, 12, 28, 0.30));
+    will-change: transform;
+  }
+
+  .cloud .puff::before,
+  .cloud .puff::after {
+    content: '';
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+  }
+
+  .cloud .puff::before {
+    width: 55%; height: 150%;
+    top: -65%; left: 10%;
+  }
+
+  .cloud .puff::after {
+    width: 42%; height: 115%;
+    top: -40%; right: 12%;
+  }
+
+  /* Warm-lit clouds catching sunset glow */
+  .cloud.warm .puff,
+  .cloud.warm .puff::before,
+  .cloud.warm .puff::after {
+    background: linear-gradient(180deg, #fff1e4 0%, #ffffff 60%);
+  }
+
+  @keyframes drift-right {
+    0%   { left: -32%; }
+    100% { left: 112%; }
+  }
+  @keyframes drift-left {
+    0%   { left: 112%; }
+    100% { left: -32%; }
+  }
+
+  @keyframes bob-a {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
+  }
+  @keyframes bob-b {
+    0%, 100% { transform: translateY(-6px); }
+    50%      { transform: translateY(10px); }
+  }
+  @keyframes bob-c {
+    0%, 100% { transform: translateY(8px); }
+    50%      { transform: translateY(-12px); }
+  }
+  @keyframes bob-d {
+    0%, 100% { transform: translateY(-4px); }
+    50%      { transform: translateY(8px); }
+  }
+
+  .cloud-1  { width: 280px; height: 85px;  top: 4%;
+              animation: drift-right 70s linear -10s infinite; opacity: 0.92; }
+  .cloud-1  .puff { animation: bob-a 7s ease-in-out infinite; }
+
+  .cloud-2  { width: 380px; height: 110px; top: 11%;
+              animation: drift-left 95s linear -55s infinite; opacity: 0.78; }
+  .cloud-2  .puff { animation: bob-b 9s ease-in-out infinite; }
+
+  .cloud-3  { width: 220px; height: 70px;  top: 18%;
+              animation: drift-right 55s linear -38s infinite; opacity: 0.9; }
+  .cloud-3  .puff { animation: bob-c 6s ease-in-out infinite; }
+
+  .cloud-4  { width: 320px; height: 95px;  top: 26%;
+              animation: drift-left 85s linear -20s infinite; opacity: 0.74; }
+  .cloud-4  .puff { animation: bob-a 8s ease-in-out infinite; }
+
+  .cloud-5  { width: 200px; height: 65px;  top: 33%;
+              animation: drift-right 50s linear -28s infinite; opacity: 0.88; }
+  .cloud-5  .puff { animation: bob-b 7s ease-in-out infinite; }
+
+  .cloud-6  { width: 420px; height: 120px; top: 41%;
+              animation: drift-left 110s linear -8s infinite; opacity: 0.68; }
+  .cloud-6  .puff { animation: bob-c 11s ease-in-out infinite; }
+
+  .cloud-7  { width: 260px; height: 80px;  top: 49%;
+              animation: drift-right 78s linear -65s infinite; opacity: 0.85; }
+  .cloud-7  .puff { animation: bob-a 9s ease-in-out infinite; }
+
+  .cloud-8  { width: 340px; height: 100px; top: 56%;
+              animation: drift-left 90s linear -42s infinite; opacity: 0.78; }
+  .cloud-8  .puff { animation: bob-d 8s ease-in-out infinite; }
+
+  .cloud-9  { width: 180px; height: 60px;  top: 64%;
+              animation: drift-right 48s linear -15s infinite; opacity: 0.95; }
+  .cloud-9  .puff { animation: bob-c 6.5s ease-in-out infinite; }
+
+  .cloud-10 { width: 380px; height: 110px; top: 71%;
+              animation: drift-left 100s linear -73s infinite; opacity: 0.72; }
+  .cloud-10 .puff { animation: bob-a 10s ease-in-out infinite; }
+
+  .cloud-11 { width: 240px; height: 75px;  top: 78%;
+              animation: drift-right 60s linear -32s infinite; opacity: 0.86; }
+  .cloud-11 .puff { animation: bob-b 7.5s ease-in-out infinite; }
+
+  .cloud-12 { width: 300px; height: 90px;  top: 86%;
+              animation: drift-left 82s linear -50s infinite; opacity: 0.78; }
+  .cloud-12 .puff { animation: bob-d 8.5s ease-in-out infinite; }
+
+  .cloud-13 { width: 160px; height: 55px;  top: 92%;
+              animation: drift-right 45s linear -22s infinite; opacity: 0.9; }
+  .cloud-13 .puff { animation: bob-c 5.5s ease-in-out infinite; }
+
+  .cloud-14 { width: 280px; height: 85px;  top: 14%;
+              animation: drift-left 75s linear -3s infinite; opacity: 0.82; }
+  .cloud-14 .puff { animation: bob-b 9.5s ease-in-out infinite; }
+
+  .cloud-15 { width: 360px; height: 105px; top: 60%;
+              animation: drift-right 96s linear -68s infinite; opacity: 0.7; }
+  .cloud-15 .puff { animation: bob-a 11s ease-in-out infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cloud,
+    .cloud .puff { animation: none !important; }
+  }
+
+  /* ==========================================================
+     LAYOUT WRAPPER — desktop max-width guard
+     ========================================================== */
+  .wrap {
+    position: relative;
+    z-index: 2;
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  /* ==========================================================
+     LONG TICKET — single unified container
+     ========================================================== */
+  .long-ticket {
+    background: var(--paper);
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid var(--pink-200);
+    box-shadow:
+      0 30px 60px -12px rgba(20, 5, 12, 0.45),
+      0 8px 20px -6px rgba(20, 5, 12, 0.3);
+    position: relative;
+    z-index: 1;
+    max-width: 850px;
+    margin: 0 auto;
+  }
+
+  .lt-perf {
+    height: 0;
+    border-top: 2px dashed var(--pink-300);
+    margin: 0 24px;
+  }
+
+  /* ----------------------------------------------------------
+     Shared typography (high-contrast, Quicksand-bold headers)
+     ---------------------------------------------------------- */
+  .label {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    color: var(--plum-mid);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--plum-deep);
+  }
+
+  .value.script {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 1.95rem);
+    font-weight: 700;
+    color: var(--plum-deep);
+  }
+
+  /* Fluid place names — scale from phone to laptop */
+  .place {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.35rem, 1rem + 2.4vw, 2rem);
+    font-weight: 700;
+    color: var(--plum-deep);
+    line-height: 1.15;
+  }
+
+  .tag {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--plum-mid);
+    text-transform: uppercase;
+  }
+
+  /* Section headers — bold Quicksand */
+  .mono-title {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.95rem, 0.85rem + 0.6vw, 1.15rem);
+    letter-spacing: 2.5px;
+    color: var(--plum-deep);
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .mono-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--plum-mid);
+    margin-top: 6px;
+  }
+
+  /* ----------------------------------------------------------
+     Section: Boarding Pass (with attached top-right stub)
+     ---------------------------------------------------------- */
+  .lt-boarding {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .lt-main {
+    padding: clamp(24px, 4vw, 40px);
+    background: linear-gradient(180deg, var(--cream) 0%, #ffffff 100%);
+    min-width: 0;
+  }
+
+  .airline-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    border-bottom: 2px dashed var(--pink-300);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .airline-name {
+    font-family: 'Quicksand', sans-serif;
+    font-size: clamp(1.1rem, 0.9rem + 1.4vw, 1.45rem);
+    font-weight: 700;
+    color: var(--plum-deep);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .from-to {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .from-to .arrow {
+    color: var(--plum-mid);
+    font-size: clamp(1.2rem, 0.8rem + 1.5vw, 1.6rem);
+    flex-shrink: 0;
+  }
+
+  .from-to .sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.85rem, 0.75rem + 0.5vw, 0.95rem);
+    color: var(--plum-mid);
+    font-style: italic;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    border-top: 1px solid var(--pink-200);
+    padding-top: 24px;
+  }
+
+  .pilot {
+    margin-top: 32px;
+    padding: clamp(20px, 3vw, 30px);
+    background: var(--cream);
+    border: 1px solid var(--pink-200);
+    border-radius: 15px;
+  }
+
+  .pilot-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.2rem);
+    line-height: 1.75;
+    color: var(--plum-deep);
+    font-weight: 600;
+  }
+
+  .pilot-body p { margin-bottom: 16px; }
+  .pilot-body strong { color: var(--plum-deep); font-weight: 700; }
+
+  .pilot-greeting {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.4rem, 1.1rem + 1.2vw, 1.7rem);
+    font-weight: 700;
+    color: var(--plum-deep);
+    margin-bottom: 14px;
+  }
+
+  .pilot-sign {
+    text-align: right;
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.65rem, 1.3rem + 1.4vw, 2rem);
+    font-weight: 700;
+    color: var(--plum-deep);
+    margin-top: 10px;
+  }
+
+  /* Stub — attached to top-right of the boarding section */
+  .lt-stub {
+    padding: clamp(28px, 3.5vw, 40px) clamp(20px, 2.5vw, 28px);
+    background: var(--paper);
+    border-left: 2px dashed var(--pink-300);
+    text-align: center;
+    min-width: 0;
+  }
+
+  .stub-seal {
+    margin: 26px auto;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--plum-mid), var(--plum-deep));
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    box-shadow: 0 10px 22px rgba(59, 20, 34, 0.35);
+  }
+
+  .stub-seal span {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: #fff;
+  }
+
+  .days-together {
+    margin-top: 20px;
+    padding: 16px 12px;
+    text-align: center;
+    background: var(--cream);
+    border: 1px solid var(--pink-200);
+    border-radius: 12px;
+  }
+
+  .days-together .label {
+    margin-bottom: 6px;
+    font-size: 0.7rem;
+    color: var(--plum-mid);
+  }
+
+  .days-counter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 1.4rem + 2.5vw, 2.4rem);
+    font-weight: 700;
+    color: var(--plum-deep);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+
+  .days-counter .unit {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--plum-mid);
+    margin-top: 4px;
+    letter-spacing: 1.5px;
+  }
+
+  .days-sub {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.78rem;
+    color: var(--plum-mid);
+    font-weight: 700;
+    margin-top: 10px;
+    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .days-since {
+    margin-top: 6px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    color: var(--plum-deep);
+    font-size: 0.9rem;
+  }
+
+  /* ----------------------------------------------------------
+     Generic section padding for non-boarding sections
+     ---------------------------------------------------------- */
+  .lt-section {
+    padding: clamp(26px, 4vw, 40px) clamp(22px, 4vw, 40px);
+    background: var(--paper);
+  }
+
+  .section-header {
+    margin-bottom: 24px;
+  }
+
+  /* ----------------------------------------------------------
+     Section: Flight Map
+     ---------------------------------------------------------- */
+  .flight-map .section-header { text-align: center; }
+
+  .flight-path {
+    position: relative;
+    height: 110px;
+    margin: 0 10px;
+  }
+
+  .flight-path::before {
+    content: '';
+    position: absolute;
+    left: 70px;
+    right: 70px;
+    top: 50%;
+    border-top: 2px dashed var(--plum-mid);
+    z-index: 1;
+  }
+
+  .stop {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+    background: var(--paper);
+    padding: 4px 10px;
+  }
+
+  .stop.start { left: 70px; }
+  .stop.end   { left: calc(100% - 70px); }
+
+  .stop .dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--plum-deep);
+    margin: 0 auto 8px;
+    box-shadow: 0 0 0 5px rgba(138, 46, 76, 0.18);
+  }
+
+  .stop .stop-date {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    color: var(--plum-mid);
+    text-transform: uppercase;
+  }
+
+  .stop .stop-place {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.95rem, 0.85rem + 0.5vw, 1.1rem);
+    font-weight: 700;
+    color: var(--plum-deep);
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .airplane-glider {
+    position: absolute;
+    top: 50%;
+    font-size: 1.7rem;
+    color: var(--plum-deep);
+    z-index: 3;
+    animation: glide 7s ease-in-out infinite;
+    text-shadow: 0 2px 6px rgba(59, 20, 34, 0.25);
+  }
+
+  @keyframes glide {
+    0%   { left: 70px;  transform: translateY(-50%); }
+    50%  { left: calc(100% - 90px); transform: translateY(-58%); }
+    100% { left: 70px;  transform: translateY(-50%); }
+  }
+
+  /* ----------------------------------------------------------
+     Section: Customs Declaration
+     ---------------------------------------------------------- */
+  .customs .section-header {
+    position: relative;
+    padding-bottom: 14px;
+    border-bottom: 2px dashed var(--pink-300);
+  }
+
+  .customs .section-header::after {
+    content: 'OFFICIAL · LL';
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--plum-deep);
+    border: 1px solid var(--plum-mid);
+    padding: 4px 10px;
+  }
+
+  .customs-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--pink-300);
+  }
+
+  .customs-row .field-label {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    color: var(--plum-mid);
+    text-transform: uppercase;
+  }
+
+  .customs-row .field-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 0.95rem + 0.6vw, 1.25rem);
+    color: var(--plum-deep);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  .declare-title {
+    margin-top: 26px;
+    margin-bottom: 14px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    color: var(--plum-deep);
+    text-transform: uppercase;
+  }
+
+  .declare-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .declare-list li {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border: 1px solid var(--pink-200);
+    border-radius: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.2rem);
+    font-weight: 600;
+    color: var(--plum-deep);
+    background: var(--cream);
+  }
+
+  .declare-list .check {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--plum-deep);
+    border-radius: 4px;
+    margin-right: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--plum-deep);
+    font-weight: 800;
+    font-size: 0.95rem;
+    background: var(--paper);
+    flex-shrink: 0;
+  }
+
+  .signature-block {
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid var(--plum-mid);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .signature-name {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.7rem, 1.3rem + 1.6vw, 2.2rem);
+    font-weight: 700;
+    color: var(--plum-deep);
+    line-height: 1;
+  }
+
+  .signature-caption {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--plum-mid);
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .signature-date {
+    text-align: right;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    color: var(--plum-deep);
+  }
+
+  /* ----------------------------------------------------------
+     Section: Baggage Claim (cargo-grid)
+     ---------------------------------------------------------- */
+  .baggage .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px dashed var(--pink-300);
+    padding-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .baggage-belt,
+  .cargo-grid {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .bag-card {
+    position: relative;
+    padding: 24px 22px 20px 22px;
+    background: var(--cream);
+    border: 1.5px solid var(--plum-mid);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 22px -15px rgba(59, 20, 34, 0.5);
+    min-width: 0;
+  }
+
+  .bag-card::before {
+    content: '';
+    position: absolute;
+    top: 22px;
+    left: 16px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--plum-mid);
+  }
+
+  .bag-tag-id {
+    display: inline-block;
+    margin-left: 26px;
+    margin-bottom: 14px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    color: var(--plum-mid);
+    text-transform: uppercase;
+  }
+
+  .bag-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.2rem, 1rem + 0.8vw, 1.4rem);
+    color: var(--plum-deep);
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .bag-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--plum-mid);
+    margin-bottom: 18px;
+  }
+
+  .bag-meta {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--plum-deep);
+    text-transform: uppercase;
+    border-top: 1px dashed var(--pink-300);
+    padding-top: 12px;
+  }
+
+  /* Stamp — invisible until .slam class is added by IntersectionObserver */
+  .claimed-stamp {
+    position: absolute;
+    top: 18px;
+    right: 14px;
+    border: 3px solid var(--plum-deep);
+    color: var(--plum-deep);
+    padding: 4px 12px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    transform: rotate(-30deg) scale(2);
+    background: rgba(255, 255, 255, 0.75);
+    text-transform: uppercase;
+    opacity: 0;
+    transform-origin: center;
+    will-change: transform, opacity;
+  }
+
+  .claimed-stamp.slam {
+    animation: slam-stamp 0.65s cubic-bezier(0.22, 1.4, 0.4, 1) forwards;
+  }
+
+  .bag-card:nth-child(2) .claimed-stamp.slam {
+    animation-delay: 0.18s;
+  }
+
+  @keyframes slam-stamp {
+    0%   { opacity: 0; transform: rotate(-30deg) scale(2); }
+    55%  { opacity: 1; transform: rotate(-9deg)  scale(0.92); }
+    78%  {             transform: rotate(-13deg) scale(1.06); }
+    100% { opacity: 1; transform: rotate(-12deg) scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .claimed-stamp {
+      opacity: 1;
+      transform: rotate(-12deg) scale(1);
+    }
+    .claimed-stamp.slam { animation: none; }
+  }
+
+  /* ----------------------------------------------------------
+     Section: Weather
+     ---------------------------------------------------------- */
+  .weather-section { text-align: center; }
+
+  .weather-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 26px;
+    padding: 24px 32px;
+    background: var(--cream);
+    border: 1.5px solid var(--plum-mid);
+    border-radius: 18px;
+    box-shadow: 0 10px 24px -16px rgba(59, 20, 34, 0.45);
+    text-align: left;
+    max-width: 100%;
+  }
+
+  .weather-icon {
+    font-size: 2.8rem;
+    line-height: 1;
+    color: var(--plum-deep);
+    flex-shrink: 0;
+  }
+
+  .weather-loc {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--plum-mid);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .weather-cond {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.2rem, 1rem + 0.8vw, 1.4rem);
+    color: var(--plum-deep);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .weather-temp {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.5rem);
+    color: var(--plum-deep);
+    font-weight: 700;
+    margin-top: 4px;
+  }
+
+  /* ----------------------------------------------------------
+     Footer
+     ---------------------------------------------------------- */
+  footer {
+    margin-top: 28px;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    color: #fff5f8;
+    text-shadow: 0 2px 8px rgba(40, 12, 28, 0.6);
+    font-size: 1rem;
+    padding-bottom: calc(10px + var(--safe-bottom));
+  }
+
+  /* ==========================================================
+     RESPONSIVE — mobile breakpoint (<= 768px)
+     ========================================================== */
+  @media (max-width: 768px) {
+    /* Stack boarding pass and stub vertically */
+    .lt-boarding { grid-template-columns: 1fr; }
+    .lt-stub {
+      border-left: none;
+      border-top: 2px dashed var(--pink-300);
+    }
+
+    /* Two-column info grid stays useful on phones */
+    .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+
+    /* Customs rows collapse to single column */
+    .customs-row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+      padding: 10px 0;
+    }
+
+    /* Cargo / baggage cards stack vertically */
+    .baggage-belt,
+    .cargo-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .signature-block {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .signature-date { text-align: left; }
+
+    .stop .stop-place { font-size: 0.95rem; }
+    .stop .stop-date  { font-size: 0.65rem; }
+    .flight-path::before { left: 56px; right: 56px; }
+    .stop.start { left: 56px; }
+    .stop.end   { left: calc(100% - 56px); }
+    @keyframes glide {
+      0%   { left: 56px;  transform: translateY(-50%); }
+      50%  { left: calc(100% - 76px); transform: translateY(-58%); }
+      100% { left: 56px;  transform: translateY(-50%); }
+    }
+
+    .weather-card { padding: 20px; gap: 18px; }
+    .weather-icon { font-size: 2.4rem; }
+
+    /* Slimmer clouds on small screens (already off-screen at edges) */
+    .cloud-1, .cloud-7  { width: 200px; height: 60px; }
+    .cloud-2, .cloud-6, .cloud-10, .cloud-15 { width: 240px; height: 70px; }
+    .cloud-3, .cloud-9, .cloud-13 { width: 150px; height: 50px; }
+    .cloud-4, .cloud-8, .cloud-12, .cloud-14 { width: 200px; height: 60px; }
+    .cloud-5, .cloud-11 { width: 170px; height: 55px; }
+  }
+
+  /* Very small phones */
+  @media (max-width: 380px) {
+    body { padding-left: calc(12px + var(--safe-left)); padding-right: calc(12px + var(--safe-right)); }
+    .info-grid { grid-template-columns: 1fr; }
+    .from-to { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .from-to > div:last-child { text-align: left !important; }
+    .from-to .arrow { align-self: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Sunset sky — clouds drift behind the ticket -->
+<div class="sky" aria-hidden="true">
+  <div class="cloud cloud-1"><div class="puff"></div></div>
+  <div class="cloud cloud-2 warm"><div class="puff"></div></div>
+  <div class="cloud cloud-3"><div class="puff"></div></div>
+  <div class="cloud cloud-4"><div class="puff"></div></div>
+  <div class="cloud cloud-5"><div class="puff"></div></div>
+  <div class="cloud cloud-6 warm"><div class="puff"></div></div>
+  <div class="cloud cloud-7"><div class="puff"></div></div>
+  <div class="cloud cloud-8"><div class="puff"></div></div>
+  <div class="cloud cloud-9"><div class="puff"></div></div>
+  <div class="cloud cloud-10 warm"><div class="puff"></div></div>
+  <div class="cloud cloud-11"><div class="puff"></div></div>
+  <div class="cloud cloud-12"><div class="puff"></div></div>
+  <div class="cloud cloud-13"><div class="puff"></div></div>
+  <div class="cloud cloud-14"><div class="puff"></div></div>
+  <div class="cloud cloud-15 warm"><div class="puff"></div></div>
+</div>
+
+<div class="wrap">
+  <article class="long-ticket" role="region" aria-label="LoveLines Boarding Pass">
+
+    <!-- ============================================================
+         Section 1 — Boarding Pass (with attached top-right stub)
+         ============================================================ -->
+    <section class="lt-boarding">
+
+      <div class="lt-main">
+        <div class="airline-bar">
+          <div>
+            <div class="airline-name">LoveLines Airways</div>
+            <div class="tag">Forever · First Class</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="label">Boarding Pass</div>
+            <div class="value" style="font-style: italic;">No. 05 · MTH</div>
+          </div>
+        </div>
+
+        <div class="from-to">
+          <div>
+            <div class="label">From</div>
+            <div class="place">5 Months Ago</div>
+            <div class="sub">the day everything started</div>
+          </div>
+          <div class="arrow">✈</div>
+          <div style="text-align: right;">
+            <div class="label">To</div>
+            <div class="place">Your Heart</div>
+            <div class="sub">my favorite destination</div>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div>
+            <div class="label">Passenger</div>
+            <div class="value script">Nur Liyana Jasmine</div>
+          </div>
+          <div>
+            <div class="label">Flight</div>
+            <div class="value">LL-05MTH</div>
+          </div>
+          <div>
+            <div class="label">Date</div>
+            <div class="value">02 · MAY · 2026</div>
+          </div>
+          <div>
+            <div class="label">Gate</div>
+            <div class="value">G — F</div>
+          </div>
+          <div>
+            <div class="label">Seat</div>
+            <div class="value">My Heart</div>
+          </div>
+          <div>
+            <div class="label">Boarding</div>
+            <div class="value">Every Day</div>
+          </div>
+        </div>
+
+        <div class="pilot">
+          <div class="label" style="margin-bottom: 14px;">✎ Message From The Pilot, Khairul Aqib</div>
+          <div class="pilot-body">
+            <p class="pilot-greeting">My sweetest baby girl, Jasmine ❤️</p>
+            <p>
+              Its been 5 months since we got together and to celebrate our 5 month anniversary, I wanted to make something to remember the last date. Remember the flight ticket receipt you got kan? I wanted to recreate it to something similar to that because you really loved that.
+            </p>
+            <p>
+              That day was so short but so memorable to me because I finally got to keep my promise of bringing you to our <strong>NakNak date</strong>. I got you <strong>flowers</strong> for our anniversary and I really cannot wait for us to build our <strong>dragons</strong> together hehe. I have never regretted getting into a relationship with you and I wish to always be with you. I love you sayang, you are the love of my life sayang.
+            </p>
+            <div class="pilot-sign">— Yours, always.</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="lt-stub">
+        <div class="label">LoveLines · Stub</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; font-size: 1rem; color: var(--plum-deep); margin-bottom: 20px;">
+          Keep close to your heart
+        </div>
+
+        <div style="text-align: left; margin-bottom: 14px;">
+          <div class="label">Passenger</div>
+          <div class="value script" style="font-size: clamp(1.1rem, 0.9rem + 0.8vw, 1.25rem); line-height: 1.2;">Nur Liyana Jasmine</div>
+        </div>
+
+        <div style="text-align: left; margin-bottom: 14px;">
+          <div class="label">Flight</div>
+          <div class="value">LL-05MTH</div>
+        </div>
+
+        <div class="stub-seal">
+          5
+          <span>MONTHS</span>
+        </div>
+
+        <div style="margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--pink-300);">
+          <div class="tag">★ FOREVER · MY HEART ★</div>
+        </div>
+
+        <div class="days-together">
+          <div class="label">Time In Flight</div>
+          <div class="days-counter"><span id="dayCount">—</span><span class="unit">days</span></div>
+          <div class="days-sub">
+            <span id="hCount">0</span>h ·
+            <span id="mCount">0</span>m ·
+            <span id="sCount">0</span>s
+          </div>
+          <div class="days-since">since 02 · DEC · 2025</div>
+        </div>
+      </aside>
+    </section>
+
+    <div class="lt-perf"></div>
+
+    <!-- ============================================================
+         Section 2 — Flight Map
+         ============================================================ -->
+    <section class="lt-section flight-map">
+      <div class="section-header">
+        <div class="mono-title">In-Flight Map</div>
+        <div class="mono-sub">tracking the route from takeoff to your heart</div>
+      </div>
+
+      <div class="flight-path" aria-hidden="true">
+        <div class="stop start">
+          <div class="dot"></div>
+          <div class="stop-date">02 Dec 2025</div>
+          <div class="stop-place">Takeoff</div>
+        </div>
+
+        <div class="airplane-glider">✈</div>
+
+        <div class="stop end">
+          <div class="dot"></div>
+          <div class="stop-date">Today</div>
+          <div class="stop-place">Your Heart</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="lt-perf"></div>
+
+    <!-- ============================================================
+         Section 3 — Customs Declaration
+         ============================================================ -->
+    <section class="lt-section customs">
+      <div class="section-header">
+        <div class="mono-title">Customs Declaration</div>
+        <div class="mono-sub">to be completed by every arriving passenger</div>
+      </div>
+
+      <div class="customs-row">
+        <div class="field-label">Passenger</div>
+        <div class="field-value" style="font-family: 'Dancing Script', cursive; font-size: clamp(1.4rem, 1.1rem + 1.4vw, 1.7rem);">
+          Nur Liyana Jasmine
+        </div>
+      </div>
+      <div class="customs-row">
+        <div class="field-label">Country of Origin</div>
+        <div class="field-value">5 Months Ago</div>
+      </div>
+      <div class="customs-row">
+        <div class="field-label">Final Destination</div>
+        <div class="field-value">Your Heart</div>
+      </div>
+      <div class="customs-row">
+        <div class="field-label">Purpose of Visit</div>
+        <div class="field-value">Forever &amp; ever</div>
+      </div>
+
+      <div class="declare-title">▾ Items to Declare</div>
+      <ul class="declare-list">
+        <li><span class="check" aria-hidden="true">✓</span> Infinite Hugs</li>
+        <li><span class="check" aria-hidden="true">✓</span> Late Night Laughs</li>
+        <li><span class="check" aria-hidden="true">✓</span> Future Adventures</li>
+      </ul>
+
+      <div class="signature-block">
+        <div>
+          <div class="signature-name">Nur Liyana Jasmine</div>
+          <div class="signature-caption">Signature of Passenger</div>
+        </div>
+        <div class="signature-date">
+          Signed · 02 May 2026
+        </div>
+      </div>
+    </section>
+
+    <div class="lt-perf"></div>
+
+    <!-- ============================================================
+         Section 4 — Baggage Claim
+         ============================================================ -->
+    <section class="lt-section baggage" id="baggage-section">
+      <div class="section-header">
+        <div>
+          <div class="mono-title">Baggage Claim</div>
+          <div class="mono-sub">cargo arrived safely with this flight</div>
+        </div>
+        <div class="tag">Carousel · 05</div>
+      </div>
+
+      <div class="baggage-belt cargo-grid">
+        <article class="bag-card">
+          <div class="claimed-stamp">CLAIMED</div>
+          <div class="bag-tag-id">LL-05MTH · 001</div>
+          <div class="bag-name">Flowers That Never Fade</div>
+          <div class="bag-desc">a bouquet of soft pink, sealed in time</div>
+          <div class="bag-meta">
+            <span>Fragile</span>
+            <span>Handle With Love</span>
+          </div>
+        </article>
+
+        <article class="bag-card">
+          <div class="claimed-stamp">CLAIMED</div>
+          <div class="bag-tag-id">LL-05MTH · 002</div>
+          <div class="bag-name">Dark Ice Dragon</div>
+          <div class="bag-desc">waiting patiently in its box for us</div>
+          <div class="bag-meta">
+            <span>Keep Frozen</span>
+            <span>Open Together</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="lt-perf"></div>
+
+    <!-- ============================================================
+         Section 5 — Weather at Your Heart
+         ============================================================ -->
+    <section class="lt-section weather-section">
+      <div class="section-header" style="text-align: center;">
+        <div class="mono-title">Local Weather</div>
+        <div class="mono-sub">forecast at your final destination</div>
+      </div>
+
+      <div class="weather-card" aria-label="Weather at Your Heart">
+        <div class="weather-icon" aria-hidden="true">❀</div>
+        <div>
+          <div class="weather-loc">Now at · Your Heart</div>
+          <div class="weather-cond">100% Chance of Love</div>
+          <div class="weather-temp">Warm &amp; Cozy</div>
+        </div>
+      </div>
+    </section>
+
+  </article>
+
+  <footer>
+    LoveLines Airways · ticket issued with all my heart, 02 May 2026
+  </footer>
+</div>
+
+<script>
+  // Live time-in-flight counter — counting from 02 Dec 2025
+  (function() {
+    var start = new Date(2025, 11, 2, 0, 0, 0); // 2 December 2025, local time
+    var dayEl = document.getElementById('dayCount');
+    var hEl = document.getElementById('hCount');
+    var mEl = document.getElementById('mCount');
+    var sEl = document.getElementById('sCount');
+
+    function tick() {
+      var diff = Date.now() - start.getTime();
+      if (diff < 0) diff = 0;
+      var totalSec = Math.floor(diff / 1000);
+      var days = Math.floor(totalSec / 86400);
+      var hours = Math.floor((totalSec % 86400) / 3600);
+      var mins = Math.floor((totalSec % 3600) / 60);
+      var secs = totalSec % 60;
+      dayEl.textContent = days.toLocaleString();
+      hEl.textContent = hours;
+      mEl.textContent = mins;
+      sEl.textContent = secs;
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  })();
+
+  // Slam stamps when the Baggage Claim section scrolls into view
+  (function() {
+    var stamps = document.querySelectorAll('.claimed-stamp');
+    if (!stamps.length) return;
+
+    function slamAll() {
+      stamps.forEach(function(s) { s.classList.add('slam'); });
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      slamAll();
+      return;
+    }
+
+    var target = document.getElementById('baggage-section');
+    var observer = new IntersectionObserver(function(entries, obs) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          slamAll();
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.35 });
+
+    observer.observe(target);
+  })();
+</script>
+</body>
+</html>

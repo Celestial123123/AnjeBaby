@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Happy 2 Months ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Elegant letter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #ffd1e6 0%, #f6a6c9 45%, #c37edb 100%);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            overflow-x: hidden;
+        }
+
+        /* Floating hearts */
+        .float-heart {
+            position: fixed;
+            bottom: -30px;
+            font-size: 24px;
+            opacity: 0.85;
+            pointer-events: none;
+            z-index: 0;
+            animation: rise linear forwards;
+        }
+
+        @keyframes rise {
+            to {
+                transform: translateY(-140vh) scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        .card {
+            background: white;
+            max-width: 900px;
+            width: 100%;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+            text-align: center;
+            z-index: 1;
+        }
+
+        h1 {
+            color: #ff4f8b;
+            font-size: 2.4rem;
+            margin-bottom: 6px;
+        }
+
+        h2 {
+            color: #666;
+            margin-bottom: 22px;
+        }
+
+        .heart {
+            font-size: 2.6rem;
+            margin: 18px 0;
+            animation: pulse 1.3s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                transform: scale(1.25);
+            }
+        }
+
+        /* Extra heart rain */
+        .heart-rain {
+            position: fixed;
+            top: -30px;
+            font-size: 18px;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: fall linear forwards;
+            z-index: 0;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .click-heart {
+            position: fixed;
+            font-size: 22px;
+            pointer-events: none;
+            animation: pop 1s ease forwards;
+            z-index: 10;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.6);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .sparkle {
+            position: absolute;
+            font-size: 18px;
+            animation: sparkle 1s ease forwards;
+            pointer-events: none;
+        }
+
+        @keyframes sparkle {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.8) translateY(-20px);
+                opacity: 0;
+            }
+        }
+
+
+        /* Slideshow */
+        .gallery {
+            position: relative;
+            width: 100%;
+            max-width: 720px;
+            height: 360px;
+            margin: 22px auto;
+            background: #ffe6f0;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery img,
+        .gallery video {
+            position: absolute;
+            max-width: 92%;
+            max-height: 92%;
+            object-fit: contain;
+            border-radius: 16px;
+            border: 2px solid #ffd1e1;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .gallery .active {
+            opacity: 1;
+        }
+
+        .controls {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 22px;
+            pointer-events: none;
+        }
+
+        .controls button {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.75);
+            border: none;
+            border-radius: 999px;
+            width: 42px;
+            height: 42px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            transition: transform 0.15s ease, background 0.15s ease;
+            backdrop-filter: blur(6px);
+        }
+
+        .controls button:hover {
+            transform: scale(1.1);
+            background: white;
+        }
+
+        .message {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 18px;
+        }
+
+        /* Letter card */
+        .revealCard {
+            margin: 28px auto;
+            max-width: 600px;
+            border-radius: 22px;
+            padding: 20px;
+            border: 2px dashed #ff9dc2;
+            background: linear-gradient(180deg, #fff5f9, #ffe8f1);
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .revealTop {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 800;
+            color: #ff4f8b;
+            margin-bottom: 6px;
+        }
+
+        .chip {
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: #ff4f8b;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .letter {
+            display: none;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #3e2a33;
+            margin-top: 16px;
+        }
+
+        .letter.show {
+            display: block;
+        }
+
+        .letter p {
+            margin-bottom: 1.1em;
+            text-indent: 1.4em;
+        }
+
+        .signature {
+            margin-top: 22px;
+            font-style: italic;
+            font-weight: 600;
+            text-indent: 0;
+        }
+
+        .counter {
+            margin-top: 14px;
+            font-weight: 700;
+            color: #ff4f8b;
+            text-shadow: 0 0 10px rgba(255, 80, 140, 0.6);
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="bgMusic" loop>
+        <source src="2months/exception.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="card">
+        <h1>Happy 2 Months Anniversary ❤️</h1>
+        <h2>Still choosing you, every day, my fiancé</h2>
+
+        <div class="heart">💖</div>
+
+        <div class="gallery">
+            <img src="2months/picture1.png" class="active">
+            <img src="2months/picture2.png">
+            <img src="2months/picture24.jpg">
+            <img src="2months/picture3.png">
+            <img src="2months/picture20.jpg">
+            <img src="2months/picture4.png">
+            <img src="2months/picture5.png">
+            <img src="2months/picture25.jpg">
+            <img src="2months/picture6.png">
+            <img src="2months/picture7.png">
+            <img src="2months/picture19.jpg">
+            <img src="2months/picture21.jpg">
+            <img src="2months/picture8.png">
+            <img src="2months/picture23.jpg">
+            <img src="2months/picture9.png">
+            <img src="2months/picture10.png">
+            <img src="2months/picture11.png">
+            <img src="2months/picture26.jpg">
+            <img src="2months/picture12.png">
+            <img src="2months/picture13.png">
+            <img src="2months/picture18.jpg">
+            <img src="2months/picture14.png">
+            <img src="2months/picture22.jpg">
+            <img src="2months/picture15.png">
+            <img src="2months/picture16.png">
+            <img src="2months/picture17.jpg">
+            <img src="2months/picture28.png">
+            <img src="2months/picture27.jpg">
+            <video src="2months/video1.mp4" muted playsinline></video>
+            <video src="2months/video2.mp4" muted playsinline></video>
+            <img src="2months/picture29.png">
+            <div class="controls">
+                <button onclick="prevSlide()">❮</button>
+                <button onclick="nextSlide()">❯</button>
+            </div>
+        </div>
+
+        <p class="message">
+            In just two months, you’ve given me memories I never want to lose and feelings I never knew I needed.
+            Distance may separate us physically, but you are present in every thought, every smile, and every part of my
+            day.
+        </p>
+
+        <div class="revealCard" onclick="toggleLetter()">
+            <div class="revealTop">
+                <span>💌 Tap to read something special</span>
+                <span class="chip" id="chipText">SEALED</span>
+            </div>
+
+            <div class="letter" id="letter">
+                <div class="signature">
+                    Dear Jasmine,
+                </div>
+
+                <p>Two months ago, I never imagined that someone could walk into my life and quietly become my favorite
+                    part of it. Yet here you are, the person who fills my days with warmth, my thoughts with comfort,
+                    and my heart with a happiness I didn’t know I was missing.</p>
+
+                <p>We’ve had our ups and downs, little storms and gentle skies, but through every moment, we chose to
+                    stay. We chose to understand, to forgive, to grow, and because of that, what we have today feels
+                    even more meaningful and real.</p>
+
+                <p>Thank you for your patience when I am difficult, for your laughter that brightens my darkest moods,
+                    and for the love you give so effortlessly. Even on imperfect days, even when things aren’t easy, my
+                    heart still chooses you again and again, without hesitation.</p>
+
+                <p>I am grateful for every memory we’ve made, every conversation we’ve shared, and every quiet moment in
+                    between. And more than anything, I am excited for all the days, months, and years still waiting for
+                    us ahead.</p>
+
+                <p>I don’t regret choosing you. Not yesterday, not today, not ever.</p>
+
+                <div class="signature">
+                    Always yours,
+                    Khairul ❤️
+                </div>
+            </div>
+        </div>
+
+        <div class="counter" id="daysCounter"></div>
+
+        <div class="footer">Happy 2 months, my love 💕</div>
+    </div>
+
+    <script>
+        // Days Counter
+        const startDate = new Date("2025-12-02");
+        const days = Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24));
+        document.getElementById("daysCounter").innerText =
+            `We’ve been together for ${days} days 💗`;
+
+
+        // Slideshow (image + video aware)
+        const slides = document.querySelectorAll(".gallery img, .gallery video");
+        let current = 0;
+        let slideTimeout = null;
+
+        function showSlide(index) {
+            clearTimeout(slideTimeout);
+
+            const prev = slides[current];
+            if (prev.tagName === "VIDEO") {
+                prev.pause();
+                prev.currentTime = 0;
+                prev.onended = null;
+            }
+
+            prev.classList.remove("active");
+            current = (index + slides.length) % slides.length;
+
+            const slide = slides[current];
+            slide.classList.add("active");
+
+            if (slide.tagName === "VIDEO") {
+                slide.play();
+                slide.onended = () => showSlide(current + 1);
+            } else {
+                slideTimeout = setTimeout(() => showSlide(current + 1), 4000);
+            }
+        }
+
+        function nextSlide() {
+            showSlide(current + 1);
+        }
+
+        function prevSlide() {
+            showSlide(current - 1);
+        }
+
+        // Start
+        showSlide(0);
+
+        // Music
+        const music = document.getElementById("bgMusic");
+        document.addEventListener("click", () => {
+            if (music.paused) {
+                music.volume = 0;
+                music.play();
+                let v = 0;
+                const fade = setInterval(() => {
+                    if (v < 0.08) {
+                        v += 0.01;
+                        music.volume = v;
+                    } else clearInterval(fade);
+                }, 200);
+            }
+        }, { once: true });
+
+        // Typewriter effect
+        let typed = false;
+
+        function toggleLetter() {
+            const letter = document.getElementById("letter");
+            const chip = document.getElementById("chipText");
+
+            if (typed) return;
+
+            chip.textContent = "OPENED 💖";
+            letter.classList.add("show");
+            typed = true;
+
+            // sparkles
+            for (let i = 0; i < 12; i++) {
+                const s = document.createElement("div");
+                s.className = "sparkle";
+                s.textContent = "✨";
+                s.style.left = Math.random() * 90 + "%";
+                s.style.top = Math.random() * 40 + "%";
+                letter.appendChild(s);
+                setTimeout(() => s.remove(), 1000);
+            }
+
+            const blocks = letter.querySelectorAll("p, .signature");
+            blocks.forEach(el => {
+                el.dataset.text = el.innerHTML;
+                el.innerHTML = "";
+                el.style.display = "none";
+            });
+
+            let i = 0;
+            function typeNext() {
+                if (i >= blocks.length) return;
+                const el = blocks[i];
+                el.style.display = "block";
+                let c = 0;
+                const t = setInterval(() => {
+                    el.innerHTML += el.dataset.text.charAt(c++);
+                    if (c >= el.dataset.text.length) {
+                        clearInterval(t);
+                        i++;
+                        setTimeout(typeNext, 350);
+                    }
+                }, 18);
+            }
+            typeNext();
+        }
+
+        // Heart rain 
+        setInterval(() => {
+            for (let i = 0; i < 4; i++) {   // create 4 hearts each time
+                const heart = document.createElement("div");
+                heart.className = "heart-rain";
+                heart.textContent = ["💖", "💗", "💕", "💞", "❤️"][Math.floor(Math.random() * 5)];
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 10000);
+            }
+        }, 150);
+
+        // Floating hearts
+        setInterval(() => {
+            for (let i = 0; i < 3; i++) {  // 3 hearts per burst
+                const heart = document.createElement("div");
+                heart.className = "float-heart";
+                heart.textContent = ["💖", "💗", "💕", "💞", "❤️"][Math.floor(Math.random() * 5)];
+                heart.style.left = Math.random() * 100 + "vw";
+
+                heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 7000);
+            }
+        }, 300);
+
+        // Click hearts
+        document.addEventListener("click", e => {
+            const heart = document.createElement("div");
+            heart.className = "click-heart";
+            heart.textContent = "💖";
+            heart.style.left = e.clientX + "px";
+            heart.style.top = e.clientY + "px";
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 1000);
+        });
+    </script>
+</body>
+
+</html>

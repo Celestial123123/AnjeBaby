@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Start-Process \"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\6months.html\")",
+      "PowerShell(Rename-Item *)",
+      "Bash(gh api *)",
+      "PowerShell(gh api *)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:celestial123123.github.io)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\" -Recurse -File | Where-Object { $_.Length -gt 50MB } | Sort-Object Length -Descending | Select-Object @{N='SizeMB';E={[math]::Round\\($_.Length/1MB,1\\)}}, FullName)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\" -Recurse -File | Where-Object { $_.Length -gt 25MB } | Sort-Object Length -Descending | Select-Object @{N='SizeMB';E={[math]::Round\\($_.Length/1MB,1\\)}}, FullName)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\2months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\3months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\4months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\ValentinesImages\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\Music\" -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Length -gt 25MB } | Sort-Object Length -Descending | Select-Object @{N='SizeMB';E={[math]::Round\\($_.Length/1MB,1\\)}}, FullName)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\2months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\3months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\4months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\ValentinesImages\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\Music\" -Recurse -File -ErrorAction SilentlyContinue | Sort-Object Length -Descending | Select-Object -First 15 @{N='SizeMB';E={[math]::Round\\($_.Length/1MB,1\\)}}, FullName)",
+      "PowerShell(git *)"
+    ]
+  }
+}

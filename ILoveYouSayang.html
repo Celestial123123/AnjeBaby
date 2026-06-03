@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover">
+<title>Flight JASMINE-01 | Digital Comfort Sanctuary</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cadbury: #482683;
+  --cadbury-deep: #2e1a54;
+  --cadbury-light: #6b3fa0;
+  --rose-pink: #e8a0bf;
+  --rose-light: #f5c6d8;
+  --rose-deep: #c76e9f;
+  --brownie: #5c3a2e;
+  --brownie-light: #8b6552;
+  --brownie-warm: #a0795e;
+  --gold-sunrise: #f5c06e;
+  --gold-warm: #e8a840;
+  --sky-dark: #0d0b2e;
+  --sky-indigo: #1a1145;
+  --sky-mid: #2d1b69;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  min-height: 100svh;
+  overflow-x: hidden;
+  color: #f0e6f6;
+  background: var(--sky-dark);
+}
+
+/* ===== Animated Sky Background ===== */
+.sky-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    var(--sky-dark) 0%,
+    var(--sky-indigo) 25%,
+    var(--cadbury-deep) 50%,
+    var(--sky-mid) 75%,
+    #1f1050 100%
+  );
+  background-size: 400% 400%;
+  animation: skyShift 20s ease-in-out infinite;
+  transition: all 3s ease;
+}
+
+.sky-bg.sunrise {
+  background: linear-gradient(
+    180deg,
+    #1a1145 0%,
+    #4a2070 15%,
+    #7b3f8a 30%,
+    #c76e9f 45%,
+    #e8a040 60%,
+    #f5c06e 75%,
+    #ffe4a0 90%,
+    #fff5d6 100%
+  );
+  background-size: 100% 100%;
+  animation: none;
+}
+
+@keyframes skyShift {
+  0%, 100% { background-position: 50% 0%; }
+  50% { background-position: 50% 100%; }
+}
+
+/* ===== Stars ===== */
+.stars-container {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 3s ease;
+}
+
+.stars-container.fade { opacity: 0; }
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  border-radius: 50%;
+  animation: twinkle var(--dur) ease-in-out infinite;
+  opacity: 0;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.1; transform: scale(0.8); }
+  50% { opacity: var(--max-o, 1); transform: scale(1.3); }
+}
+
+/* ===== Rose Petals ===== */
+.petals-container {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.petal {
+  position: absolute;
+  top: -60px;
+  width: var(--size);
+  height: var(--size);
+  background: var(--color);
+  border-radius: 50% 0 50% 50%;
+  opacity: 0.5;
+  animation: petalFall var(--fall-dur) linear infinite;
+  animation-delay: var(--delay);
+  filter: blur(0.5px);
+}
+
+@keyframes petalFall {
+  0% {
+    transform: translateX(0) rotate(0deg) scale(1);
+    opacity: 0;
+  }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.4; }
+  100% {
+    transform: translateX(var(--drift)) rotate(var(--spin)) scale(0.6);
+    opacity: 0;
+    top: 110svh;
+  }
+}
+
+/* ===== Main Content ===== */
+.content {
+  position: relative;
+  z-index: 10;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+  padding-top: max(40px, env(safe-area-inset-top));
+  padding-bottom: max(60px, env(safe-area-inset-bottom));
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
+}
+
+/* ===== Header ===== */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeUp 1.5s ease forwards;
+  opacity: 0;
+}
+
+.flight-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(72, 38, 131, 0.4);
+  border: 1px solid rgba(232, 160, 191, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--rose-light);
+  margin-bottom: 28px;
+}
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.25;
+  background: linear-gradient(135deg, #fff 0%, var(--rose-light) 50%, var(--gold-sunrise) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+
+.header .subtitle {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--rose-pink);
+  opacity: 0.85;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Comfort Inventory (Minecraft-style) ===== */
+.inventory-section {
+  margin-bottom: 48px;
+  animation: fadeUp 1.5s ease 0.3s forwards;
+  opacity: 0;
+}
+
+.inventory-label {
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--brownie-warm);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.inventory-label::before,
+.inventory-label::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brownie-warm), transparent);
+}
+
+.inventory-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.inv-slot {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  background: rgba(20, 12, 40, 0.85);
+  border: 2px solid rgba(72, 38, 131, 0.6);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 20px rgba(72, 38, 131, 0.2), 0 4px 15px rgba(0,0,0,0.3);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.inv-slot:hover {
+  border-color: var(--rose-pink);
+  background: rgba(72, 38, 131, 0.35);
+  transform: translateY(-4px);
+  box-shadow: inset 0 0 25px rgba(232, 160, 191, 0.15), 0 8px 30px rgba(72, 38, 131, 0.4);
+}
+
+.inv-slot .slot-icon {
+  color: var(--rose-pink);
+  transition: all 0.3s ease;
+}
+
+.inv-slot:hover .slot-icon {
+  color: #fff;
+  filter: drop-shadow(0 0 8px var(--rose-pink));
+}
+
+.inv-slot .slot-count {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+}
+
+.inv-tooltip {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: rgba(15, 8, 35, 0.95);
+  border: 1px solid var(--cadbury-light);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  color: var(--rose-light);
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
+.inv-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--cadbury-light);
+}
+
+.inv-tooltip .tooltip-title {
+  color: var(--gold-sunrise);
+  font-weight: 600;
+  margin-bottom: 3px;
+  font-size: 0.72rem;
+}
+
+.inv-slot:hover .inv-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== Glassmorphism Letter Card ===== */
+.letter-card {
+  background: rgba(72, 38, 131, 0.15);
+  border: 1px solid rgba(232, 160, 191, 0.2);
+  border-radius: 20px;
+  padding: clamp(28px, 6vw, 48px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 0 80px rgba(72, 38, 131, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  margin-bottom: 40px;
+  animation: fadeUp 1.5s ease 0.6s forwards;
+  opacity: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.letter-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 20%, rgba(232, 160, 191, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.letter-card .decorative-line {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--rose-pink), var(--cadbury-light), var(--rose-pink));
+  margin: 0 auto 28px;
+  border-radius: 2px;
+}
+
+.letter-body {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(0.92rem, 2.5vw, 1.05rem);
+  line-height: 1.9;
+  color: rgba(240, 230, 246, 0.92);
+  text-align: left;
+}
+
+.letter-body p {
+  margin-bottom: 20px;
+  text-indent: 1.5em;
+}
+
+.letter-body p:first-child {
+  text-indent: 0;
+}
+
+.letter-body p:first-child::first-letter {
+  font-size: 2.8em;
+  float: left;
+  line-height: 0.85;
+  margin-right: 8px;
+  margin-top: 4px;
+  color: var(--rose-pink);
+  font-weight: 700;
+}
+
+/* ===== Signature ===== */
+.signature {
+  text-align: right;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(232, 160, 191, 0.15);
+}
+
+.signature .sign-label {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--rose-pink);
+  margin-bottom: 4px;
+}
+
+.signature .sign-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--rose-light), var(--gold-sunrise));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.signature .sign-subtitle {
+  font-size: 0.78rem;
+  color: rgba(232, 160, 191, 0.6);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ===== A380 Button ===== */
+.a380-section {
+  text-align: center;
+  animation: fadeUp 1.5s ease 0.9s forwards;
+  opacity: 0;
+  margin-bottom: 40px;
+}
+
+.a380-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(72, 38, 131, 0.5), rgba(92, 58, 46, 0.4));
+  border: 1px solid rgba(232, 160, 191, 0.3);
+  color: var(--rose-light);
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  letter-spacing: 0.5px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.a380-btn:hover {
+  background: linear-gradient(135deg, rgba(72, 38, 131, 0.7), rgba(199, 110, 159, 0.3));
+  border-color: var(--rose-pink);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(72, 38, 131, 0.4);
+  color: #fff;
+}
+
+.a380-btn:active { transform: translateY(0); }
+
+/* ===== A380 Silhouette ===== */
+.a380-plane {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  top: 35%;
+  left: -300px;
+}
+
+.a380-plane svg {
+  width: 260px;
+  height: auto;
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+}
+
+.a380-plane.fly {
+  animation: flyAcross 4.5s ease-in-out forwards;
+}
+
+@keyframes flyAcross {
+  0% { left: -300px; opacity: 0; transform: rotate(-3deg) scale(0.7); }
+  15% { opacity: 0.9; transform: rotate(-1deg) scale(1); }
+  50% { top: 25%; opacity: 1; transform: rotate(0deg) scale(1.1); }
+  85% { opacity: 0.9; transform: rotate(1deg) scale(1); }
+  100% { left: 110svw; opacity: 0; transform: rotate(2deg) scale(0.8); top: 30%; }
+}
+
+/* ===== Sunrise Overlay ===== */
+.sunrise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(10, 5, 25, 0.85);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.sunrise-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sunrise-card {
+  background: rgba(72, 38, 131, 0.2);
+  border: 1px solid rgba(245, 192, 110, 0.3);
+  border-radius: 20px;
+  padding: clamp(28px, 6vw, 44px);
+  max-width: 560px;
+  margin: 20px;
+  text-align: center;
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 80px rgba(245, 192, 110, 0.08);
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.6s ease 0.3s;
+}
+
+.sunrise-overlay.show .sunrise-card {
+  transform: translateY(0) scale(1);
+}
+
+.sunrise-card .plane-icon-wrap {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  background: rgba(245, 192, 110, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-sunrise);
+}
+
+.sunrise-card p {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1rem, 3vw, 1.15rem);
+  line-height: 1.8;
+  color: rgba(255, 245, 214, 0.9);
+  font-style: italic;
+}
+
+.sunrise-card .close-overlay {
+  margin-top: 24px;
+  background: rgba(245, 192, 110, 0.15);
+  border: 1px solid rgba(245, 192, 110, 0.3);
+  color: var(--gold-sunrise);
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sunrise-card .close-overlay:hover {
+  background: rgba(245, 192, 110, 0.25);
+  border-color: var(--gold-sunrise);
+}
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  padding: 30px 0 20px;
+  animation: fadeUp 1.5s ease 1.2s forwards;
+  opacity: 0;
+}
+
+.footer .hearts {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.footer .hearts span {
+  display: inline-block;
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+.footer .hearts span:nth-child(2) { animation-delay: 0.3s; }
+.footer .hearts span:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.footer p {
+  font-size: 0.7rem;
+  color: rgba(232, 160, 191, 0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ===== Memory Bubbles ===== */
+.memory-bubbles {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.memory-bubble {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+  opacity: 0.55;
+  box-shadow:
+    0 0 20px rgba(232, 160, 191, 0.2),
+    0 0 40px rgba(72, 38, 131, 0.15),
+    inset 0 0 15px rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(232, 160, 191, 0.15);
+  animation: bubbleFloat var(--float-dur) ease-in-out infinite;
+  animation-delay: var(--float-delay);
+  will-change: transform;
+}
+
+.memory-bubble img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(0.4px) saturate(0.85);
+  display: block;
+}
+
+@keyframes bubbleFloat {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translate(var(--drift-x1), var(--drift-y1)) rotate(var(--rot1)) scale(var(--scale1));
+  }
+  50% {
+    transform: translate(var(--drift-x2), var(--drift-y2)) rotate(var(--rot2)) scale(1.02);
+  }
+  75% {
+    transform: translate(var(--drift-x3), var(--drift-y3)) rotate(var(--rot3)) scale(var(--scale2));
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .memory-bubble { opacity: 0.4; }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  .inv-slot { width: 72px; height: 72px; }
+  .inv-tooltip { font-size: 0.7rem; }
+  .content {
+    padding: 30px 16px 50px;
+    padding-top: max(30px, env(safe-area-inset-top));
+    padding-bottom: max(50px, env(safe-area-inset-bottom));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Animated Sky Background -->
+<div class="sky-bg" id="skyBg"></div>
+
+<!-- Twinkling Stars -->
+<div class="stars-container" id="starsContainer"></div>
+
+<!-- Falling Rose Petals -->
+<div class="petals-container" id="petalsContainer"></div>
+
+<!-- Memory Bubbles -->
+<div class="memory-bubbles">
+  <div class="memory-bubble" style="
+    width: 110px; height: 110px;
+    top: 8%; left: 5%;
+    --float-dur: 18s; --float-delay: 0s;
+    --drift-x1: 25px; --drift-y1: -18px; --rot1: 3deg; --scale1: 1.04;
+    --drift-x2: -15px; --drift-y2: 22px; --rot2: -2deg;
+    --drift-x3: 30px; --drift-y3: 10px; --rot3: 1.5deg; --scale2: 0.98;
+  "><img src="Imagess/image1.jpg" alt="Memory 1"></div>
+
+  <div class="memory-bubble" style="
+    width: 90px; height: 90px;
+    top: 22%; right: 8%;
+    --float-dur: 22s; --float-delay: -3s;
+    --drift-x1: -20px; --drift-y1: 15px; --rot1: -2.5deg; --scale1: 1.03;
+    --drift-x2: 18px; --drift-y2: -25px; --rot2: 3deg;
+    --drift-x3: -12px; --drift-y3: -8px; --rot3: -1deg; --scale2: 1.05;
+  "><img src="Imagess/image2.jpg" alt="Memory 2"></div>
+
+  <div class="memory-bubble" style="
+    width: 125px; height: 125px;
+    top: 38%; left: 3%;
+    --float-dur: 25s; --float-delay: -7s;
+    --drift-x1: 18px; --drift-y1: 20px; --rot1: 2deg; --scale1: 0.97;
+    --drift-x2: -22px; --drift-y2: -12px; --rot2: -3.5deg;
+    --drift-x3: 10px; --drift-y3: 28px; --rot3: 1deg; --scale2: 1.03;
+  "><img src="Imagess/image3.jpg" alt="Memory 3"></div>
+
+  <div class="memory-bubble" style="
+    width: 85px; height: 85px;
+    top: 55%; right: 4%;
+    --float-dur: 16s; --float-delay: -2s;
+    --drift-x1: -15px; --drift-y1: -20px; --rot1: 4deg; --scale1: 1.06;
+    --drift-x2: 25px; --drift-y2: 12px; --rot2: -1.5deg;
+    --drift-x3: -8px; --drift-y3: -15px; --rot3: 2.5deg; --scale2: 0.96;
+  "><img src="Imagess/image4.jpg" alt="Memory 4"></div>
+
+  <div class="memory-bubble" style="
+    width: 100px; height: 100px;
+    top: 70%; left: 10%;
+    --float-dur: 20s; --float-delay: -5s;
+    --drift-x1: 22px; --drift-y1: -10px; --rot1: -1.5deg; --scale1: 1.02;
+    --drift-x2: -18px; --drift-y2: 20px; --rot2: 2.5deg;
+    --drift-x3: 28px; --drift-y3: -5px; --rot3: -3deg; --scale2: 1.04;
+  "><img src="Imagess/image5.jpg" alt="Memory 5"></div>
+
+  <div class="memory-bubble" style="
+    width: 130px; height: 130px;
+    top: 15%; left: 55%;
+    --float-dur: 28s; --float-delay: -10s;
+    --drift-x1: -12px; --drift-y1: 25px; --rot1: 1.5deg; --scale1: 0.98;
+    --drift-x2: 20px; --drift-y2: -18px; --rot2: -2deg;
+    --drift-x3: -25px; --drift-y3: 8px; --rot3: 3deg; --scale2: 1.03;
+  "><img src="Imagess/image6.jpg" alt="Memory 6"></div>
+
+  <div class="memory-bubble" style="
+    width: 95px; height: 95px;
+    top: 82%; right: 15%;
+    --float-dur: 19s; --float-delay: -8s;
+    --drift-x1: 16px; --drift-y1: 14px; --rot1: -3deg; --scale1: 1.05;
+    --drift-x2: -20px; --drift-y2: -22px; --rot2: 1.5deg;
+    --drift-x3: 12px; --drift-y3: 18px; --rot3: -1deg; --scale2: 0.97;
+  "><img src="Imagess/image7.jpg" alt="Memory 7"></div>
+
+  <div class="memory-bubble" style="
+    width: 80px; height: 80px;
+    top: 45%; left: 60%;
+    --float-dur: 23s; --float-delay: -4s;
+    --drift-x1: -18px; --drift-y1: -12px; --rot1: 2deg; --scale1: 1.03;
+    --drift-x2: 14px; --drift-y2: 20px; --rot2: -2.5deg;
+    --drift-x3: -22px; --drift-y3: -6px; --rot3: 1.5deg; --scale2: 1.01;
+  "><img src="Imagess/image8.png" alt="Memory 8"></div>
+
+  <div class="memory-bubble" style="
+    width: 105px; height: 105px;
+    top: 65%; left: 45%;
+    --float-dur: 21s; --float-delay: -12s;
+    --drift-x1: 20px; --drift-y1: 16px; --rot1: -1deg; --scale1: 0.99;
+    --drift-x2: -16px; --drift-y2: -20px; --rot2: 3deg;
+    --drift-x3: 24px; --drift-y3: -10px; --rot3: -2deg; --scale2: 1.04;
+  "><img src="Imagess/image9.png" alt="Memory 9"></div>
+
+  <!-- Second wave — duplicates at different positions for density -->
+  <div class="memory-bubble" style="
+    width: 75px; height: 75px;
+    top: 4%; left: 72%;
+    --float-dur: 17s; --float-delay: -6s;
+    --drift-x1: -14px; --drift-y1: 20px; --rot1: 2.5deg; --scale1: 1.03;
+    --drift-x2: 18px; --drift-y2: -14px; --rot2: -1.5deg;
+    --drift-x3: -10px; --drift-y3: 16px; --rot3: 3deg; --scale2: 0.97;
+  "><img src="Imagess/image3.jpg" alt="Memory 3b"></div>
+
+  <div class="memory-bubble" style="
+    width: 95px; height: 95px;
+    top: 30%; left: 78%;
+    --float-dur: 24s; --float-delay: -9s;
+    --drift-x1: 16px; --drift-y1: -22px; --rot1: -2deg; --scale1: 1.05;
+    --drift-x2: -20px; --drift-y2: 10px; --rot2: 2deg;
+    --drift-x3: 14px; --drift-y3: 18px; --rot3: -1.5deg; --scale2: 1.01;
+  "><img src="Imagess/image1.jpg" alt="Memory 1b"></div>
+
+  <div class="memory-bubble" style="
+    width: 115px; height: 115px;
+    top: 50%; left: 25%;
+    --float-dur: 26s; --float-delay: -14s;
+    --drift-x1: -22px; --drift-y1: 12px; --rot1: 1deg; --scale1: 0.98;
+    --drift-x2: 15px; --drift-y2: -20px; --rot2: -3deg;
+    --drift-x3: -18px; --drift-y3: 25px; --rot3: 2deg; --scale2: 1.04;
+  "><img src="Imagess/image5.jpg" alt="Memory 5b"></div>
+
+  <div class="memory-bubble" style="
+    width: 70px; height: 70px;
+    top: 88%; left: 55%;
+    --float-dur: 15s; --float-delay: -1s;
+    --drift-x1: 20px; --drift-y1: -15px; --rot1: 3.5deg; --scale1: 1.06;
+    --drift-x2: -12px; --drift-y2: 18px; --rot2: -2deg;
+    --drift-x3: 16px; --drift-y3: -10px; --rot3: 1deg; --scale2: 0.98;
+  "><img src="Imagess/image7.jpg" alt="Memory 7b"></div>
+
+  <div class="memory-bubble" style="
+    width: 88px; height: 88px;
+    top: 12%; left: 35%;
+    --float-dur: 21s; --float-delay: -11s;
+    --drift-x1: -16px; --drift-y1: -18px; --rot1: -1.5deg; --scale1: 1.02;
+    --drift-x2: 22px; --drift-y2: 14px; --rot2: 2.5deg;
+    --drift-x3: -20px; --drift-y3: -8px; --rot3: -2deg; --scale2: 1.05;
+  "><img src="Imagess/image4.jpg" alt="Memory 4b"></div>
+
+  <div class="memory-bubble" style="
+    width: 120px; height: 120px;
+    top: 75%; right: 3%;
+    --float-dur: 27s; --float-delay: -16s;
+    --drift-x1: 12px; --drift-y1: 22px; --rot1: 2deg; --scale1: 0.97;
+    --drift-x2: -18px; --drift-y2: -16px; --rot2: -1deg;
+    --drift-x3: 25px; --drift-y3: 6px; --rot3: 3deg; --scale2: 1.03;
+  "><img src="Imagess/image2.jpg" alt="Memory 2b"></div>
+
+  <div class="memory-bubble" style="
+    width: 82px; height: 82px;
+    top: 42%; left: 85%;
+    --float-dur: 19s; --float-delay: -7s;
+    --drift-x1: -20px; --drift-y1: 14px; --rot1: -3deg; --scale1: 1.04;
+    --drift-x2: 16px; --drift-y2: -22px; --rot2: 1.5deg;
+    --drift-x3: -14px; --drift-y3: 20px; --rot3: -1deg; --scale2: 0.99;
+  "><img src="Imagess/image6.jpg" alt="Memory 6b"></div>
+
+  <div class="memory-bubble" style="
+    width: 100px; height: 100px;
+    top: 60%; left: 8%;
+    --float-dur: 23s; --float-delay: -13s;
+    --drift-x1: 18px; --drift-y1: -12px; --rot1: 1.5deg; --scale1: 1.01;
+    --drift-x2: -14px; --drift-y2: 24px; --rot2: -2.5deg;
+    --drift-x3: 22px; --drift-y3: -18px; --rot3: 2deg; --scale2: 1.03;
+  "><img src="Imagess/image8.png" alt="Memory 8b"></div>
+
+  <div class="memory-bubble" style="
+    width: 68px; height: 68px;
+    top: 92%; left: 20%;
+    --float-dur: 16s; --float-delay: -3s;
+    --drift-x1: -12px; --drift-y1: -16px; --rot1: 2deg; --scale1: 1.05;
+    --drift-x2: 20px; --drift-y2: 10px; --rot2: -3deg;
+    --drift-x3: -16px; --drift-y3: -12px; --rot3: 1.5deg; --scale2: 0.97;
+  "><img src="Imagess/image9.png" alt="Memory 9b"></div>
+
+  <!-- Third wave — smaller scattered fills -->
+  <div class="memory-bubble" style="
+    width: 65px; height: 65px;
+    top: 18%; left: 88%;
+    --float-dur: 20s; --float-delay: -15s;
+    --drift-x1: -18px; --drift-y1: 12px; --rot1: -2deg; --scale1: 1.04;
+    --drift-x2: 10px; --drift-y2: -18px; --rot2: 3deg;
+    --drift-x3: -14px; --drift-y3: 8px; --rot3: -1.5deg; --scale2: 1.02;
+  "><img src="Imagess/image2.jpg" alt="Memory 2c"></div>
+
+  <div class="memory-bubble" style="
+    width: 108px; height: 108px;
+    top: 35%; left: 42%;
+    --float-dur: 29s; --float-delay: -18s;
+    --drift-x1: 14px; --drift-y1: 20px; --rot1: 1deg; --scale1: 0.98;
+    --drift-x2: -22px; --drift-y2: -10px; --rot2: -2deg;
+    --drift-x3: 18px; --drift-y3: 15px; --rot3: 2.5deg; --scale2: 1.03;
+  "><img src="Imagess/image6.jpg" alt="Memory 6c"></div>
+
+  <div class="memory-bubble" style="
+    width: 78px; height: 78px;
+    top: 85%; left: 75%;
+    --float-dur: 18s; --float-delay: -5s;
+    --drift-x1: 16px; --drift-y1: -20px; --rot1: 3deg; --scale1: 1.06;
+    --drift-x2: -10px; --drift-y2: 16px; --rot2: -1deg;
+    --drift-x3: 20px; --drift-y3: -8px; --rot3: 2deg; --scale2: 0.97;
+  "><img src="Imagess/image4.jpg" alt="Memory 4c"></div>
+
+  <div class="memory-bubble" style="
+    width: 92px; height: 92px;
+    top: 3%; left: 42%;
+    --float-dur: 22s; --float-delay: -8s;
+    --drift-x1: -15px; --drift-y1: 18px; --rot1: -1.5deg; --scale1: 1.02;
+    --drift-x2: 20px; --drift-y2: -14px; --rot2: 2deg;
+    --drift-x3: -18px; --drift-y3: 22px; --rot3: -3deg; --scale2: 1.04;
+  "><img src="Imagess/image1.jpg" alt="Memory 1c"></div>
+
+  <div class="memory-bubble" style="
+    width: 85px; height: 85px;
+    top: 52%; left: 70%;
+    --float-dur: 25s; --float-delay: -20s;
+    --drift-x1: 20px; --drift-y1: -16px; --rot1: 2deg; --scale1: 0.99;
+    --drift-x2: -14px; --drift-y2: 22px; --rot2: -2.5deg;
+    --drift-x3: 18px; --drift-y3: -12px; --rot3: 1deg; --scale2: 1.05;
+  "><img src="Imagess/image3.jpg" alt="Memory 3c"></div>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="flight-badge">
+      <i data-lucide="plane" style="width:14px;height:14px"></i>
+      <span>Flight JASMINE-01</span>
+    </div>
+    <h1>My precious baby,<br>Nur Liyana Jasmine</h1>
+    <p class="subtitle">A Digital Comfort Sanctuary</p>
+  </header>
+
+  <!-- Comfort Inventory -->
+  <section class="inventory-section">
+    <div class="inventory-label">
+      <span>Comfort Inventory</span>
+    </div>
+    <div class="inventory-row">
+      <!-- Slot 1: The Fuel -->
+      <div class="inv-slot">
+        <i data-lucide="coffee" class="slot-icon" style="width:30px;height:30px"></i>
+        <span class="slot-count">64</span>
+        <div class="inv-tooltip">
+          <div class="tooltip-title">The Fuel</div>
+          Mekdi &amp; Brownies standby.
+        </div>
+      </div>
+      <!-- Slot 2: The Sweetness -->
+      <div class="inv-slot">
+        <i data-lucide="candy" class="slot-icon" style="width:30px;height:30px"></i>
+        <span class="slot-count">99</span>
+        <div class="inv-tooltip">
+          <div class="tooltip-title">The Sweetness</div>
+          Unlimited Cadbury Almonds.
+        </div>
+      </div>
+      <!-- Slot 3: The Strength -->
+      <div class="inv-slot">
+        <i data-lucide="heart-handshake" class="slot-icon" style="width:30px;height:30px"></i>
+        <span class="slot-count">&infin;</span>
+        <div class="inv-tooltip">
+          <div class="tooltip-title">The Strength</div>
+          Player 2 is Online.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Letter -->
+  <article class="letter-card">
+    <div class="decorative-line"></div>
+    <div class="letter-body">
+      <p>I want to write this to you because I want to let it all out for you, I just want to say that whenever life gets really heavy, You are not weak sayang. You are not a crybaby. You are human with a heart that feels deeply and that is one of the things I love about you sayang. I know you are really stressed and exhausted right now and I can see how much you have been carrying your whole life. Even the parts you dont say out loud.</p>
+
+      <p>Think about the A380, it is big and powerful and built to cross continents kan? But even the biggest and strongest plane in the sky perlu jalan yang besar to take off and a soft landing when its tired. Even the best planes has to refuel. So if you feel exhausted, that does not make you weak sayang, you have been flying for a long time without a single break. And it is okay for you to land, rest and to breathe.</p>
+
+      <p>To me, you are as sweet as those Cadbury Almonds you really love, and as beautiful as a rose. But even roses has thorns, bukan sebab dorang bahaya. No, its because they are trying to protect themselves when they are hurting or tired. Your tears are not weakness, they are just your heart saying you need a break.</p>
+
+      <p>So please dont be too hard on yourself. It is okay to feel overwhelmed and it is okay to cry. It is okay to take a break. The strongest ones needs the most help because you feel like you are alone but remember sayang, I am always here supporting you in everything you do. No matter what. I will protect you, comfort you and care you whenever you need to rest because you deserve all of that and more sayang.</p>
+
+      <p>I am here, always.</p>
+
+      <p>Whenever you are taking off, blooming like a rose, or just need a soft place to land, I am right beside you, in your heart, in your isle seat of the plane, in the McDonalds booth on a Thursday Night at 4AM at KLIA1 on Christmas. I will always be with you sayang.</p>
+    </div>
+
+    <div class="signature">
+      <div class="sign-label">With all my love,</div>
+      <div class="sign-name">Khairul Aqib</div>
+      <div class="sign-subtitle">your loving jello baby</div>
+    </div>
+  </article>
+
+  <!-- A380 Button -->
+  <div class="a380-section">
+    <button class="a380-btn" id="a380Btn" onclick="engageA380()">
+      <i data-lucide="plane-takeoff" style="width:18px;height:18px"></i>
+      Feeling Heavy? Engage A380 Mode.
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="hearts">
+      <span style="color:var(--rose-pink)"><i data-lucide="heart" style="width:16px;height:16px;fill:var(--rose-pink)"></i></span>
+      <span style="color:var(--gold-sunrise)"><i data-lucide="heart" style="width:16px;height:16px;fill:var(--gold-sunrise)"></i></span>
+      <span style="color:var(--rose-pink)"><i data-lucide="heart" style="width:16px;height:16px;fill:var(--rose-pink)"></i></span>
+    </div>
+    <p>Flight JASMINE-01 &bull; Boarding Forever</p>
+  </footer>
+
+</div>
+
+<!-- A380 Silhouette -->
+<div class="a380-plane" id="a380Plane">
+  <svg viewBox="0 0 800 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- A380 Silhouette -->
+    <g fill="rgba(245,192,110,0.85)" stroke="rgba(245,192,110,0.4)" stroke-width="1">
+      <!-- Fuselage -->
+      <ellipse cx="400" cy="140" rx="340" ry="32" />
+      <!-- Nose -->
+      <path d="M 60 140 Q 30 140 40 135 Q 50 120 80 125 Q 65 130 60 140 Z" />
+      <!-- Tail Fin -->
+      <path d="M 720 140 Q 740 138 760 110 Q 770 80 755 60 Q 750 55 740 58 Q 735 65 730 90 Q 725 120 720 140 Z" />
+      <!-- Horizontal Stabilizer -->
+      <path d="M 700 140 Q 720 135 760 128 Q 780 125 780 132 Q 775 138 740 142 Q 720 145 700 140 Z" />
+      <path d="M 700 140 Q 720 145 760 152 Q 780 155 780 148 Q 775 142 740 138 Q 720 135 700 140 Z" />
+      <!-- Left Wing -->
+      <path d="M 300 170 Q 280 190 200 245 Q 190 252 195 255 Q 210 258 230 250 Q 320 210 380 175 Q 350 172 300 170 Z" />
+      <!-- Right Wing (top) -->
+      <path d="M 300 110 Q 280 90 200 35 Q 190 28 195 25 Q 210 22 230 30 Q 320 70 380 105 Q 350 108 300 110 Z" />
+      <!-- Engine pods on wings -->
+      <ellipse cx="260" cy="230" rx="22" ry="8" />
+      <ellipse cx="310" cy="205" rx="22" ry="8" />
+      <ellipse cx="260" cy="50" rx="22" ry="8" />
+      <ellipse cx="310" cy="75" rx="22" ry="8" />
+      <!-- Windows line -->
+      <line x1="100" y1="135" x2="700" y2="135" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-dasharray="4 6" />
+      <!-- Double deck line -->
+      <line x1="120" y1="143" x2="690" y2="143" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="3 5" />
+    </g>
+  </svg>
+</div>
+
+<!-- Sunrise Overlay -->
+<div class="sunrise-overlay" id="sunriseOverlay">
+  <div class="sunrise-card">
+    <div class="plane-icon-wrap">
+      <i data-lucide="plane-landing" style="width:28px;height:28px"></i>
+    </div>
+    <p>The A380 needs a long runway to fly, and a soft place to land. You are landing now, sayang.</p>
+    <button class="close-overlay" onclick="closeSunrise()">
+      <i data-lucide="heart" style="width:12px;height:12px;vertical-align:-2px;margin-right:4px;fill:currentColor"></i>
+      I feel it
+    </button>
+  </div>
+</div>
+
+<script>
+// Initialize Lucide icons
+lucide.createIcons();
+
+// ===== Generate Stars =====
+(function createStars() {
+  const container = document.getElementById('starsContainer');
+  const count = window.innerWidth < 600 ? 80 : 160;
+  for (let i = 0; i < count; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 70 + '%';
+    star.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+    star.style.setProperty('--max-o', (0.4 + Math.random() * 0.6));
+    star.style.animationDelay = Math.random() * 5 + 's';
+    star.style.width = star.style.height = (1 + Math.random() * 2) + 'px';
+    container.appendChild(star);
+  }
+})();
+
+// ===== Generate Petals =====
+(function createPetals() {
+  const container = document.getElementById('petalsContainer');
+  const colors = [
+    'rgba(232,160,191,0.5)',
+    'rgba(199,110,159,0.4)',
+    'rgba(245,198,216,0.45)',
+    'rgba(160,121,94,0.35)',
+    'rgba(139,101,82,0.3)'
+  ];
+  const count = window.innerWidth < 600 ? 15 : 25;
+  for (let i = 0; i < count; i++) {
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    petal.style.left = Math.random() * 100 + '%';
+    petal.style.setProperty('--size', (8 + Math.random() * 14) + 'px');
+    petal.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
+    petal.style.setProperty('--fall-dur', (8 + Math.random() * 12) + 's');
+    petal.style.setProperty('--delay', (Math.random() * 15) + 's');
+    petal.style.setProperty('--drift', (Math.random() > 0.5 ? '' : '-') + (30 + Math.random() * 80) + 'px');
+    petal.style.setProperty('--spin', (180 + Math.random() * 360) + 'deg');
+    container.appendChild(petal);
+  }
+})();
+
+// ===== A380 Mode =====
+let a380Active = false;
+
+function engageA380() {
+  if (a380Active) return;
+  a380Active = true;
+
+  const plane = document.getElementById('a380Plane');
+  const skyBg = document.getElementById('skyBg');
+  const stars = document.getElementById('starsContainer');
+
+  // Fly plane across
+  plane.classList.add('fly');
+
+  // Shift sky to sunrise after a short delay
+  setTimeout(() => {
+    skyBg.classList.add('sunrise');
+    stars.classList.add('fade');
+  }, 1500);
+
+  // Show overlay
+  setTimeout(() => {
+    document.getElementById('sunriseOverlay').classList.add('show');
+  }, 3500);
+}
+
+function closeSunrise() {
+  document.getElementById('sunriseOverlay').classList.remove('show');
+
+  // Revert after overlay closes
+  setTimeout(() => {
+    document.getElementById('skyBg').classList.remove('sunrise');
+    document.getElementById('starsContainer').classList.remove('fade');
+    document.getElementById('a380Plane').classList.remove('fly');
+    a380Active = false;
+  }, 1000);
+}
+</script>
+</body>
+</html>

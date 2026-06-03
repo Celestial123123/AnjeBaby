@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Jasmine Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --rose-50:  #fff5f7;
+  --rose-100: #ffe8ee;
+  --rose-200: #ffd1df;
+  --rose-300: #ffadc5;
+  --rose-400: #ff7ea6;
+  --rose-500: #f4567a;
+  --gold:     #d4a574;
+  --gold-light: #e8c9a8;
+  --cream:    #fefaf6;
+  --text:     #3d2c35;
+  --text-soft:#7a6670;
+  --glass:    rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.45);
+  --shadow:   0 8px 32px rgba(61, 44, 53, 0.08);
+  --shadow-hover: 0 16px 48px rgba(61, 44, 53, 0.14);
+  --radius:   20px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text);
+  min-height: 100svh;
+  overflow-x: hidden;
+  background: var(--cream);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* ===== Ambient Background ===== */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: orb-drift linear infinite;
+}
+
+.ambient-orb:nth-child(1) {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255, 173, 197, 0.30), transparent 70%);
+  top: -15%; left: -10%;
+  animation-duration: 28s;
+}
+.ambient-orb:nth-child(2) {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(212, 165, 116, 0.20), transparent 70%);
+  top: 40%; right: -15%;
+  animation-duration: 34s;
+  animation-delay: -10s;
+}
+.ambient-orb:nth-child(3) {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(255, 209, 223, 0.25), transparent 70%);
+  bottom: -10%; left: 30%;
+  animation-duration: 38s;
+  animation-delay: -18s;
+}
+
+@keyframes orb-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  25% { transform: translate(60px, -40px) scale(1.1); opacity: 0.8; }
+  50% { transform: translate(-30px, 50px) scale(0.95); opacity: 0.5; }
+  75% { transform: translate(40px, 20px) scale(1.05); opacity: 0.7; }
+}
+
+/* ===== Layout Shell ===== */
+.shell {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+/* ===== Profile Header ===== */
+.profile {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeUp 0.8s ease-out;
+}
+
+/* CSS-only monogram avatar */
+.avatar {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 20px;
+  position: relative;
+}
+
+.avatar-ring {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--rose-300),
+    var(--gold),
+    var(--rose-400),
+    var(--gold-light),
+    var(--rose-300)
+  );
+  padding: 3px;
+  animation: ring-spin 12s linear infinite;
+}
+
+@keyframes ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+.avatar-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #fff5f7 0%, #ffe0ea 50%, #ffd1df 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.6), transparent 60%);
+}
+
+.monogram {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--rose-500) 0%, var(--gold) 50%, var(--rose-400) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 2px;
+}
+
+.avatar-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: conic-gradient(from 90deg, transparent, rgba(255, 173, 197, 0.3), transparent, rgba(212, 165, 116, 0.2), transparent);
+  filter: blur(12px);
+  animation: ring-spin 8s linear infinite reverse;
+}
+
+.profile h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.profile .subtitle {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+.profile .subtitle i {
+  color: var(--rose-400);
+  margin: 0 4px;
+  font-size: 0.7rem;
+  animation: pulse-heart 2s ease-in-out infinite;
+}
+
+@keyframes pulse-heart {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+/* ===== Search Bar ===== */
+.search-wrap {
+  max-width: 420px;
+  margin: 0 auto 24px;
+  position: relative;
+  animation: fadeUp 0.8s ease-out 0.1s both;
+}
+
+.search-wrap i {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rose-300);
+  font-size: 0.85rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 13px 18px 13px 44px;
+  border: 1.5px solid var(--glass-border);
+  border-radius: 50px;
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-input::placeholder { color: var(--text-soft); opacity: 0.6; }
+.search-input:focus {
+  border-color: var(--rose-300);
+  box-shadow: 0 0 0 4px rgba(255, 173, 197, 0.15);
+}
+
+/* ===== Filter Tabs ===== */
+.filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s ease-out 0.2s both;
+}
+
+.filter-btn {
+  padding: 8px 18px;
+  border: 1.5px solid var(--glass-border);
+  border-radius: 50px;
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  border-color: var(--rose-300);
+  color: var(--rose-500);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--rose-400), var(--rose-500));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(244, 86, 122, 0.25);
+}
+
+/* ===== Card Grid ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ===== Card ===== */
+.card {
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  animation: fadeUp 0.6s ease-out both;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--rose-200);
+}
+
+.card:hover::before { opacity: 1; }
+
+.card[data-category="anniversary"]::before  { background: linear-gradient(90deg, var(--rose-300), var(--gold)); }
+.card[data-category="special"]::before       { background: linear-gradient(90deg, #c084fc, var(--rose-400)); }
+.card[data-category="messages"]::before      { background: linear-gradient(90deg, var(--rose-400), #fb923c); }
+.card[data-category="apology"]::before       { background: linear-gradient(90deg, #a78bfa, var(--rose-300)); }
+
+/* Card header */
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.card[data-category="anniversary"] .card-icon  { background: linear-gradient(135deg, #ffe4ec, #ffd1df); color: var(--rose-500); }
+.card[data-category="special"] .card-icon       { background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed; }
+.card[data-category="messages"] .card-icon      { background: linear-gradient(135deg, #ffe4ec, #fed7aa); color: #ea580c; }
+.card[data-category="apology"] .card-icon       { background: linear-gradient(135deg, #ede9fe, #fce7f3); color: #8b5cf6; }
+
+/* Device badges */
+.device-badges {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 0.78rem;
+}
+
+.badge-phone {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.badge-desktop {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.card-desc {
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  color: #fff;
+}
+
+.card[data-category="anniversary"] .card-link  { background: linear-gradient(135deg, var(--rose-400), var(--rose-500)); }
+.card[data-category="special"] .card-link       { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+.card[data-category="messages"] .card-link      { background: linear-gradient(135deg, var(--rose-400), #f97316); }
+.card[data-category="apology"] .card-link       { background: linear-gradient(135deg, #a78bfa, var(--rose-400)); }
+
+.card-link:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+}
+
+.card-link i { font-size: 0.75rem; transition: transform 0.3s; }
+.card-link:hover i { transform: translateX(3px); }
+
+/* ===== Empty State ===== */
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-soft);
+}
+
+.empty i { font-size: 2.5rem; color: var(--rose-200); margin-bottom: 12px; display: block; }
+.empty p { font-size: 0.95rem; }
+
+/* ===== Section Label ===== */
+.section-label {
+  grid-column: 1 / -1;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+  padding-bottom: 4px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--rose-200), transparent);
+}
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  margin-top: 48px;
+  padding: 20px;
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  animation: fadeUp 0.8s ease-out 0.5s both;
+}
+
+.footer i { color: var(--rose-400); animation: pulse-heart 2s ease-in-out infinite; }
+
+/* ===== Animations ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+  .shell { padding: 24px 14px 48px; }
+  .grid  { grid-template-columns: 1fr; gap: 16px; }
+  .avatar { width: 90px; height: 90px; }
+  .monogram { font-size: 28px; }
+  .card { padding: 20px; }
+  .filters { gap: 6px; }
+  .filter-btn { padding: 7px 14px; font-size: 0.75rem; }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Stagger card animations */
+.card:nth-child(1)  { animation-delay: 0.05s; }
+.card:nth-child(2)  { animation-delay: 0.10s; }
+.card:nth-child(3)  { animation-delay: 0.15s; }
+.card:nth-child(4)  { animation-delay: 0.20s; }
+.card:nth-child(5)  { animation-delay: 0.25s; }
+.card:nth-child(6)  { animation-delay: 0.30s; }
+.card:nth-child(7)  { animation-delay: 0.35s; }
+.card:nth-child(8)  { animation-delay: 0.40s; }
+.card:nth-child(9)  { animation-delay: 0.45s; }
+.card:nth-child(10) { animation-delay: 0.50s; }
+.card:nth-child(11) { animation-delay: 0.55s; }
+.card:nth-child(12) { animation-delay: 0.60s; }
+.card:nth-child(13) { animation-delay: 0.65s; }
+.card:nth-child(14) { animation-delay: 0.70s; }
+.card:nth-child(15) { animation-delay: 0.75s; }
+</style>
+</head>
+<body>
+
+<!-- Ambient background orbs -->
+<div class="ambient">
+  <div class="ambient-orb"></div>
+  <div class="ambient-orb"></div>
+  <div class="ambient-orb"></div>
+</div>
+
+<div class="shell">
+
+  <!-- Profile Header -->
+  <header class="profile">
+    <div class="avatar">
+      <div class="avatar-glow"></div>
+      <div class="avatar-ring">
+        <div class="avatar-inner">
+          <span class="monogram">NLJ</span>
+        </div>
+      </div>
+    </div>
+    <h1>Nur Liyana Jasmine</h1>
+    <p class="subtitle">
+      <i class="fas fa-heart"></i>
+      Our Digital Memory Hub
+      <i class="fas fa-heart"></i>
+    </p>
+  </header>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <i class="fas fa-search"></i>
+    <input type="text" class="search-input" placeholder="Search pages..." id="searchInput">
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-filter="all">
+      <i class="fas fa-th"></i>&ensp;All
+    </button>
+    <button class="filter-btn" data-filter="anniversary">
+      <i class="fas fa-calendar-heart"></i>&ensp;Anniversaries
+    </button>
+    <button class="filter-btn" data-filter="special">
+      <i class="fas fa-star"></i>&ensp;Special
+    </button>
+    <button class="filter-btn" data-filter="messages">
+      <i class="fas fa-envelope-open-text"></i>&ensp;Messages
+    </button>
+    <button class="filter-btn" data-filter="apology">
+      <i class="fas fa-hand-holding-heart"></i>&ensp;Apologies
+    </button>
+    <button class="filter-btn" data-filter="phone">
+      <i class="fas fa-mobile-alt"></i>&ensp;Phone Friendly
+    </button>
+    <button class="filter-btn" data-filter="desktop">
+      <i class="fas fa-desktop"></i>&ensp;Desktop Only
+    </button>
+  </div>
+
+  <!-- Card Grid -->
+  <div class="grid" id="cardGrid">
+
+    <!-- ─── Anniversary Pages ─── -->
+    <div class="section-label" data-category="anniversary">Anniversaries</div>
+
+    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 1 Month">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-heart"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Happy 1 Month</div>
+      <p class="card-desc">Our very first monthiversary celebration page — floating planes, love letter, and sweet memories.</p>
+      <a href="1month.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 2 Months">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-heart"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Happy 2 Months</div>
+      <p class="card-desc">Floating hearts and an elegant love letter marking two beautiful months together.</p>
+      <a href="2months.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 3 Months">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-heart"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Happy 3 Months</div>
+      <p class="card-desc">A timeline-style accordion card reliving every precious milestone from month three.</p>
+      <a href="3Months.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 4 Months">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-heart"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Happy 4 Months</div>
+      <p class="card-desc">Photo slideshow card with floating hearts and a collage background — four months of us.</p>
+      <a href="4months.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 5 Months">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-heart"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Happy 5 Months</div>
+      <p class="card-desc">Falling petals and glowing orbs surround a beautifully written love celebration page.</p>
+      <a href="5months.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 6 Months — Love Pokédex">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-heart"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Happy 6 Months — Love Pokédex</div>
+      <p class="card-desc">A retro Pokédex-themed anniversary page with pixel fonts, status lights, and dual-screen layout.</p>
+      <a href="6months.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <!-- ─── Special Occasions ─── -->
+    <div class="section-label" data-category="special">Special Occasions</div>
+
+    <div class="card" data-category="special" data-device="desktop" data-title="Valentine's Day">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-gift"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Valentine's Day</div>
+      <p class="card-desc">A multi-page Valentine's experience with Our Story, Gallery, and Love Letter sections. Desktop layout only.</p>
+      <a href="Valentines.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="special" data-device="both" data-title="LoveLines Boarding Pass">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-ticket-alt"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">LoveLines Boarding Pass</div>
+      <p class="card-desc">A beautiful airline boarding pass styled ticket — specifically optimized for iPhone with safe-area support.</p>
+      <a href="ticket.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="special" data-device="both" data-title="Our Memories Gallery">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-images"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Our Memories Gallery</div>
+      <p class="card-desc">A glowing neon photo frame slideshow with floating hearts on a dark cinematic backdrop.</p>
+      <a href="15.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="special" data-device="desktop" data-title="Heart Animation">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-heartbeat"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Heart Animation</div>
+      <p class="card-desc">A mesmerizing full-screen canvas heart animation with sparkles and floating mini-hearts. Best on desktop.</p>
+      <a href="heart.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <!-- ─── Personal Messages ─── -->
+    <div class="section-label" data-category="messages">Personal Messages</div>
+
+    <div class="card" data-category="messages" data-device="both" data-title="I Love You, Sayang">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-envelope-open-text"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">I Love You, Sayang</div>
+      <p class="card-desc">An immersive flight-themed digital comfort sanctuary with animated sky, stars, and sunrise transitions.</p>
+      <a href="ILoveYouSayang.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="messages" data-device="both" data-title="Us">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-feather-alt"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Us</div>
+      <p class="card-desc">Floating polaroid memories drift around an intimate love letter on a warm twilight canvas.</p>
+      <a href="Us.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="messages" data-device="both" data-title="Get Well Soon">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-hand-holding-medical"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Get Well Soon</div>
+      <p class="card-desc">A gentle, calming get-well page with soft ambient orbs, lavender tones, and safe-area iPhone support.</p>
+      <a href="GetWell.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <!-- ─── Apology Pages ─── -->
+    <div class="section-label" data-category="apology">Apologies</div>
+
+    <div class="card" data-category="apology" data-device="both" data-title="I'm Sorry">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-heart-broken"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">I'm Sorry</div>
+      <p class="card-desc">A Cadbury-themed apology page with purple gradients, floating chocolate & almond pieces, and a heartfelt note.</p>
+      <a href="imSorry.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" data-category="apology" data-device="both" data-title="I'm So Sorry">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-heart-broken"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">I'm So Sorry</div>
+      <p class="card-desc">Soft pink floating hearts surround a deeply personal apology letter with warm pastel gradients.</p>
+      <a href="ImSoSorry.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    Made with <i class="fas fa-heart"></i> for Nur Liyana Jasmine
+  </footer>
+
+</div>
+
+<script>
+(function() {
+  const grid = document.getElementById('cardGrid');
+  const searchInput = document.getElementById('searchInput');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = grid.querySelectorAll('.card');
+  const sectionLabels = grid.querySelectorAll('.section-label');
+
+  let activeFilter = 'all';
+
+  function applyFilters() {
+    const query = searchInput.value.toLowerCase().trim();
+    const categoriesVisible = new Set();
+
+    cards.forEach(card => {
+      const cat = card.dataset.category;
+      const device = card.dataset.device;
+      const title = (card.dataset.title || '').toLowerCase();
+      const desc = (card.querySelector('.card-desc')?.textContent || '').toLowerCase();
+
+      let matchFilter = activeFilter === 'all'
+        || activeFilter === cat
+        || (activeFilter === 'phone' && (device === 'phone' || device === 'both'))
+        || (activeFilter === 'desktop' && (device === 'desktop' || device === 'both'));
+
+      let matchSearch = !query || title.includes(query) || desc.includes(query);
+
+      if (matchFilter && matchSearch) {
+        card.style.display = '';
+        categoriesVisible.add(cat);
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    sectionLabels.forEach(label => {
+      const cat = label.dataset.category;
+      if (activeFilter === 'all' || activeFilter === cat || activeFilter === 'phone' || activeFilter === 'desktop') {
+        label.style.display = categoriesVisible.has(cat) ? '' : 'none';
+      } else {
+        label.style.display = cat === activeFilter && categoriesVisible.has(cat) ? '' : 'none';
+      }
+    });
+
+    const anyVisible = [...cards].some(c => c.style.display !== 'none');
+    let empty = grid.querySelector('.empty');
+    if (!anyVisible) {
+      if (!empty) {
+        empty = document.createElement('div');
+        empty.className = 'empty';
+        empty.innerHTML = '<i class="fas fa-search"></i><p>No pages match your search.</p>';
+        grid.appendChild(empty);
+      }
+      empty.style.display = '';
+    } else if (empty) {
+      empty.style.display = 'none';
+    }
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  searchInput.addEventListener('input', applyFilters);
+})();
+</script>
+
+</body>
+</html>

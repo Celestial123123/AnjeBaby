@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<body style="background:black; margin:0; overflow:hidden;">
+<canvas id="c"></canvas>
+
+<script>
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resize();
+window.onresize = resize;
+
+function heartX(t) { return 15 * Math.pow(Math.sin(t), 3); }
+function heartY(t) {
+    return (
+        12 * Math.cos(t)
+        - 5 * Math.cos(2*t)
+        - 2 * Math.cos(3*t)
+        - Math.cos(4*t)
+    );
+}
+
+let frame = 0;
+
+let sparkles = [];
+function createSparkle() {
+    sparkles.push({
+        x: canvas.width / 2 + (Math.random() * 140 - 70),
+        y: canvas.height / 2 + 25,
+        size: Math.random() * 3 + 1,
+        alpha: 1
+    });
+}
+
+function updateSparkles() {
+    for (let s of sparkles) {
+        s.alpha -= 0.02;
+        s.y -= 0.5;
+    }
+    sparkles = sparkles.filter(s => s.alpha > 0);
+}
+
+function drawSparkles() {
+    for (let s of sparkles) {
+        ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+let miniHearts = [];
+
+function spawnMiniHeart() {
+    miniHearts.push({
+        x: Math.random() * canvas.width,
+        y: canvas.height + 20,
+        size: Math.random() * 12 + 6,
+        speed: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.6 + 0.4
+    });
+}
+
+function drawMiniHeart(x, y, size, alpha) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size / 30, size / 30);
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(-15, -15, -30, 10, 0, 30);
+    ctx.bezierCurveTo(30, 10, 15, -15, 0, 0);
+
+    // Pink color
+    ctx.fillStyle = `rgba(255,105,180,${alpha})`; 
+    ctx.shadowBlur = 18;
+    ctx.shadowColor = "rgba(255,105,180,1)";
+    ctx.fill();
+    ctx.restore();
+}
+
+function updateMiniHearts() {
+    for (let h of miniHearts) {
+        h.y -= h.speed;
+        h.x += Math.sin(h.y * 0.02) * 0.5;
+    }
+    miniHearts = miniHearts.filter(h => h.y > -40);
+}
+
+function drawMiniHearts() {
+    for (let h of miniHearts) {
+        drawMiniHeart(h.x, h.y, h.size, h.alpha);
+    }
+}
+
+function drawHeart(scale) {
+    ctx.beginPath();
+    for (let i = 0; i < 2000; i++) {
+        let t = i * 0.01;
+        let x = heartX(t) * 20 * scale + canvas.width / 2;
+        let y = -heartY(t) * 20 * scale + canvas.height / 2;
+        ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgba(255, 0, 0, 0.9)`;
+    ctx.lineWidth = 3;
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "red";
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+}
+
+function drawText() {
+    ctx.fillStyle = "white";
+    ctx.font = "bold 50px Arial";
+    ctx.textAlign = "center";
+
+    ctx.fillText("I love", canvas.width / 2, canvas.height / 2 - 20);
+
+    ctx.fillStyle = "white";
+    ctx.fillText("Jasmine", canvas.width / 2, canvas.height / 2 + 35);
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 40px Arial";
+    ctx.fillText("- Khairul", canvas.width / 2, canvas.height / 2 + 95);
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    frame++;
+
+    let scale = 1 + Math.sin(frame * 0.05) * 0.08;
+
+    drawHeart(scale);
+    drawText();
+
+    if (frame % 5 === 0) createSparkle();
+    updateSparkles();
+    drawSparkles();
+
+    if (frame % 3 === 0) spawnMiniHeart();
+    updateMiniHearts();
+    drawMiniHearts();
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+</body>
+</html>

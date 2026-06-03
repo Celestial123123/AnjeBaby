@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Happy Month Anniversary ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #ffd6e5;
+            background-image: radial-gradient(#ff9dbb 1px, transparent 1px);
+            background-size: 40px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at top, rgba(255, 120, 170, 0.35), transparent 60%),
+                radial-gradient(circle at bottom, rgba(255, 180, 210, 0.35), transparent 60%);
+            z-index: -2;
+            animation: blush 6s ease-in-out infinite;
+        }
+
+        @keyframes blush {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .sky {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .plane {
+            position: absolute;
+            width: 80px;
+            opacity: 0.75;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        .fly-right {
+            left: -120px;
+            animation-name: flyRight;
+        }
+
+        .fly-left {
+            right: -120px;
+            transform: scaleX(-1);
+            animation-name: flyLeft;
+        }
+
+        @keyframes flyRight {
+            to {
+                transform: translateX(calc(100vw + 240px));
+            }
+        }
+
+        @keyframes flyLeft {
+            to {
+                transform: translateX(calc(-100vw - 240px)) scaleX(-1);
+            }
+        }
+
+        .trail {
+            position: fixed;
+            font-size: 14px;
+            opacity: 0.9;
+            animation: trailFade 1.3s ease-out forwards;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes trailFade {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(25px);
+                opacity: 0;
+            }
+        }
+
+        .float-heart {
+            position: fixed;
+            bottom: -20px;
+            font-size: 26px;
+            opacity: 0.7;
+            animation: rise 10s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes rise {
+            to {
+                transform: translateY(-120vh) scale(1.6);
+            }
+        }
+
+        .sparkle {
+            position: fixed;
+            font-size: 14px;
+            animation: sparkleFade 1s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes sparkleFade {
+            to {
+                opacity: 0;
+                transform: scale(2);
+            }
+        }
+
+        .popup {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 14px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 80, 140, 0.4);
+            font-size: 0.95rem;
+            opacity: 0;
+            animation: popup 8s infinite;
+            z-index: 3;
+        }
+
+        @keyframes popup {
+
+            0%,
+            70% {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+
+            75%,
+            95% {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .card {
+            background: #fff;
+            max-width: 900px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            animation: heartbeat 4s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            }
+
+            50% {
+                box-shadow: 0 20px 50px rgba(255, 90, 150, 0.5);
+            }
+        }
+
+        h1 {
+            color: #ff4f8b;
+            margin-bottom: 10px;
+            font-size: 2.4rem;
+        }
+
+        h2 {
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .collage-container {
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            border: 6px solid #ffd1e1;
+        }
+
+        .collage-container img {
+            width: 100%;
+        }
+
+        .message {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #444;
+            padding: 0 20px;
+        }
+
+        .heart {
+            font-size: 2.8rem;
+            margin: 20px 0;
+            animation: pulse 1.3s infinite;
+        }
+
+        @keyframes pulse {
+            50% {
+                transform: scale(1.3);
+            }
+        }
+
+        .counter {
+            margin-top: 20px;
+            font-weight: 600;
+            color: #ff4f8b;
+            text-shadow: 0 0 12px rgba(255, 80, 140, 0.7);
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="bgMusic" autoplay loop muted>
+        <source src="music/Loved.mp3" type="audio/mpeg">
+    </audio>
+
+
+    <div class="sky">
+        <img src="images/A380.png" class="plane fly-right" style="top:10%; animation-duration:22s;"
+            onanimationiteration="trail(this)">
+        <img src="images/A350(1).png" class="plane fly-left" style="top:35%; animation-duration:26s;"
+            onanimationiteration="trail(this)">
+        <img src="images/A350(2).png" class="plane fly-right" style="top:60%; animation-duration:24s;"
+            onanimationiteration="trail(this)">
+        <img src="images/A380.png" class="plane fly-left" style="top:80%; animation-duration:30s;"
+            onanimationiteration="trail(this)">
+    </div>
+
+    <div class="float-heart" style="left:12%;">💖</div>
+    <div class="float-heart" style="left:28%; animation-delay:2s;">💕</div>
+    <div class="float-heart" style="left:55%; animation-delay:5s;">💞</div>
+    <div class="float-heart" style="left:75%; animation-delay:1s;">💗</div>
+
+    <div class="popup">I miss you more than you know 💕</div>
+
+    <div class="card">
+        <h1>Happy 1 Month Anniversary ❤️</h1>
+        <h2>To Us, Always</h2>
+
+        <div class="collage-container">
+            <img src="images/collage1.jpg">
+        </div>
+
+        <div class="heart">💖</div>
+
+        <p class="message">
+            We reached the first month, and I still cannot believe how lucky I am to be with someone like you. Every
+            laugh, every perverted jokes and moments and every moment
+            that I spent with you has been such an enjoyable time. Espcially our first date at KLIA, we plane watched,
+            you taught me alot about airplanes, like the A380, A350, B770.
+            I remember the moment you messaged me that you were shy and could not come over to me, so I had to walk to
+            meet you, and Im not gonna lie. I was nervous but happy. I was able
+            to finally meet you for the first time. No cameras, no pictures, no videos. Just you. We only spent a couple
+            hours together and I already missed it, the moment I got on the train
+            back, I felt sad because I wouldnt be able to meet you again for the next couple of months. But, it makes me
+            look forward to our next time meeting each other. I enjoy creating plans
+            ahead of time so I can look forward to them, so dont be shy and say what you want, and I will do my best to
+            fulfill it. I know your classes have been tiring and you will be getting busier
+            but I do enjoy spending the time we have together. As much as I wish it can be more, that is unfortunately
+            life, but with the time apart, we are able to talk about our days or anything
+            that has happend to us. I will read you bedtime stories every night if you wish so, and I will keep doing so
+            for the rest of my life. I am looking forward to movie nights with you on Saturdays
+            and I want to play more games with you whenever we both are free. Here is to many more months, years and our
+            lifetime with you.
+        </p>
+
+        <div class="counter" id="daysCounter"></div>
+
+        <div class="footer">
+            From the bottom of my heart, I want to say Thank You for being with me, Jasmine. I love you soo much 💕
+        </div>
+    </div>
+
+    <script>
+        const startDate = new Date("2025-12-02");
+        const today = new Date();
+        const days = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+        document.getElementById("daysCounter").innerText =
+            `We've been together for ${days} days 💗`;
+
+        function trail(plane) {
+            const heart = document.createElement("div");
+            heart.className = "trail";
+            heart.textContent = "💖";
+            const r = plane.getBoundingClientRect();
+            heart.style.left = r.left + "px";
+            heart.style.top = r.top + "px";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1200);
+        }
+
+        document.addEventListener("mousemove", e => {
+            const s = document.createElement("div");
+            s.className = "sparkle";
+            s.textContent = "✨";
+            s.style.left = e.clientX + "px";
+            s.style.top = e.clientY + "px";
+            document.body.appendChild(s);
+            setTimeout(() => s.remove(), 1000);
+        });
+    </script>
+
+    <script>
+        const music = document.getElementById("bgMusic");
+
+        function enableMusic() {
+            music.muted = false;
+            music.volume = 0;
+            music.play();
+
+            let vol = 0;
+            const fade = setInterval(() => {
+                if (vol < 0.2) {
+                    vol += 0.02;
+                    music.volume = vol;
+                } else {
+                    clearInterval(fade);
+                }
+            }, 200);
+
+            document.removeEventListener("click", enableMusic);
+        }
+
+        document.addEventListener("click", enableMusic);
+    </script>
+
+
+</body>
+
+</html>

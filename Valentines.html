@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Happy Valentine's Day ❤️</title>
+    <link href="Valentines.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="viewer" class="viewer" onclick="closeViewer()">
+        <img id="viewerImg">
+    </div>
+
+    <audio id="bgMusic" autoplay loop>
+        <source src="ValentinesImages/Valentine.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- VALENTINE GATE -->
+    <div id="valentineGate" class="page active">
+        <div class="story-container">
+            <h2 id="gateTitle"></h2>
+            <br>
+            <button onclick="enterSite()">Yes ❤️</button>
+        </div>
+    </div>
+
+    <!-- HOME -->
+    <div id="home" class="page">
+        <h1>Happy Valentine's Day ❤️</h1>
+        <p>This little website is made just for you My Love.</p>
+
+        <button onclick="showPage('story')">Our Story</button>
+        <button onclick="showPage('gallery')">Gallery</button>
+        <button onclick="showPage('letter')">Love Letter</button>
+    </div>
+
+    <!-- STORY -->
+    <div id="story" class="page">
+        <h2>Our Story</h2>
+
+        <div class="accordion">
+            <button class="acc-btn" onclick="toggleAcc(this)">2 December 2025</button>
+            <div class="acc-content">
+                <b>2 December 2025</b><br>
+                Before our story officially began, we were just two friends spending a few weeks together, brought
+                together
+                by me coming back to <i>Asia Syndicate</i> because of Ryme, farming Batu Purple and Biru untuk craft
+                the
+                M4
+                Joker at MIRP.
+                Somewhere between those simple conversations, random jokes, and late-night sessions, something slowly
+                started to grow without us even realizing it.
+
+                Just a few days before everything changed, we randomly decided to play Schedule 1 together, just the two
+                of
+                us, as friends.
+                Neither of us knew that those small moments would quietly lead us to the day we finally became more than
+                friends.
+
+                And on <b>2 December 2025</b>, what started as friendship turned into something much more meaningful.
+                The
+                beginning of us.
+                </p>
+            </div>
+
+            <button class="acc-btn" onclick="toggleAcc(this)">25 December 2025</button>
+            <div class="acc-content">
+                <p>
+                    <b>25 December 2025, Our First Date</b><br>
+                    That night felt like time slowed down just for us. You had just arrived from your hometown, Kedah,
+                    on
+                    your way back to campus in Bintulu, Sarawak, landing at the airport around 11PM, and from that
+                    moment
+                    until 5:30AM, every minute became a memory I will always treasure.
+
+                    We started with something simple: McDonald’s.
+                    You had the Prosperity Burger medium set with curly fries and a bottle of water, while I took the
+                    large
+                    set with normal fries and Coke Zero. I even offered you some of my fries, but you smiled and said
+                    you
+                    didn’t want normal fries, a small moment that somehow made the night feel even more personal and
+                    memorable. Sitting together on the bench at the KLIA1 viewing area, we shared our meal while quietly
+                    watching airplanes pass by, talking about everything and nothing at the same time.
+
+                    We spent the night walking around the airport again and again, exploring every corner like two
+                    people
+                    who never wanted the night to end.
+                    At 3AM, we stopped by the Turkish Delight stall to try cream puffs, laughing at how random yet
+                    perfect
+                    the moment felt.
+                    We took pictures at the Monopoly set, capturing small pieces of a night that already felt
+                    unforgettable.
+
+                    Later, around 4:30AM, we sat together at McDonald’s again, sharing an ice cream cone, staying close
+                    and
+                    quietly wishing the morning would arrive just a little slower.
+                    And when 5:30AM finally came, the moment I had to leave. I remember how heavy that step away from
+                    you
+                    felt. Part of me wanted to turn back, return to the airport, and stay just a little longer, because
+                    leaving you that morning was harder than I expected.
+
+                    But I had to go home to prepare for my 9AM FYP meeting with my supervisor, carrying with me the
+                    quiet
+                    sadness of saying goodbye, and at the same time the warm feeling of knowing that the night we just
+                    spent
+                    together was something truly special, a memory I would replay again and again.
+                </p>
+            </div>
+
+            <button class="acc-btn" onclick="toggleAcc(this)">30 January 2026</button>
+            <div class="acc-content">
+                <p>
+                    <b>30 January 2026 — Our Little Engagement</b><br>
+                    On 30 January 2026 at around 2AM, something unexpected and unforgettable happened. We got randomly
+                    engaged on MIRP. It was completely a spur-of-the-moment decision, something none of us planned, and
+                    it all started because of Tupai. What began as a simple late-night hangout session quickly turned
+                    into one of
+                    the most special memories I will always hold close.
+
+                    Thankfully, all of my ooc friends were able to be there to witness it. Rexsz, Opies, Tupai, and
+                    Skykid
+                    were all present, making the moment feel even more meaningful. Uncle Alexander had
+                    inved everyone who was available at the time, and seeing everyone gather there made the moment
+                    feel surprisingly warm and real.
+
+                    It might have been spontaneous, simple, and a little chaotic, but it was ours. And that is what
+                    makes it so memorable to me. That night reminded me that sometimes the most beautiful memories are
+                    not the ones carefully planned, but the ones that happen naturally, with the right people around us.
+                </p>
+            </div>
+
+            <button class="acc-btn" onclick="toggleAcc(this)">15 March 2026</button>
+            <div class="acc-content">
+                <p>
+                    <b>15 March 2026 — Our Next Chapter</b><br>
+                    Even though it is the fasting month and we may not be able to do much, spending the afternoon
+                    together
+                    from
+                    1PM to 6:30PM already means more than enough to me.
+                    Sometimes the most beautiful moments are not the busiest ones, but the quiet hours where we simply
+                    sit
+                    side
+                    by side, talking, laughing, and watching airplanes pass slowly across the sky.
+
+                    It may just be a simple day of chilling, hanging out, and airplane watching, but moments like these
+                    are
+                    the
+                    ones that quietly build our story; peaceful, sincere, and filled with the comfort of being together.
+                </p>
+            </div>
+
+            <button class="acc-btn" onclick="toggleAcc(this)">28 March 2026</button>
+            <div class="acc-content">
+                <p>
+                    <b>28 March 2026 — More Moments Together</b><br>
+                    Before you head back to Bintulu, we will spend another special day together, our little “NakNak
+                    Date” at
+                    KLIA2.
+                    I will be bringing brownies for you to enjoy, something small but prepared with the thought of
+                    seeing
+                    you
+                    smile.
+
+                    That day, I will show you how to use the train around the airport, and we will explore the place
+                    together
+                    just like we always do, turning simple moments into memories.
+                    We will sit down, enjoy our meal, and you will finally get to taste the spicy NakNak flavour that
+                    once
+                    made
+                    me sick, a small story that somehow became part of our shared memories too.
+
+                    It may seem like just another day before your flight back, but for me it is another moment I know I
+                    will
+                    hold close, because every time we meet, even the simplest plans become something special.
+                </p>
+            </div>
+
+            <p>
+                And this is only the beginning.
+                Every day with you is another page, another memory, another reason I’m grateful that our paths met
+                that
+                day.
+            </p>
+
+            <button onclick="showPage('home')">Back</button>
+        </div>
+    </div>
+
+
+    <!-- GALLERY -->
+    <div id="gallery" class="page">
+        <h2>Our Memories</h2>
+
+        <div class="gallery">
+            <img src="ValentinesImages/picture1.png">
+            <img src="ValentinesImages/picture2.png">
+            <img src="ValentinesImages/picture24.jpg">
+            <img src="ValentinesImages/picture3.png">
+            <img src="ValentinesImages/picture20.jpg">
+            <img src="ValentinesImages/picture4.png">
+            <img src="ValentinesImages/picture5.png">
+            <img src="ValentinesImages/picture25.jpg">
+            <img src="ValentinesImages/picture43.png">
+            <img src="ValentinesImages/picture6.png">
+            <img src="ValentinesImages/picture7.png">
+            <img src="ValentinesImages/picture19.jpg">
+            <img src="ValentinesImages/picture49.png">
+            <img src="ValentinesImages/picture21.jpg">
+            <img src="ValentinesImages/picture8.png">
+            <img src="ValentinesImages/picture23.jpg">
+            <img src="ValentinesImages/picture9.png">
+            <img src="ValentinesImages/picture10.png">
+            <img src="ValentinesImages/picture11.png">
+            <img src="ValentinesImages/picture26.jpg">
+            <img src="ValentinesImages/picture12.png">
+            <img src="ValentinesImages/picture13.png">
+            <img src="ValentinesImages/picture18.jpg">
+            <img src="ValentinesImages/picture14.png">
+            <img src="ValentinesImages/picture22.jpg">
+            <img src="ValentinesImages/picture15.png">
+            <img src="ValentinesImages/picture16.png">
+            <img src="ValentinesImages/picture17.jpg">
+            <img src="ValentinesImages/picture50.png">
+            <img src="ValentinesImages/picture37.png">
+            <img src="ValentinesImages/picture28.png">
+            <img src="ValentinesImages/picture27.jpg">
+            <img src="ValentinesImages/collage1.jpg">
+            <img src="ValentinesImages/picture29.png">
+            <img src="ValentinesImages/picture30.jpg">
+            <img src="ValentinesImages/picture42.png">
+            <img src="ValentinesImages/picture31.png">
+            <img src="ValentinesImages/picture32.png">
+            <img src="ValentinesImages/picture33.png">
+            <img src="ValentinesImages/picture36.png">
+            <img src="ValentinesImages/picture44.png">
+            <img src="ValentinesImages/picture38.png">
+            <img src="ValentinesImages/picture39.png">
+            <img src="ValentinesImages/picture40.png">
+            <img src="ValentinesImages/picture41.png">
+            <img src="ValentinesImages/picture34.png">
+            <img src="ValentinesImages/picture57.png">
+            <img src="ValentinesImages/picture45.png">
+            <img src="ValentinesImages/picture46.png">
+            <img src="ValentinesImages/picture48.png">
+            <img src="ValentinesImages/picture51.png">
+            <img src="ValentinesImages/picture53.png">
+            <img src="ValentinesImages/picture54.png">
+            <img src="ValentinesImages/picture55.png">
+            <img src="ValentinesImages/picture56.png">
+            <img src="ValentinesImages/picture52.png">
+            <img src="ValentinesImages/picture58.png">
+            <img src="ValentinesImages/picture35.png">
+            <img src="ValentinesImages/picture47.png">
+            <img src="ValentinesImages/picture59.png">
+            <img src="ValentinesImages/picture60.png">
+            <img src="ValentinesImages/picture61.png">
+            <img src="ValentinesImages/picture62.png">
+            <img src="ValentinesImages/picture63.png">
+            <img src="ValentinesImages/picture64.png">
+            <img src="ValentinesImages/picture65.jpg">
+            <img src="ValentinesImages/picture66.jpg">
+            <img src="ValentinesImages/picture67.jpg">
+            <img src="ValentinesImages/picture68.jpg">
+            <img src="ValentinesImages/picture69.jpg">
+            <img src="ValentinesImages/picture70.jpg">
+            <img src="ValentinesImages/picture71.jpg">
+            <img src="ValentinesImages/picture72.jpg">
+            <img src="ValentinesImages/picture73.jpg">
+            <img src="ValentinesImages/picture74.jpg">
+            <img src="ValentinesImages/picture75.jpg">
+            <img src="ValentinesImages/picture76.jpg">
+            <img src="ValentinesImages/picture77.jpg">
+            <img src="ValentinesImages/picture78.jpg">
+            <img src="ValentinesImages/picture79.jpg">
+            <img src="ValentinesImages/picture80.jpg">
+            <img src="ValentinesImages/picture81.jpg">
+            <img src="ValentinesImages/picture82.jpg">
+            <img src="ValentinesImages/picture83.jpg">
+            <img src="ValentinesImages/picture84.jpg">
+            <img src="ValentinesImages/picture85.jpg">
+            <img src="ValentinesImages/picture86.jpg">
+            <img src="ValentinesImages/picture87.jpg">
+            <img src="ValentinesImages/picture88.jpg">
+            <img src="ValentinesImages/picture89.jpg">
+            <img src="ValentinesImages/picture90.jpg">
+            <img src="ValentinesImages/picture91.jpg">
+        </div>
+        </br>
+        <button onclick="showPage('home')">Back</button>
+    </div>
+
+    <!-- LETTER -->
+    <div id="letter" class="page">
+        <div class="story-container">
+            <h2>Love Letter</h2>
+            <div class="signature">
+                Dear Jasmine,
+            </div>
+            <p>
+                Today is Valentine’s Day, and I keep thinking about how everything between us began. From the days when
+                we
+                were just friends spending time together playing games, talking about random things, and laughing at our
+                own
+                jokes, to the moment we slowly realized that what we had was becoming something more. None of it felt
+                rushed, none of it felt forced. It simply happened naturally, and somehow that makes everything feel
+                even
+                more special to me.
+            </p>
+
+            <p>
+                I still remember the first time we met at the airport, how nervous I felt walking toward you, wondering
+                what
+                I should say and how I should act. Yet the moment I saw you, all those nervous thoughts faded, and I
+                felt
+                something calm and warm inside me. That night, sitting together, watching airplanes, sharing food,
+                walking
+                around the airport with no real destination, and talking about everything and nothing at the same time
+                became one of the most unforgettable memories I have. Even now, when I think back to it, I still feel
+                the
+                same happiness I felt that night.
+            </p>
+
+            <p>
+                Some of my favorite moments with you are not always the big ones. Sometimes they are the small and quiet
+                moments, the times when we joke around, tease each other, share random thoughts late at night, or simply
+                sit
+                together without needing anything special to happen. Even the distance between us does not take those
+                moments away. Every message you send, every call we share, and every time we spend together online still
+                makes me feel close to you.
+            </p>
+
+            <p>
+                I know that life can be busy, classes can be tiring, and sometimes days do not go the way we want them
+                to.
+                But even on those days, I want you to know that I am always here, ready to listen, ready to talk, and
+                ready
+                to stay by your side through whatever comes. I may not always be perfect, and I may not always say the
+                right
+                things, but my intention has always been the same, which is to care for you, support you, and continue
+                choosing you every single day.
+            </p>
+
+            <p>
+                I look forward to every plan we make together, every future date, every movie night, every game session,
+                every airport meeting, and every small moment that we will slowly turn into memories. I like making
+                plans
+                ahead of time because it gives me something to look forward to, something that reminds me that more
+                beautiful days with you are always coming.
+            </p>
+
+            <p>
+                Thank you for your patience, for your understanding, for your laughter, and for the warmth you bring
+                into my
+                life. Thank you for staying even during moments that were not easy, for choosing to grow together
+                instead of
+                walking away, and for allowing our story to continue becoming stronger with time.
+            </p>
+
+            <p>
+                This Valentine’s Day is only one day, but what I feel for you is something I carry every day. I want to
+                keep
+                building memories with you, keep laughing with you, keep growing with you, and keep writing our story
+                together, month after month, year after year. No matter how much time passes, I hope we will always be
+                able
+                to look back at the beginning and smile, knowing that everything we built started from two people who
+                simply
+                enjoyed spending time together.
+            </p>
+
+            <p>
+                Happy Valentine’s Day, Jasmine. Thank you for being part of my life, and thank you for being someone I
+                can
+                love, care for, and look forward to seeing again and again.
+            </p>
+
+            <div class="signature">
+                Always yours,<br>
+                Khairul ❤️
+            </div>
+        </div>
+        <button onclick="showPage('home')">Back</button>
+    </div>
+
+    <script>
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+
+            if (id === 'gallery') {
+                enableGalleryViewer();
+            }
+        }
+
+        /* typing effect (safe) */
+        const typingEl = document.getElementById("typing");
+
+        if (typingEl) {
+            const msg = "Every moment with you is my favorite memory. I love you ❤️";
+            let i = 0;
+            function type() {
+                if (i < msg.length) {
+                    typingEl.innerHTML += msg.charAt(i);
+                    i++;
+                    setTimeout(type, 50);
+                }
+            }
+            type();
+        }
+
+
+        /* gallery image click viewer */
+        function enableGalleryViewer() {
+            document.querySelectorAll('.gallery img').forEach(img => {
+                img.onclick = function () {
+                    document.getElementById('viewer').style.display = 'flex';
+                    document.getElementById('viewerImg').src = this.src;
+                };
+            });
+        }
+
+
+        function closeViewer() {
+            document.getElementById('viewer').style.display = 'none';
+        }
+
+        /* ensure autoplay works */
+        window.addEventListener("click", function () {
+            const music = document.getElementById("bgMusic");
+            if (music.paused) {
+                music.play();
+            }
+        }, { once: true });
+
+        /* accordion */
+        function toggleAcc(btn) {
+            const content = btn.nextElementSibling;
+            content.classList.toggle("open");
+            btn.classList.toggle("active");
+        }
+
+        function enterSite() {
+
+            const gate = document.getElementById('valentineGate');
+
+            /* heart burst */
+            for (let i = 0; i < 18; i++) {
+                const h = document.createElement("div");
+                h.className = "burst-heart";
+                h.textContent = "💖";
+
+                const angle = Math.random() * 360;
+                const distance = 120 + Math.random() * 80;
+
+                const x = Math.cos(angle) * distance + "px";
+                const y = Math.sin(angle) * distance + "px";
+
+                h.style.setProperty('--x', x);
+                h.style.setProperty('--y', y);
+
+                h.style.left = window.innerWidth / 2 + "px";
+                h.style.top = window.innerHeight / 2 + "px";
+
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 1100);
+            }
+
+            /* fade gate */
+            gate.style.opacity = "0";
+
+            setTimeout(() => {
+                gate.style.display = "none";
+                const home = document.getElementById('home');
+                home.classList.add('active', 'fade-in');
+            }, 600);
+        }
+
+        // Heart rain 
+        setInterval(() => {
+            for (let i = 0; i < 4; i++) {   // create 4 hearts each time
+                const heart = document.createElement("div");
+                heart.className = "heart-rain";
+                heart.textContent = ["💖", "💗", "💕", "💞", "❤️"][Math.floor(Math.random() * 5)];
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 10000);
+            }
+        }, 150);
+
+        // Floating hearts
+        setInterval(() => {
+            for (let i = 0; i < 3; i++) {  // 3 hearts per burst
+                const heart = document.createElement("div");
+                heart.className = "float-heart";
+                heart.textContent = ["💖", "💗", "💕", "💞", "❤️"][Math.floor(Math.random() * 5)];
+                heart.style.left = Math.random() * 100 + "vw";
+
+                heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 7000);
+            }
+        }, 300);
+
+        function spawnHeart() {
+            const heart = document.createElement("div");
+            heart.className = "particle-heart";
+            heart.textContent = "❤";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.bottom = "-20px";
+            heart.style.animationDuration = (10 + Math.random() * 10) + "s";
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 22000);
+        }
+
+        setInterval(spawnHeart, 180);
+
+        document.addEventListener("click", function (e) {
+            const sparkle = document.createElement("div");
+            sparkle.innerHTML = "✨";
+            sparkle.style.position = "fixed";
+            sparkle.style.left = e.clientX + "px";
+            sparkle.style.top = e.clientY + "px";
+            sparkle.style.pointerEvents = "none";
+            sparkle.style.animation = "spark 0.7s ease-out forwards";
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => sparkle.remove(), 700);
+        });
+
+        /* romantic intro typing */
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const gateText = "Will You Be My Valentine? ❤️";
+            let tIndex = 0;
+            const el = document.getElementById("gateTitle");
+
+            function typeGate() {
+                if (!el) return;
+
+                if (tIndex < gateText.length) {
+                    el.innerHTML =
+                        gateText.substring(0, tIndex + 1) +
+                        '<span class="type-cursor">|</span>';
+                    tIndex++;
+                    setTimeout(typeGate, 45);
+                } else {
+                    el.innerHTML = gateText;
+                }
+            }
+
+            typeGate();
+        });
+
+        /* soft music fade-in */
+        window.addEventListener("click", () => {
+            const music = document.getElementById("bgMusic");
+            if (music.paused) {
+                music.volume = 0;
+                music.play();
+                let v = 0;
+                const fade = setInterval(() => {
+                    if (v < 0.12) {
+                        v += 0.01;
+                        music.volume = v;
+                    } else clearInterval(fade);
+                }, 200);
+            }
+        }, { once: true });
+
+        enableGalleryViewer();
+    </script>
+</body>
+
+</html>
