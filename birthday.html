@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0" />
+  <meta name="theme-color" content="#2a160f" />
+  <title>Happy Birthday, Jasmine! 💖</title>
+
+  <!-- canvas-confetti: tiny trusted lib for the heart + chocolate bursts -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* =====================================================================
+   THEME  —  Pink × Chocolate (Cadbury Almond inspired)
+   ===================================================================== */
+    :root {
+      --choc-deep: #2a160f;
+      --choc: #4a2c1d;
+      --choc-milk: #7b4a2e;
+      --rose-gold: #e8b4a0;
+      --rose-gold-2: #f7c9b8;
+      --pink: #ff8fb8;
+      --pink-soft: #ffd1e3;
+      --pink-hot: #ff5c97;
+      --cream: #fff5ee;
+      --gold: #f3c969;
+      --txt: #fff3ec;
+      --txt-dim: #e7c7b8;
+      --glass: rgba(255, 235, 225, .08);
+      --glass-brd: rgba(255, 209, 227, .22);
+      --r: 24px;
+      --tap: 54px;
+      --shadow-soft: 0 10px 40px rgba(0, 0, 0, .4), 0 0 30px rgba(255, 92, 151, .18);
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+      color: var(--txt);
+      background: var(--choc-deep);
+      overflow-x: hidden;
+      min-height: 100dvh;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* serif accent for romantic headings */
+    .script {
+      font-family: "Snell Roundhand", "Brush Script MT", "Segoe Script", cursive
+    }
+
+    /* =====================================================================
+   ANIMATED CHOCOLATE→PINK GRADIENT BACKDROP
+   ===================================================================== */
+    .bg-grad {
+      position: fixed;
+      inset: -25%;
+      z-index: -3;
+      background:
+        radial-gradient(45% 50% at 18% 18%, rgba(255, 143, 184, .42), transparent 60%),
+        radial-gradient(40% 45% at 85% 22%, rgba(243, 201, 105, .28), transparent 60%),
+        radial-gradient(55% 55% at 50% 88%, rgba(255, 92, 151, .40), transparent 60%),
+        linear-gradient(165deg, #3a1f14, #2a160f 45%, #1c0e08);
+      filter: saturate(1.15);
+      animation: gradShift 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes gradShift {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1)
+      }
+
+      50% {
+        transform: translate3d(2%, -2%, 0) scale(1.07)
+      }
+
+      100% {
+        transform: translate3d(-2%, 2%, 0) scale(1.03)
+      }
+    }
+
+    /* glossy chocolate sheen overlay */
+    .bg-sheen {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, .05) 50%, transparent 60%);
+      background-size: 300% 300%;
+      animation: sheen 9s linear infinite
+    }
+
+    @keyframes sheen {
+      to {
+        background-position: -300% 0
+      }
+    }
+
+    /* floating hearts + chocolate emojis */
+    .floaters {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none
+    }
+
+    .floaters span {
+      position: absolute;
+      bottom: -50px;
+      font-size: 1.6rem;
+      opacity: 0;
+      animation: driftUp linear infinite;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .3))
+    }
+
+    @keyframes driftUp {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0);
+        opacity: 0
+      }
+
+      10% {
+        opacity: .85
+      }
+
+      90% {
+        opacity: .85
+      }
+
+      100% {
+        transform: translateY(-112vh) translateX(var(--dx, 20px)) rotate(var(--rot, 40deg));
+        opacity: 0
+      }
+    }
+
+    /* =====================================================================
+   LAYOUT
+   ===================================================================== */
+    .section {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 56px 22px 6px
+    }
+
+    .section-title {
+      font-size: clamp(1.5rem, 6.5vw, 2.1rem);
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: .5px;
+      background: linear-gradient(90deg, var(--rose-gold), var(--pink), var(--gold), var(--pink-hot));
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 6s linear infinite;
+    }
+
+    @keyframes shimmer {
+      to {
+        background-position: 220% center
+      }
+    }
+
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-brd);
+      border-radius: var(--r);
+      box-shadow: var(--shadow-soft);
+    }
+
+    /* =====================================================================
+   BUTTONS
+   ===================================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: var(--tap);
+      padding: 0 28px;
+      border: none;
+      cursor: pointer;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--pink-hot), var(--choc-milk));
+      box-shadow: 0 8px 26px rgba(255, 92, 151, .4), inset 0 1px 0 rgba(255, 255, 255, .25);
+      transition: transform .15s ease, filter .2s;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    .btn:active {
+      transform: scale(.94);
+      filter: brightness(1.12)
+    }
+
+    .btn.choc {
+      background: linear-gradient(135deg, var(--choc-milk), var(--choc))
+    }
+
+    /* =====================================================================
+   HERO
+   ===================================================================== */
+    .hero {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 84px 24px 50px;
+      gap: 22px;
+      position: relative;
+    }
+
+    .hero .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 7px;
+      font-size: .68rem;
+      font-weight: 700;
+      color: var(--rose-gold-2);
+      text-shadow: 0 0 16px rgba(247, 201, 184, .6)
+    }
+
+    .hero h1 {
+      font-size: clamp(2.3rem, 11vw, 3.8rem);
+      line-height: 1.08;
+      font-weight: 900;
+      letter-spacing: -.5px
+    }
+
+    .hero h1 .grad {
+      background: linear-gradient(120deg, var(--pink-soft), var(--pink-hot), var(--gold), var(--rose-gold));
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 6s linear infinite;
+      display: block
+    }
+
+    .hero .name {
+      display: block;
+      margin-top: 8px;
+      font-size: clamp(2.6rem, 14vw, 4.4rem);
+      background: linear-gradient(120deg, #fff, var(--pink-soft), var(--rose-gold-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 38px rgba(255, 143, 184, .55);
+      animation: pulseName 2.6s ease-in-out infinite
+    }
+
+    @keyframes pulseName {
+
+      0%,
+      100% {
+        transform: scale(1)
+      }
+
+      50% {
+        transform: scale(1.04)
+      }
+    }
+
+    .hero .sub {
+      color: var(--txt-dim);
+      font-size: 1.05rem;
+      max-width: 310px;
+      line-height: 1.6
+    }
+
+    .hero .floaty {
+      position: absolute;
+      font-size: 2rem;
+      opacity: .9;
+      pointer-events: none;
+      animation: bobFloat 7s ease-in-out infinite
+    }
+
+    @keyframes bobFloat {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-5deg)
+      }
+
+      50% {
+        transform: translateY(-24px) rotate(5deg)
+      }
+    }
+
+    .scroll-hint {
+      margin-top: 4px;
+      color: var(--txt-dim);
+      font-size: .78rem;
+      letter-spacing: 3px;
+      animation: bob 1.8s infinite
+    }
+
+    @keyframes bob {
+
+      0%,
+      100% {
+        transform: translateY(0);
+        opacity: .55
+      }
+
+      50% {
+        transform: translateY(7px);
+        opacity: 1
+      }
+    }
+
+    /* =====================================================================
+   COUNTDOWN
+   ===================================================================== */
+    .countdown {
+      display: flex;
+      gap: 9px;
+      justify-content: center;
+      flex-wrap: wrap
+    }
+
+    .cd-cell {
+      flex: 1 1 62px;
+      max-width: 98px;
+      padding: 18px 6px;
+      text-align: center;
+      border-radius: 18px
+    }
+
+    .cd-num {
+      font-size: clamp(1.9rem, 9vw, 2.9rem);
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(255, 143, 184, .7);
+      font-variant-numeric: tabular-nums
+    }
+
+    .cd-lbl {
+      font-size: .6rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--txt-dim);
+      margin-top: 5px
+    }
+
+    .cd-message {
+      text-align: center;
+      font-size: clamp(1.4rem, 7vw, 2rem);
+      font-weight: 800;
+      padding: 30px 18px;
+      line-height: 1.3;
+      background: linear-gradient(90deg, var(--gold), var(--pink-hot), var(--rose-gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: pulseName 2s infinite
+    }
+
+    /* =====================================================================
+   LOVE NOTES — swipe card deck
+   ===================================================================== */
+    .deck {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--r);
+      touch-action: pan-y
+    }
+
+    .deck-track {
+      display: flex;
+      transition: transform .45s cubic-bezier(.22, 1, .36, 1)
+    }
+
+    .note {
+      min-width: 100%;
+      padding: 34px 26px;
+      text-align: center
+    }
+
+    .note .emoji {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 0 14px rgba(255, 92, 151, .6))
+    }
+
+    .note h3 {
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+      color: var(--rose-gold-2)
+    }
+
+    .note p {
+      color: var(--txt-dim);
+      line-height: 1.7;
+      font-size: 1.02rem
+    }
+
+    .deck-dots {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 16px
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--glass-brd);
+      transition: all .3s
+    }
+
+    .dot.on {
+      background: var(--pink-hot);
+      box-shadow: 0 0 12px var(--pink-hot);
+      width: 26px;
+      border-radius: 6px
+    }
+
+    .deck-hint {
+      text-align: center;
+      color: var(--txt-dim);
+      font-size: .78rem;
+      margin-top: 12px;
+      letter-spacing: 1px
+    }
+
+    /* =====================================================================
+   MEMORIES grid
+   ===================================================================== */
+    .mem-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    .mem {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      padding: 18px 20px
+    }
+
+    .mem .ic {
+      font-size: 1.9rem;
+      flex: 0 0 auto;
+      filter: drop-shadow(0 0 10px rgba(255, 143, 184, .5))
+    }
+
+    .mem .info h4 {
+      font-size: 1.08rem;
+      margin-bottom: 3px
+    }
+
+    .mem .info p {
+      color: var(--txt-dim);
+      font-size: .88rem;
+      line-height: 1.5
+    }
+
+    /* =====================================================================
+   MESSAGE card
+   ===================================================================== */
+    .message-card {
+      padding: 30px 26px;
+      text-align: center;
+      line-height: 1.8;
+      font-size: 1.06rem
+    }
+
+    .message-card .heart {
+      font-size: 2.2rem;
+      display: block;
+      margin-bottom: 12px;
+      animation: pulseName 1.6s infinite
+    }
+
+    .message-card .sig {
+      display: block;
+      margin-top: 18px;
+      color: var(--pink);
+      font-weight: 700;
+      font-style: italic;
+      font-size: 1.15rem
+    }
+
+    /* =====================================================================
+   SWEET SURPRISE — chocolate bar reveal
+   ===================================================================== */
+    .surprise-stage {
+      position: relative;
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px
+    }
+
+    .choc-bar {
+      --w: 150px;
+      width: var(--w);
+      height: calc(var(--w)*1.42);
+      border-radius: 14px;
+      cursor: pointer;
+      position: relative;
+      background:
+        linear-gradient(145deg, #6b3f25 0%, #4a2c1d 45%, #34200f 100%);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, .55), inset 0 2px 4px rgba(255, 255, 255, .18), inset 0 -8px 14px rgba(0, 0, 0, .5);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 5px;
+      padding: 9px;
+      transform: scale(0) rotate(-20deg);
+      opacity: 0;
+      transition: transform .55s cubic-bezier(.34, 1.56, .64, 1), opacity .4s;
+      touch-action: manipulation;
+    }
+
+    .choc-bar.show {
+      transform: scale(1) rotate(0);
+      opacity: 1;
+      animation: floatBar 3.5s ease-in-out infinite 0.6s
+    }
+
+    @keyframes floatBar {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-2deg)
+      }
+
+      50% {
+        transform: translateY(-16px) rotate(2deg)
+      }
+    }
+
+    .choc-bar .sq {
+      border-radius: 6px;
+      background: linear-gradient(145deg, #7b4a2e, #4a2c1d);
+      box-shadow: inset 1px 1px 2px rgba(255, 255, 255, .22), inset -2px -2px 4px rgba(0, 0, 0, .45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+    }
+
+    .choc-bar .sq::after {
+      content: "🌰";
+      opacity: .45;
+      font-size: .8rem
+    }
+
+    .choc-bar .brand {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: .95rem;
+      letter-spacing: 1px;
+      color: var(--gold);
+      text-shadow: 0 1px 3px #000;
+      pointer-events: none;
+    }
+
+    .choc-bar:active {
+      transform: scale(.95)
+    }
+
+    .surprise-tip {
+      text-align: center;
+      color: var(--txt-dim);
+      font-size: .85rem;
+      margin-top: 14px
+    }
+
+    .hidden {
+      display: none
+    }
+
+    /* =====================================================================
+   PHOTO GRID placeholder
+   ===================================================================== */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 11px
+    }
+
+    .gallery .cell {
+      aspect-ratio: 1;
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, rgba(255, 143, 184, .3), rgba(123, 74, 46, .4));
+      border: 1px solid var(--glass-brd);
+      transition: transform .25s;
+    }
+
+    .gallery .cell:active {
+      transform: scale(.93)
+    }
+
+    .gallery .cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .gallery-note {
+      text-align: center;
+      color: var(--txt-dim);
+      font-size: .8rem;
+      margin-top: 12px
+    }
+
+    /* reveal-on-scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity .7s ease, transform .7s ease
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: none
+    }
+
+    footer {
+      text-align: center;
+      color: var(--txt-dim);
+      font-size: .82rem;
+      padding: 40px 22px calc(30px + env(safe-area-inset-bottom))
+    }
+
+    footer .big {
+      font-size: 1.5rem;
+      margin-bottom: 8px
+    }
+  </style>
+</head>
+
+<body>
+  <!-- backdrops -->
+  <div class="bg-grad"></div>
+  <div class="bg-sheen"></div>
+  <div class="floaters" id="floaters"></div>
+
+  <!-- ============================ HERO ============================ -->
+  <header class="hero" id="home">
+    <span class="floaty" style="top:13%;left:9%">💖</span>
+    <span class="floaty" style="top:20%;right:11%;animation-delay:1.4s">🍫</span>
+    <span class="floaty" style="bottom:25%;left:14%;animation-delay:.7s">💕</span>
+    <span class="floaty" style="bottom:17%;right:13%;animation-delay:2.1s">🌰</span>
+
+    <span class="eyebrow">June 6 • 2026</span>
+    <h1>
+      <span class="grad">Happy Birthday,</span>
+      <span class="name">Jasmine! 💖</span>
+    </h1>
+    <p class="sub">For Nur Liyana Jasmine, the sweetest girl in the whole wide world 🍫💕</p>
+    <button class="btn" onclick="loveBlast()">💖 Send Me Love</button>
+    <div class="scroll-hint">▾ SCROLL ▾</div>
+  </header>
+
+  <!-- ========================= LOVE NOTES ======================== -->
+  <section class="section" id="notes">
+    <h2 class="section-title reveal">💌 Tap Through My Love Notes</h2>
+    <div class="glass reveal" style="padding:8px">
+      <div class="deck" id="deck">
+        <div class="deck-track" id="track">
+          <!-- 🔁 EDIT THESE NOTES -->
+          <div class="note"><span class="emoji">🌹</span>
+            <h3>To My Jasmine</h3>
+            <p>You're the softest, sweetest, most beautiful soul I've ever known. Happy birthday, my love.</p>
+          </div>
+          <div class="note"><span class="emoji">🍫</span>
+            <h3>Sweeter Than Chocolate</h3>
+            <p>And that's saying a lot, because you know how much I love Cadbury Almond.</p>
+          </div>
+          <div class="note"><span class="emoji">💖</span>
+            <h3>Forever & Always</h3>
+            <p>Here's to more memories, more laughter, and more us. I love you.</p>
+          </div>
+        </div>
+      </div>
+      <div class="deck-dots" id="dots"></div>
+      <p class="deck-hint">← swipe or tap a side →</p>
+    </div>
+  </section>
+
+  <!-- ======================= SWEET MESSAGE ======================= -->
+  <section class="section" id="message">
+    <h2 class="section-title reveal">💝 A Sweet Message for My Favorite Person</h2>
+    <div class="glass message-card reveal">
+      <span class="heart">💖</span>
+      <!-- 🔁 SWAP THIS MESSAGE -->
+      My sweetest baby, on your birthday I want you to know how endlessly grateful I am for you.
+      You are my comfort, my joy, and my favorite person in this whole world. Thank you for being
+      exactly who you are. 🍫💕
+      
+      Loving you is the easiest and most beautiful thing I’ve ever done. Every single day with you feels like a
+      blessing, and I am so lucky to have your smile to brighten up my world. You have this incredible way of making
+      everything better just by being there, and I hope today makes you feel just as special, loved, and cherished as
+      you make me feel every single day.
+
+      As we celebrate you today, I want to promise you my hand to hold, my shoulder to lean on, and my whole heart,
+      today and for all the birthdays to come. Happy Birthday, Jasmine. You mean absolutely everything to me. ✨💖
+      <span class="sig">— Always yours, Khairul </span>
+    </div>
+  </section>
+
+  <!-- ====================== SWEET SURPRISE ======================= -->
+  <section class="section" id="surprise">
+    <h2 class="section-title reveal">🎁 Tap for a Sweet Surprise</h2>
+    <div class="glass reveal" style="padding:20px">
+      <div style="text-align:center">
+        <button class="btn choc" id="revealBtn" onclick="revealChoc()">🍫 Unwrap Your Surprise</button>
+      </div>
+      <div class="surprise-stage">
+        <div class="choc-bar" id="chocBar" onclick="burstChoc()">
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <div class="sq"></div>
+          <span class="brand">YAYANG PUNYA</span>
+        </div>
+      </div>
+      <p class="surprise-tip hidden" id="chocTip">Tap the chocolate bar to make it burst! 💥</p>
+    </div>
+  </section>
+
+  <!-- ========================= PHOTO GRID ======================== -->
+  <section class="section" id="gallery">
+    <h2 class="section-title reveal">📸 Us, In Pictures</h2>
+    <div class="gallery reveal">
+      <!-- 🔁 Swap in your own photos by changing the src paths below -->
+      <div class="cell"><img src="Imagess/image1.jpg" alt="Us 1" loading="lazy"></div>
+      <div class="cell"><img src="Imagess/image2.jpg" alt="Us 2" loading="lazy"></div>
+      <div class="cell"><img src="Imagess/image3.jpg" alt="Us 3" loading="lazy"></div>
+      <div class="cell"><img src="Imagess/image4.jpg" alt="Us 4" loading="lazy"></div>
+      <div class="cell"><img src="Imagess/image5.jpg" alt="Us 5" loading="lazy"></div>
+      <div class="cell"><img src="Imagess/image6.jpg" alt="Us 6" loading="lazy"></div>
+      <div class="cell"><img src="Imagess/image7.jpg" alt="Us 7" loading="lazy"></div>
+      <div class="cell"><img src="Imagess/image8.png" alt="Us 8" loading="lazy"></div>
+      <div class="cell"><img src="Imagess/image9.png" alt="Us 9" loading="lazy"></div>
+    </div>
+    <p class="gallery-note">Mwah 💕</p>
+  </section>
+
+  <footer>
+    <div class="big">💖🍫🌹💕🌰</div>
+    Made with all my love, just for you, Jasmine.<br>
+    <span style="font-size:.72rem;opacity:.6">6 · 6 · 2026</span>
+  </footer>
+
+  <script>
+    /* =====================================================================
+       FLOATING HEARTS & CHOCOLATE in the background
+       ===================================================================== */
+    (function () {
+      const wrap = document.getElementById('floaters');
+      const icons = ['💖', '💕', '🍫', '🌰', '💗', '🍫'];
+      for (let i = 0; i < 16; i++) {
+        const s = document.createElement('span');
+        s.textContent = icons[i % icons.length];
+        s.style.left = Math.random() * 100 + '%';
+        s.style.fontSize = (Math.random() * 1.4 + 1.1) + 'rem';
+        s.style.animationDuration = (Math.random() * 10 + 11) + 's';
+        s.style.animationDelay = (-Math.random() * 16) + 's';
+        s.style.setProperty('--dx', (Math.random() * 120 - 60) + 'px');
+        s.style.setProperty('--rot', (Math.random() * 80 - 40) + 'deg');
+        wrap.appendChild(s);
+      }
+    })();
+
+    /* =====================================================================
+       CONFETTI  —  pink hearts + chocolate bars
+       ===================================================================== */
+    const heartShape = (typeof confetti !== "undefined" && confetti.shapeFromText)
+      ? confetti.shapeFromText({ text: '💖', scalar: 2 }) : null;
+    const chocShape = (typeof confetti !== "undefined" && confetti.shapeFromText)
+      ? confetti.shapeFromText({ text: '🍫', scalar: 2 }) : null;
+
+    function loveBlast() {
+      if (typeof confetti !== "function") return;
+      // chocolate-bar + heart shower
+      const shapes = [heartShape, chocShape].filter(Boolean);
+      confetti({
+        particleCount: 60, spread: 75, origin: { y: .65 }, scalar: 1.6,
+        shapes: shapes.length ? shapes : undefined,
+        colors: ['#ff5c97', '#ff8fb8', '#7b4a2e', '#4a2c1d', '#f3c969']
+      });
+      confetti({
+        particleCount: 80, spread: 100, startVelocity: 45, origin: { y: .7 },
+        colors: ['#ff5c97', '#ffd1e3', '#f7c9b8', '#7b4a2e', '#f3c969']
+      });
+      confetti({
+        particleCount: 40, spread: 120, startVelocity: 25, decay: .92, scalar: 1.2, origin: { y: .6 },
+        shapes: shapes.length ? shapes : undefined
+      });
+    }
+    // explosive burst on load
+    window.addEventListener('load', () => { setTimeout(loveBlast, 250); setTimeout(loveBlast, 1000); });
+
+    const $ = id => document.getElementById(id);
+
+    /* =====================================================================
+       LOVE NOTES card deck — swipe / tap
+       ===================================================================== */
+    const track = $('track'), deck = $('deck'), slides = track.children.length;
+    let idx = 0; const dotsWrap = $('dots');
+    for (let i = 0; i < slides; i++) { const d = document.createElement('div'); d.className = 'dot' + (i ? '' : ' on'); dotsWrap.appendChild(d); }
+    const dots = [...dotsWrap.children];
+    function goto(i) {
+      idx = (i + slides) % slides; track.style.transform = `translateX(-${idx * 100}%)`;
+      dots.forEach((d, j) => d.classList.toggle('on', j === idx));
+    }
+    let sx = 0, dx = 0, drag = false;
+    deck.addEventListener('touchstart', e => { sx = e.touches[0].clientX; drag = true; dx = 0; clearInterval(auto); }, { passive: true });
+    deck.addEventListener('touchmove', e => { if (drag) dx = e.touches[0].clientX - sx; }, { passive: true });
+    deck.addEventListener('touchend', () => { if (Math.abs(dx) > 45) goto(idx + (dx < 0 ? 1 : -1)); drag = false; });
+    deck.addEventListener('click', e => {
+      const mid = deck.getBoundingClientRect().left + deck.offsetWidth / 2;
+      goto(idx + (e.clientX > mid ? 1 : -1));
+    });
+    let auto = setInterval(() => goto(idx + 1), 5000);
+
+    /* =====================================================================
+       SWEET SURPRISE — reveal + burst chocolate bar
+       ===================================================================== */
+    function revealChoc() {
+      $('chocBar').classList.add('show');
+      $('chocTip').classList.remove('hidden');
+      $('revealBtn').textContent = '✨ Surprise Unwrapped!';
+    }
+    function burstChoc() {
+      const bar = $('chocBar');
+      if (!bar.classList.contains('show')) return;
+      const r = bar.getBoundingClientRect();
+      const ox = (r.left + r.width / 2) / innerWidth, oy = (r.top + r.height / 2) / innerHeight;
+      if (typeof confetti === "function") {
+        const starShape = confetti.shapeFromText ? confetti.shapeFromText({ text: '⭐', scalar: 2 }) : null;
+        const shapes = [heartShape, starShape].filter(Boolean);
+        confetti({
+          particleCount: 120, spread: 360, startVelocity: 35, origin: { x: ox, y: oy }, scalar: 1.4,
+          shapes: shapes.length ? shapes : undefined,
+          colors: ['#f3c969', '#ff5c97', '#ff8fb8', '#fff', '#ffd1e3']
+        });
+        confetti({
+          particleCount: 60, spread: 100, startVelocity: 50, origin: { x: ox, y: oy },
+          colors: ['#f3c969', '#fff', '#ff8fb8']
+        });
+      }
+      // pop + reset so she can do it again
+      bar.style.transition = 'transform .25s ease, opacity .25s';
+      bar.style.transform = 'scale(1.5)'; bar.style.opacity = '0';
+      setTimeout(() => {
+        bar.classList.remove('show'); bar.style.transition = ''; bar.style.transform = ''; bar.style.opacity = '';
+        $('revealBtn').textContent = '🍫 Unwrap Again'; $('chocTip').classList.add('hidden');
+      }, 300);
+    }
+
+    /* =====================================================================
+       REVEAL-ON-SCROLL
+       ===================================================================== */
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('show'); io.unobserve(e.target);
+        }
+      })
+    }, { threshold: .14 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+</body>
+
+</html>
