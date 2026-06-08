@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For Jasmine 💜</title>
+<style>
+  :root {
+    --bg-deep: #1a1726;
+    --bg-soft: #221d33;
+    --lavender: #c9b8ff;
+    --lavender-soft: #b8a6f0;
+    --blue-soft: #9fc3e8;
+    --cream: #f5efe6;
+    --text-soft: #e8e2f2;
+    --text-dim: #b3a9c9;
+    --glow: rgba(201, 184, 255, 0.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    background: radial-gradient(ellipse at 50% 0%, #2a2440 0%, var(--bg-deep) 55%, #14111f 100%);
+    color: var(--text-soft);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.25rem;
+    line-height: 1.6;
+  }
+
+  /* ---------- Drifting stars / particles ---------- */
+  .sky {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--lavender);
+    opacity: 0;
+    animation: drift linear infinite, twinkle ease-in-out infinite;
+    filter: blur(0.3px);
+  }
+  @keyframes drift {
+    from { transform: translateY(0) translateX(0); }
+    to   { transform: translateY(-120vh) translateX(20px); }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; }
+    50%      { opacity: 0.7; }
+  }
+
+  /* ---------- Main content ---------- */
+  .wrap {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.25rem;
+    animation: fadeUp 1.8s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  h1 {
+    font-size: clamp(1.7rem, 5vw, 2.9rem);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    line-height: 1.35;
+    color: var(--cream);
+  }
+  h1 .name {
+    font-weight: 500;
+    color: var(--lavender);
+    text-shadow: 0 0 24px var(--glow);
+  }
+  .subtitle {
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    color: var(--text-dim);
+    font-weight: 300;
+    max-width: 32ch;
+  }
+
+  /* ---------- Reasons I love you (flip/reveal card) ---------- */
+  .reasons-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .reason-card {
+    width: 100%;
+    max-width: 360px;
+    cursor: pointer;
+    perspective: 1200px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Single face that turns edge-on; content is swapped at the midpoint,
+     so only one side is ever shown (no backface bleed-through). */
+  .reason-face {
+    width: 100%;
+    min-height: 190px;
+    border-radius: 24px;
+    padding: 1.9rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.7rem;
+    border: 1px solid rgba(201, 184, 255, 0.22);
+    box-shadow: 0 12px 40px -14px var(--glow);
+    background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+    backdrop-filter: blur(8px);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    transition: transform 0.4s ease, background 0.4s ease;
+  }
+  .reason-card.turning .reason-face { transform: rotateY(90deg); }
+  /* cover look while closed */
+  .reason-face.is-cover {
+    background: linear-gradient(160deg, rgba(201,184,255,0.16), rgba(159,195,232,0.08));
+  }
+
+  .reason-content { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; }
+  .reason-content[hidden] { display: none; }
+
+  .heart-big {
+    font-size: 2.4rem;
+    color: var(--lavender);
+    text-shadow: 0 0 22px var(--glow);
+    animation: heartPulse 3.5s ease-in-out infinite;
+  }
+  @keyframes heartPulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50%      { transform: scale(1.12); opacity: 1; }
+  }
+  .front-title {
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: 0.5px;
+  }
+  .front-sub {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+  }
+  .reason-eyebrow {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--lavender-soft);
+  }
+  .reason-text {
+    font-size: clamp(1.05rem, 3vw, 1.25rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+  .reason-hint {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    opacity: 0.75;
+    min-height: 1.2em;
+  }
+
+  /* ---------- Message card + button ---------- */
+  .comfort {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+  }
+  .message-card {
+    background: linear-gradient(160deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border: 1px solid rgba(201, 184, 255, 0.18);
+    border-radius: 22px;
+    padding: 1.75rem 1.6rem;
+    width: 100%;
+    max-width: 480px;
+    min-height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .message-card p {
+    font-size: clamp(1.05rem, 3vw, 1.25rem);
+    font-weight: 300;
+    color: var(--text-soft);
+    font-style: italic;
+  }
+  .message-card.faded { opacity: 0; transform: translateY(8px); }
+
+  .btn {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    color: #2a2440;
+    background: linear-gradient(135deg, var(--lavender), var(--blue-soft));
+    padding: 0.85rem 2rem;
+    border-radius: 100px;
+    box-shadow: 0 8px 28px -6px var(--glow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 34px -6px var(--glow);
+    filter: brightness(1.05);
+  }
+  .btn:active { transform: translateY(0); }
+  .btn:focus-visible { outline: 2px solid var(--lavender); outline-offset: 4px; }
+
+  footer {
+    position: relative;
+    z-index: 2;
+    margin-top: 2.5rem;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    opacity: 0.85;
+  }
+  footer .heart { color: var(--lavender); }
+
+  @media (max-width: 480px) {
+    body { padding: 2.5rem 1.1rem; }
+    .wrap { gap: 1.9rem; }
+    .reason-card .reason-face { min-height: 175px; padding: 1.7rem 1.3rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .star, .heart-big { animation: none; }
+    .reason-face { transition: background 0.4s ease; }
+    .reason-card.turning .reason-face { transform: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="sky" id="sky" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <header>
+      <h1>Take a deep breath, <span class="name">Sayangg</span>.<br />You're going to be okay.</h1>
+    </header>
+    <p class="subtitle">However heavy today feels, you don't have to hold it all at once. Just stay here a moment with me.</p>
+
+    <!-- Reasons I love you -->
+    <section class="reasons-section" aria-label="Reasons I love you">
+      <div class="reason-card" id="reasonCard" role="button" tabindex="0" aria-label="Reveal a reason I love you">
+        <div class="reason-face is-cover" id="reasonFace">
+          <div class="reason-content" id="coverContent">
+            <div class="heart-big">♡</div>
+            <div class="front-title">one reason I love you</div>
+            <div class="front-sub">tap to open</div>
+          </div>
+          <div class="reason-content" id="reasonContent" hidden>
+            <div class="reason-eyebrow">I love you because…</div>
+            <div class="reason-text" id="reasonText"></div>
+          </div>
+        </div>
+      </div>
+      <div class="reason-hint" id="reasonHint">tap the card whenever you need a reminder</div>
+    </section>
+
+    <!-- Comfort messages -->
+    <section class="comfort" aria-label="A message for you">
+      <div class="message-card" id="messageCard">
+        <p id="messageText">Whenever you're ready, here's something I want you to hear.</p>
+      </div>
+      <button class="btn" id="comfortBtn">Tell me something gentle 💜</button>
+    </section>
+  </main>
+
+  <footer>Made with all my love, just for you. <span class="heart">♡</span></footer>
+
+<script>
+  // ---------- Drifting stars ----------
+  (function makeStars() {
+    const sky = document.getElementById('sky');
+    const count = window.innerWidth < 480 ? 28 : 50;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 2.5 + 1;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.top = (Math.random() * 120) + 'vh';
+      const driftDur = Math.random() * 30 + 30;   // 30–60s slow drift
+      const twinkleDur = Math.random() * 4 + 3;   // 3–7s
+      s.style.animationDuration = driftDur + 's, ' + twinkleDur + 's';
+      s.style.animationDelay = (-Math.random() * driftDur) + 's, ' + (-Math.random() * twinkleDur) + 's';
+      sky.appendChild(s);
+    }
+  })();
+
+  // ---------- Comfort messages (cycled, no repeats until all seen) ----------
+  const messages = [
+    "I'm right here with you, every step of the way.",
+    "It's okay to not be okay right now. Take all the time you need.",
+    "You are so incredibly strong, even when you don't feel like it.",
+    "You don't have to carry it all alone.",
+    "This feeling is heavy, but it is not forever. I promise.",
+    "You matter to me more than I could ever put into words.",
+    "Rest if you need to. I'll be right here when you wake up.",
+    "One breath at a time. That's all you have to do right now."
+  ];
+
+  const card = document.getElementById('messageCard');
+  const text = document.getElementById('messageText');
+  const btn = document.getElementById('comfortBtn');
+
+  let order = [];
+  function refillOrder() {
+    order = messages.map((_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) {        // shuffle
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+  }
+  refillOrder();
+
+  btn.addEventListener('click', () => {
+    if (order.length === 0) refillOrder();
+    const next = order.shift();
+    card.classList.add('faded');
+    setTimeout(() => {
+      text.textContent = messages[next];
+      card.classList.remove('faded');
+    }, 550);
+  });
+
+  // ---------- Reasons I love you (flip + cycle, no repeats until all seen) ----------
+  const reasons = [
+    "you make even the ordinary days feel warm and safe.",
+    "you have shown me so much love that I have never thought badly of you",
+    "your laugh is genuinely my favourite sound in the world.",
+    "you're so much braver than you give yourself credit for.",
+    "being near you feels like home, no matter where we are.",
+    "you notice the little things, and you make me want to be kinder.",
+    "your heart is gentle, and the world is softer because you're in it.",
+    "even on your hardest days, you still try and that's everything.",
+    "I love who I get to be when I'm with you.",
+    "you push me to be the best version of myself",
+    "you make me enjoy games and shows that I would never enjoy before meeting you",
+    "of every little thing that makes you, you. all of it."
+  ];
+
+  const reasonCard = document.getElementById('reasonCard');
+  const reasonFace = document.getElementById('reasonFace');
+  const coverContent = document.getElementById('coverContent');
+  const reasonContent = document.getElementById('reasonContent');
+  const reasonText = document.getElementById('reasonText');
+  const reasonHint = document.getElementById('reasonHint');
+
+  let reasonOrder = [];
+  function refillReasons() {
+    reasonOrder = reasons.map((_, i) => i);
+    for (let i = reasonOrder.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [reasonOrder[i], reasonOrder[j]] = [reasonOrder[j], reasonOrder[i]];
+    }
+  }
+  refillReasons();
+
+  let turning = false;
+  function revealReason() {
+    if (turning) return;          // ignore taps mid-animation
+    turning = true;
+    reasonCard.classList.add('turning');   // card turns edge-on (90°)
+
+    // swap content while the card is edge-on, then turn it back
+    setTimeout(() => {
+      if (reasonOrder.length === 0) refillReasons();
+      reasonText.textContent = reasons[reasonOrder.shift()];
+      coverContent.hidden = true;
+      reasonContent.hidden = false;
+      reasonFace.classList.remove('is-cover');
+      reasonHint.textContent = 'tap again for another';
+      reasonCard.classList.remove('turning');
+      setTimeout(() => { turning = false; }, 400);
+    }, 400);
+  }
+
+  reasonCard.addEventListener('click', revealReason);
+  reasonCard.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); revealReason(); }
+  });
+</script>
+</body>
+</html>
