@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>For You, Sayang</title>
+<style>
+  :root {
+    --cream: #f7f1e7;
+    --cream-2: #efe6d6;
+    --paper: #fffdf8;
+    --ink: #3a342c;
+    --soft-ink: #6c6258;
+    --faint: #b3a48f;
+    --line: #e6dcc9;
+    --accent: #b08a5f;
+    --accent-soft: #cdae87;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #fff8ec 0%, rgba(255,248,236,0) 60%),
+      linear-gradient(160deg, var(--cream) 0%, var(--cream-2) 100%);
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.9;
+    font-size: 18px;
+    -webkit-font-smoothing: antialiased;
+    padding: 56px 20px 110px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* soft floating glow accents */
+  .glow {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.5;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .glow.a { width: 320px; height: 320px; background: #f3e3c9; top: -80px; left: -90px; }
+  .glow.b { width: 280px; height: 280px; background: #ecd9be; bottom: -60px; right: -80px; }
+
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---------- Opening ---------- */
+  .opening {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: rise 1.1s ease both;
+  }
+
+  .seal {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    margin: 0 auto 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, var(--accent-soft), var(--accent));
+    color: #fff8ec;
+    font-size: 24px;
+    box-shadow: 0 10px 24px -10px rgba(120, 90, 55, 0.7);
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  .opening .small {
+    font-size: 12px;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 20px;
+  }
+
+  .opening h1 {
+    font-size: 40px;
+    font-weight: normal;
+    font-style: italic;
+    margin: 0 0 16px;
+    letter-spacing: 0.01em;
+  }
+
+  .opening .sub {
+    color: var(--soft-ink);
+    font-style: italic;
+    font-size: 16px;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  /* ---------- Letter ---------- */
+  .letter {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 60px 54px 52px;
+    box-shadow:
+      0 30px 70px -36px rgba(80, 60, 35, 0.4),
+      0 2px 0 rgba(255,255,255,0.6) inset;
+    position: relative;
+    animation: rise 1.2s ease 0.15s both;
+  }
+
+  /* tiny corner flourishes */
+  .letter::before,
+  .letter::after {
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-color: var(--accent-soft);
+    border-style: solid;
+    opacity: 0.7;
+  }
+  .letter::before { top: 16px; left: 16px; border-width: 1px 0 0 1px; }
+  .letter::after { bottom: 16px; right: 16px; border-width: 0 1px 1px 0; }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--line);
+    border: 0;
+    margin: 0 auto 36px;
+    position: relative;
+  }
+  .divider::after {
+    content: "\2665";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--paper);
+    padding: 0 8px;
+    color: var(--accent-soft);
+    font-size: 13px;
+  }
+
+  .salutation {
+    font-style: italic;
+    font-size: 24px;
+    margin: 0 0 26px;
+  }
+
+  .letter p { margin: 0 0 22px; }
+  .letter p:last-of-type { margin-bottom: 0; }
+
+  /* line-by-line fade in */
+  .reveal { opacity: 0; transform: translateY(10px); animation: rise 0.9s ease forwards; }
+  .reveal:nth-of-type(1) { animation-delay: 0.55s; }
+  .reveal:nth-of-type(2) { animation-delay: 0.8s; }
+  .reveal:nth-of-type(3) { animation-delay: 1.05s; }
+  .reveal:nth-of-type(4) { animation-delay: 1.3s; }
+  .reveal:nth-of-type(5) { animation-delay: 1.55s; }
+  .reveal:nth-of-type(6) { animation-delay: 1.8s; }
+  .reveal:nth-of-type(7) { animation-delay: 2.05s; }
+  .reveal:nth-of-type(8) { animation-delay: 2.3s; }
+
+  em.tender { font-style: italic; color: var(--accent); }
+  .strong { color: var(--ink); font-weight: normal; border-bottom: 1px solid var(--accent-soft); padding-bottom: 1px; }
+
+  .sign {
+    margin-top: 42px;
+    font-style: italic;
+    color: var(--soft-ink);
+  }
+  .sign .me {
+    display: block;
+    margin-top: 6px;
+    font-size: 26px;
+    color: var(--ink);
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 46px;
+    color: var(--faint);
+    font-size: 13px;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    animation: rise 1s ease 2.6s both;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 10px 24px -10px rgba(120,90,55,0.7); }
+    50% { transform: scale(1.06); box-shadow: 0 14px 30px -10px rgba(120,90,55,0.55); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+
+  @media (max-width: 540px) {
+    body { font-size: 17px; padding: 36px 14px 80px; }
+    .letter { padding: 42px 26px 38px; }
+    .opening h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+  <div class="glow a"></div>
+  <div class="glow b"></div>
+
+  <div class="wrap">
+
+    <div class="opening">
+      <div class="seal">&#9829;</div>
+      <div class="small">For you, sayang</div>
+      <h1>I'm Sorry</h1>
+      <p class="sub">No excuses live in here. Just the truth, and a heart that's wide open for you.</p>
+    </div>
+
+    <article class="letter">
+      <hr class="divider" />
+
+      <p class="salutation">Sayang,</p>
+
+      <p class="reveal">I'm sorry. Fully, completely, without a single <em class="tender">"but"</em> attached to it.</p>
+
+      <p class="reveal">I promised you we would spend time together. I got home and I fell asleep, breaking that promise. That is the plain truth. I am not going to dress it up or hide behind an excuse. Because an explanation was never what you needed from me. <span class="strong">I was what you needed, and I wasn't there.</span></p>
+
+      <p class="reveal">You were left entirely alone when you should never have had to be. You reached out for me as your safe harbor and found silence. I can only begin to imagine how isolating and heavy that must have felt. Like you didn't matter, like no one was there to protect your peace. So let me say it as clearly as I can: you <em class="tender">do</em> matter. More than I let you feel that night. My failure says everything about my lack of care, and absolutely nothing about your worth.</p>
+
+      <p class="reveal">It breaks my heart to think about you carrying all of that weight by yourself, in the exact moment you most needed me to be there for you. I hate that I let you down when things were so hard. I am not going to look away from that reality, and I am not going to rush you past it. You are allowed to hurt for as long as you need to.</p>
+
+      <p class="reveal">Please just know this: <span class="strong">I'm right here. I'm not going anywhere.</span> Whenever you feel ready, I will be here to listen, to understand, and to do whatever it takes to make this right. For as long as it takes.</p>
+
+      <p class="reveal">I love you, sayang. I am so sorry.</p>
+
+      <p class="sign reveal">Always waiting for you,<br>
+        <span class="me">Yours, completely</span>
+      </p>
+    </article>
+
+    <footer>&#9829;&nbsp;&nbsp;Whenever you're ready. I'll be right here.&nbsp;&nbsp;&#9829;</footer>
+
+  </div>
+</body>
+</html>
