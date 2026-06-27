@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Emoji Correction Patch 💗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Caveat:wght@500;600;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rose:   #f78fb3;
+    --rose-d: #e26d97;
+    --petal:  #ffb3c8;
+    --blush:  #ffd9e3;
+    --cream:  #fff6f0;
+    --peach:  #ffe2d1;
+    --mauve:  #8a6470;
+    --ink:    #5a3b4a;
+    --glass:  rgba(255, 255, 255, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.7);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Quicksand', system-ui, sans-serif;
+    color: var(--ink);
+    min-height: 100svh;
+    overflow-x: hidden;
+    background:
+      radial-gradient(circle at 12% 15%, #ffe2ec 0%, transparent 45%),
+      radial-gradient(circle at 88% 10%, #ffe9da 0%, transparent 42%),
+      radial-gradient(circle at 50% 105%, #ffd6e4 0%, transparent 55%),
+      linear-gradient(160deg, #fff6f0 0%, #fff0f4 55%, #fdeef2 100%);
+    background-attachment: fixed;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  /* floating background accents */
+  .bg-accent {
+    position: fixed;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.5;
+    z-index: 0;
+    animation: floaty 6s ease-in-out infinite;
+  }
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 20px 64px;
+  }
+
+  .fade-up { animation: fadeUp 0.7s ease-out both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: 0 16px 40px -12px rgba(226, 109, 151, 0.28);
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, var(--rose), #c98da6, #ffab73, var(--rose));
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 6s linear infinite;
+  }
+  @keyframes shimmer {
+    to { background-position: 220% center; }
+  }
+
+  /* ===== Header ===== */
+  .intro { text-align: center; }
+
+  .terminal-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rose-d);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1.5px solid var(--blush);
+    padding: 6px 14px;
+    border-radius: 50px;
+    margin-bottom: 18px;
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #ff6b6b;
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.6);
+    animation: blink-dot 1.6s ease-in-out infinite;
+  }
+  @keyframes blink-dot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.5); }
+    50% { box-shadow: 0 0 0 6px rgba(255, 107, 107, 0); }
+  }
+
+  .hand { font-family: 'Caveat', cursive; }
+
+  .intro .pre {
+    font-family: 'Caveat', cursive;
+    font-size: 1.7rem;
+    color: var(--rose-d);
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.9rem, 6vw, 3rem);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .intro .sub {
+    margin: 16px auto 0;
+    max-width: 460px;
+    font-size: 1rem;
+    color: var(--mauve);
+    line-height: 1.6;
+  }
+
+  /* ===== Emoji diagnostic ===== */
+  .diagnostic {
+    margin-top: 34px;
+    border-radius: 26px;
+    padding: 26px 22px;
+  }
+  .diag-title {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  .compare {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .emoji-card {
+    flex: 1 1 0;
+    min-width: 130px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px 14px;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .emoji-card:hover { transform: translateY(-5px); box-shadow: 0 12px 26px -10px rgba(226,109,151,0.4); }
+  .emoji-card.intended { border-color: #9fd6b0; background: #f3fcf6; }
+  .emoji-card.glitch    { border-color: #ff9aa2; background: #fff4f4; }
+
+  .big-emoji {
+    font-size: 3.1rem;
+    line-height: 1;
+    display: inline-block;
+  }
+  .emoji-card.glitch .big-emoji { animation: wobble 2.4s ease-in-out infinite; }
+  @keyframes wobble {
+    0%, 100% { transform: rotate(-6deg); }
+    50% { transform: rotate(6deg); }
+  }
+  .tag {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 50px;
+  }
+  .tag.good { background: #def7e6; color: #2f9e5e; }
+  .tag.bad  { background: #ffe0e0; color: #d6455c; }
+  .emoji-card .label {
+    margin-top: 10px;
+    font-size: 0.84rem;
+    color: var(--mauve);
+    line-height: 1.4;
+  }
+  .verdict {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--rose-d);
+    font-weight: 600;
+  }
+
+  /* ===== Real apology ===== */
+  .apology {
+    margin-top: 30px;
+    border-radius: 28px;
+    padding: 30px 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  .apology .watermark {
+    position: absolute;
+    top: -18px; right: -10px;
+    font-size: 6rem;
+    opacity: 0.08;
+    user-select: none;
+  }
+  .apology h2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.7rem;
+    color: var(--rose-d);
+    margin-bottom: 16px;
+  }
+  .apology p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .apology p strong { color: var(--rose-d); font-weight: 700; }
+  .apology .closer {
+    font-family: 'Caveat', cursive;
+    font-size: 1.7rem;
+    color: var(--rose-d);
+    line-height: 1.3;
+    margin-top: 6px;
+  }
+
+  /* ===== Connection signal ===== */
+  .cheer { margin-top: 30px; text-align: center; }
+  .cheer h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--rose-d);
+  }
+  .cheer .hint { color: var(--mauve); font-size: 0.92rem; margin-top: 6px; }
+
+  .signal-box {
+    margin-top: 22px;
+    border-radius: 26px;
+    padding: 26px 22px;
+  }
+  .signal-readout {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--rose-d);
+    min-height: 1.5em;
+  }
+  .signal-pct { font-variant-numeric: tabular-nums; }
+
+  .meter {
+    margin: 16px 0 6px;
+    height: 16px;
+    border-radius: 50px;
+    background: #ffe3ec;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(226,109,151,0.25);
+  }
+  .meter-fill {
+    height: 100%;
+    width: 8%;
+    border-radius: 50px;
+    background: linear-gradient(90deg, #ffc2d6, var(--rose), var(--rose-d));
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .signal-bars {
+    font-size: 1.3rem;
+    letter-spacing: 4px;
+    margin-top: 4px;
+    color: var(--rose);
+  }
+
+  .btn {
+    margin-top: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+    background: linear-gradient(135deg, var(--rose), var(--rose-d));
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px -8px rgba(226, 109, 151, 0.7);
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:hover { transform: translateY(-2px) scale(1.03); }
+  .btn:active { transform: scale(0.96); }
+  .btn:disabled { opacity: 0.85; cursor: default; transform: none; }
+
+  .unlock {
+    margin-top: 22px;
+    border-radius: 24px;
+    padding: 26px 22px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease, opacity 0.5s ease, padding 0.4s ease;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .unlock.open {
+    max-height: 360px;
+    opacity: 1;
+    padding-top: 26px;
+    padding-bottom: 26px;
+  }
+  .unlock .msg {
+    font-family: 'Caveat', cursive;
+    font-size: 1.9rem;
+    line-height: 1.3;
+    color: var(--rose-d);
+  }
+  .unlock .sig {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: var(--mauve);
+  }
+
+  footer {
+    margin-top: 44px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--mauve);
+  }
+  footer a { color: var(--rose-d); text-decoration: none; font-weight: 600; }
+  footer a:hover { text-decoration: underline; }
+
+  /* heart burst particles */
+  .burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 80;
+    font-size: 1.4rem;
+    animation: rise 1.3s ease-out forwards;
+  }
+  @keyframes rise {
+    0%   { transform: translateY(0) scale(0.6) rotate(0); opacity: 1; }
+    100% { transform: translateY(-150px) scale(1.3) rotate(35deg); opacity: 0; }
+  }
+
+  @media (max-width: 480px) {
+    main { padding: 36px 16px 52px; }
+    .emoji-card { min-width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- floating background accents -->
+  <div class="bg-accent" style="top:10%; left:6%; font-size:2.6rem; animation-delay:0s;">🌸</div>
+  <div class="bg-accent" style="top:26%; right:7%; font-size:2rem; animation-delay:-1.5s;">💗</div>
+  <div class="bg-accent" style="bottom:20%; left:9%; font-size:2.2rem; animation-delay:-2.5s;">🤍</div>
+  <div class="bg-accent" style="bottom:9%; right:11%; font-size:1.7rem; animation-delay:-3.5s;">✨</div>
+
+  <main>
+
+    <!-- ===== 1. Header / Glitch callout ===== -->
+    <section class="intro fade-up">
+      <span class="terminal-chip"><span class="dot"></span> Bug Report · Patch v1.0.1</span>
+
+      <p class="pre">to my Jasmine 💌</p>
+      <h1 class="shimmer">Emoji Correction Patch</h1>
+      <p class="sub">
+        Urgent maintenance notice: a rogue emoji slipped into the end of my apology
+        and corrupted the entire <span style="font-weight:600; color:var(--rose-d);">tone</span> of the message.
+        Rolling back now. 🛠️
+      </p>
+
+      <!-- Emoji diagnostic -->
+      <div class="diagnostic glass">
+        <p class="diag-title">🔍 Running diagnostics on the affected character…</p>
+        <div class="compare">
+          <div class="emoji-card intended">
+            <span class="big-emoji">🌹</span>
+            <span class="tag good">intended</span>
+            <p class="label">What I <em>meant</em> to send as a sincere, soft sorry.</p>
+          </div>
+          <div class="emoji-card glitch">
+            <!-- The actual emoji that got sent: 😌 -->
+            <span class="big-emoji" id="culprit">😌</span>
+            <span class="tag bad">the glitch</span>
+            <p class="label">What actually shipped which reads smug &amp; way too relaxed. Im sorry sayang.</p>
+          </div>
+        </div>
+        <p class="verdict">⚠️ Detected: 1 (one) accidentally smug face. Sincerity integrity: compromised.</p>
+      </div>
+    </section>
+
+    <!-- ===== 2. The real apology ===== -->
+    <section class="apology glass fade-up" style="animation-delay:0.15s;">
+      <span class="watermark">💗</span>
+      <h2>Okay this one is betul-betul punya, sayang.</h2>
+      <p>
+        Earlier my tone shifted and felt a little off, and you didn't deserve that energy.
+        Then I used a <strong>😌</strong> that made it look like I was being
+        casual or breezing past the moment. That was not what I inteded.
+      </p>
+      <p>
+        The truth is I take how you feel seriously, and I'm genuinely sorry the way I came
+        across landed wrong. You're one of the gentlest, brightest parts of my day, and the
+        last thing I'd ever want is to make you feel brushed off.
+      </p>
+      <p>
+        <strong>You mean the world to me</strong>, and I want to make this right properly this time,
+        not with a smug little face, but with actually showing up softer for you.
+      </p>
+      <p class="closer">Thank you for being patient with me. I adore you. 💞</p>
+    </section>
+
+    <!-- ===== 3. Interactive cheer-up ===== -->
+    <section class="cheer fade-up" style="animation-delay:0.3s;">
+      <h2>Restore our connection? 🥺</h2>
+      <p class="hint">The signal dropped a bit. Tap the button to boost it back to full bars.</p>
+
+      <div class="signal-box glass">
+        <div class="signal-readout">
+          📶 Connection signal: <span class="signal-pct" id="pct">8%</span>
+        </div>
+        <div class="meter"><div class="meter-fill" id="fill"></div></div>
+        <div class="signal-bars" id="bars">▁▁▁▁▁</div>
+
+        <button class="btn" id="boost">💗 Boost our signal</button>
+      </div>
+
+      <!-- unlocked message -->
+      <div class="unlock glass" id="unlock">
+        <p class="msg" id="unlockMsg">You did it — signal fully restored. 💖</p>
+        <p class="sig">— always yours, and officially emoji-supervised from now on 😌➡️🌹</p>
+      </div>
+    </section>
+
+    <footer>
+      made with 💗 just for you, Jasmine · <a href="index.html">back to our hub</a>
+    </footer>
+
+  </main>
+
+  <script>
+    (function () {
+      const boost   = document.getElementById('boost');
+      const fill    = document.getElementById('fill');
+      const pctEl   = document.getElementById('pct');
+      const barsEl  = document.getElementById('bars');
+      const unlock  = document.getElementById('unlock');
+      const unlockMsg = document.getElementById('unlockMsg');
+
+      const steps = [8, 32, 58, 80, 100];
+      const barFaces = ['▁▁▁▁▁', '▂▂▁▁▁', '▃▃▃▁▁', '▅▅▅▅▁', '▇▇▇▇▇'];
+      const cheers = [
+        "Reconnecting… there you are. 🌷",
+        "Signal climbing — you're hard to stay disconnected from. 💕",
+        "Almost there. Smug face fully uninstalled. 🗑️😌",
+        "Strong signal restored — sincerity at 100%. 💗"
+      ];
+      let i = 0;
+
+      function heartBurst(x, y) {
+        const hearts = ['💗', '💞', '🌸', '✨', '🤍', '💕'];
+        for (let n = 0; n < 9; n++) {
+          const h = document.createElement('span');
+          h.className = 'burst';
+          h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+          h.style.left = (x + (Math.random() * 70 - 35)) + 'px';
+          h.style.top  = (y + (Math.random() * 16 - 8)) + 'px';
+          h.style.fontSize = (1 + Math.random() * 1.1) + 'rem';
+          document.body.appendChild(h);
+          setTimeout(() => h.remove(), 1300);
+        }
+      }
+
+      boost.addEventListener('click', () => {
+        if (i >= steps.length - 1) {
+          // already full — replay a little celebration
+          const r = boost.getBoundingClientRect();
+          heartBurst(r.left + r.width / 2, r.top);
+          return;
+        }
+        i++;
+        const val = steps[i];
+        fill.style.width = val + '%';
+        pctEl.textContent = val + '%';
+        barsEl.textContent = barFaces[i];
+
+        const r = boost.getBoundingClientRect();
+        heartBurst(r.left + r.width / 2, r.top);
+
+        if (i < cheers.length) {
+          unlockMsg.textContent = cheers[i - 1] || cheers[0];
+        }
+
+        if (val >= 100) {
+          unlockMsg.textContent = "Signal fully restored — apology accepted? 💖 You + me, reconnected.";
+          boost.textContent = '✨ We\'re good 💗';
+          boost.disabled = true;
+          unlock.classList.add('open');
+          // confetti finale
+          const rect = unlock.getBoundingClientRect();
+          setTimeout(() => heartBurst(window.innerWidth / 2, rect.top + 40), 200);
+        } else {
+          unlock.classList.add('open');
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
