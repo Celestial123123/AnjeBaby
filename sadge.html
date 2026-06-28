@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A New Morning, Sayang</title>
+  <style>
+    :root {
+      --ink:       #5a4a52;
+      --ink-soft:  #7d6b72;
+      --rose:      #d77f86;
+      --rose-deep: #c25f73;
+      --peach:     #f6a27a;
+      --card:      rgba(255, 252, 250, 0.72);
+      --card-edge: rgba(255, 255, 255, 0.85);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto,
+        Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      background-color: #ffe7d6;
+      background-image:
+        linear-gradient(170deg,
+          #fff0e2 0%,
+          #ffe0d6 28%,
+          #ffd2d9 55%,
+          #f3d2e6 78%,
+          #e6d4f0 100%);
+      background-attachment: fixed;
+    }
+
+    /* soft floating light orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(42px);
+      opacity: 0.55;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb.sun {
+      width: 240px; height: 240px;
+      top: -70px; right: -40px;
+      background: radial-gradient(circle, #ffd89b, #ffb37a 60%, transparent 72%);
+      opacity: 0.8;
+      animation: rise 9s ease-in-out infinite;
+    }
+    .orb.rose {
+      width: 200px; height: 200px;
+      bottom: -60px; left: -50px;
+      background: radial-gradient(circle, #ffb0c4, transparent 70%);
+      animation: drift 11s ease-in-out infinite;
+    }
+    .orb.lav {
+      width: 160px; height: 160px;
+      top: 45%; left: 8%;
+      background: radial-gradient(circle, #d9c3f0, transparent 70%);
+      animation: drift 13s ease-in-out infinite reverse;
+    }
+    @keyframes rise {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(18px); }
+    }
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0); }
+      50%      { transform: translate(20px, -16px); }
+    }
+
+    /* ---- card ---- */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      max-width: 560px;
+      width: 100%;
+      border-radius: 32px;
+      padding: 50px 44px 46px;
+      border: 1px solid var(--card-edge);
+      box-shadow:
+        0 30px 70px rgba(180, 110, 120, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      opacity: 0;
+      transform: translateY(28px) scale(0.985);
+      animation: fadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* little rising-sun icon */
+    .sun-icon {
+      width: 70px; height: 70px;
+      margin: 0 auto 22px;
+      position: relative;
+    }
+    .sun-icon .disc {
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, #ffe2a8, #ffb074 70%);
+      box-shadow: 0 0 22px rgba(255, 170, 110, 0.6);
+      animation: pulse 3.6s ease-in-out infinite;
+    }
+    .sun-icon .ray {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 4px; height: 11px;
+      margin: -35px 0 0 -2px;
+      border-radius: 4px;
+      background: #ffb074;
+      transform-origin: 2px 35px;
+      opacity: 0.8;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.08); }
+    }
+
+    .eyebrow {
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.26em;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--rose-deep);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-bottom: 26px;
+    }
+
+    .divider {
+      width: 60px; height: 4px;
+      border-radius: 4px;
+      margin: 0 auto 30px;
+      background: linear-gradient(90deg, var(--peach), var(--rose));
+    }
+
+    p.body {
+      margin-bottom: 18px;
+      color: var(--ink-soft);
+      font-size: 1.04rem;
+    }
+    p.body strong { color: var(--ink); font-weight: 700; }
+    .hl {
+      color: var(--rose-deep);
+      font-weight: 700;
+    }
+
+    .closing {
+      margin-top: 30px;
+      font-size: 1.05rem;
+      color: var(--ink);
+    }
+    .closing .name {
+      display: block;
+      margin-top: 4px;
+      font-weight: 700;
+      color: var(--rose-deep);
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--rose);
+      font-style: italic;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 40px 26px 36px; border-radius: 26px; }
+      h1 { font-size: 1.55rem; }
+      p.body { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb sun" aria-hidden="true"></div>
+  <div class="orb rose" aria-hidden="true"></div>
+  <div class="orb lav" aria-hidden="true"></div>
+
+  <main class="card">
+    <div class="sun-icon" aria-hidden="true">
+      <span class="ray" style="transform: rotate(0deg);"></span>
+      <span class="ray" style="transform: rotate(45deg);"></span>
+      <span class="ray" style="transform: rotate(90deg);"></span>
+      <span class="ray" style="transform: rotate(135deg);"></span>
+      <span class="ray" style="transform: rotate(180deg);"></span>
+      <span class="ray" style="transform: rotate(225deg);"></span>
+      <span class="ray" style="transform: rotate(270deg);"></span>
+      <span class="ray" style="transform: rotate(315deg);"></span>
+      <span class="disc"></span>
+    </div>
+
+    <p class="eyebrow">Good Morning Sayang</p>
+    <h1>I'm really sorry</h1>
+    <div class="divider"></div>
+
+    <p class="body">
+      I just woke up and saw your missed calls and my heart sank. You needed me
+      last night and I was dead asleep. I'm so sorry. I hate that you were sitting
+      there trying to reach me and I wasn't picking up.
+    </p>
+
+    <p class="body">
+      I know how much overthinking wears you out. Your brain just won't stop, and
+      everything feels ten times worse at night. And being alone with all of that,
+      when you just wanted someone to tell you it's okay? That genuinely sucks. You
+      weren't being too much. You never are.
+    </p>
+
+    <p class="body">
+      I love you, okay? Like, so so so much. You're <span class="hl">safe with me</span>.
+      Your worries, your 2am spirals, the messy days, none of it scares me off.
+      That's all part of you and I want every bit of you. You can always come to me.
+      Always.
+    </p>
+
+    <p class="body">
+      And whenever you feel like it, today, tomorrow, whenever, tell me what was on
+      your mind last night. No rush, no pressure. I'm here, and I'll listen for as
+      long as you need.
+    </p>
+
+    <p class="closing">
+      Love you always,
+      <span class="name">Forever yours</span>
+    </p>
+  </main>
+</body>
+</html>
