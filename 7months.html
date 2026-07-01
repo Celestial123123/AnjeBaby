@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy 7 Months — Our Story</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-0: #0a1017;
+    --bg-1: #0f1923;
+    --panel: #17212c;
+    --panel-2: #1c2733;
+    --line: #2a3642;
+    --red: #ff4655;
+    --red-dim: #a3313c;
+    --white: #ece8e1;
+    --muted: #7e8992;
+    --gold: #f0c419;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: radial-gradient(ellipse at 20% -10%, #16222f 0%, var(--bg-1) 45%, var(--bg-0) 100%);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  .ui { font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+
+  /* ── ambient hearts ── */
+  .ambient { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+  .spark {
+    position: absolute; color: var(--red); opacity: 0;
+    font-size: 14px; animation: rise linear infinite;
+    filter: drop-shadow(0 0 6px rgba(255,70,85,0.5));
+  }
+  @keyframes rise {
+    0% { transform: translateY(10vh) scale(0.6); opacity: 0; }
+    10% { opacity: 0.55; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(-110vh) scale(1.1); opacity: 0; }
+  }
+  .diag-glow {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: linear-gradient(115deg, transparent 40%, rgba(255,70,85,0.05) 50%, transparent 60%);
+  }
+
+  .cut { clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px); }
+  .cut-sm { clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px); }
+
+  .shell { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
+
+  /* ══════════════ TOP BAR ══════════════ */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 14px 4px; margin-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .back-link {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--muted); text-decoration: none; font-size: 13px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--white); }
+  .crumb { color: var(--muted); font-size: 13px; white-space: nowrap; }
+
+  .topbar-center { display: flex; align-items: center; gap: 4px; }
+  .nav-icon-btn {
+    width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+    background: transparent; border: none; color: var(--muted); cursor: default;
+    transition: color 0.2s;
+  }
+  .nav-icon-btn.is-live { color: var(--white); }
+  .play-tab {
+    background: linear-gradient(135deg, var(--red) 0%, #d6303f 100%);
+    color: #fff; font-size: 15px; padding: 9px 26px; margin: 0 6px;
+    box-shadow: 0 4px 16px rgba(255,70,85,0.35);
+  }
+
+  .topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .stat-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--panel); border: 1px solid var(--line);
+    padding: 6px 12px; font-size: 13px; color: var(--white);
+  }
+  .stat-pill svg { flex-shrink: 0; }
+  .avatar-ring {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), #7a1f3d);
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--line); font-size: 15px;
+  }
+
+  /* ══════════════ HERO ══════════════ */
+  .hero {
+    background: linear-gradient(135deg, #131c26 0%, #0d151e 60%, #150c10 100%);
+    border: 1px solid var(--line);
+    padding: 30px 30px 26px;
+    position: relative;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(100deg, transparent 55%, rgba(255,70,85,0.08) 65%, transparent 78%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    color: var(--red); font-size: 13px; margin-bottom: 6px; position: relative; z-index: 1;
+  }
+  .hero-eyebrow .timer {
+    color: var(--white); background: rgba(255,255,255,0.06);
+    padding: 2px 10px; font-variant-numeric: tabular-nums; letter-spacing: 1px;
+  }
+  .hero h1 {
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: clamp(30px, 5vw, 46px);
+    letter-spacing: 1px; color: var(--white); position: relative; z-index: 1;
+    text-shadow: 0 2px 30px rgba(255,70,85,0.25);
+  }
+  .hero-sub {
+    color: var(--muted); font-size: 15px; margin-top: 6px; letter-spacing: 0.5px;
+    position: relative; z-index: 1;
+  }
+
+  .hero-body { display: flex; gap: 26px; margin-top: 22px; position: relative; z-index: 1; }
+  .hero-photo-wrap { flex: 1.3; min-width: 0; position: relative; }
+  .hero-photo {
+    width: 100%; height: 320px; object-fit: cover; display: block;
+    border: 1px solid var(--line);
+    filter: saturate(1.05) contrast(1.03);
+  }
+  .hero-photo-tag {
+    position: absolute; top: 12px; left: 12px;
+    background: rgba(10,16,23,0.75); border: 1px solid var(--red);
+    color: var(--white); font-size: 11px; padding: 3px 10px;
+  }
+
+  .hero-side { flex: 1; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+  .hero-caption {
+    color: #cfd6db; font-size: 14.5px; line-height: 1.6; font-family: 'Inter', sans-serif;
+  }
+  .hero-price-row { display: flex; align-items: center; gap: 10px; margin-top: 18px; }
+  .price-plaque {
+    background: rgba(255,255,255,0.05); border: 1px solid var(--line);
+    padding: 12px 20px; flex: 1; display: flex; align-items: center; gap: 8px;
+  }
+  .price-plaque .amount { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 20px; color: var(--gold); }
+  .heart-box {
+    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--line); background: rgba(255,70,85,0.08); color: var(--red); flex-shrink: 0;
+  }
+
+  /* variant tabs */
+  .variant-tabs { display: flex; gap: 26px; margin-top: 18px; position: relative; z-index: 1; }
+  .variant-tab { cursor: pointer; padding-bottom: 8px; border: none; background: none; }
+  .variant-tab span { font-size: 13px; color: var(--muted); transition: color 0.2s; }
+  .variant-tab .bar { display: block; height: 2px; background: var(--line); margin-top: 8px; width: 100%; transition: background 0.2s; }
+  .variant-tab.active span { color: var(--white); }
+  .variant-tab.active .bar { background: var(--red); }
+
+  /* ══════════════ DEALS ROW ══════════════ */
+  .deals-head {
+    display: flex; align-items: center; gap: 14px; margin: 34px 4px 14px;
+  }
+  .deals-head .line { flex: 1; height: 1px; background: var(--line); }
+  .deals-head h2 { font-family: 'Rajdhani', sans-serif; font-size: 15px; letter-spacing: 2px; color: var(--muted); white-space: nowrap; }
+  .deals-head .timer { color: var(--gold); font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .deals-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .deal-card {
+    background: var(--panel); border: 1px solid var(--line);
+    overflow: hidden; transition: transform 0.25s ease, border-color 0.25s ease;
+    position: relative;
+  }
+  .deal-card:hover { transform: translateY(-4px); border-color: var(--red-dim); }
+  .deal-card img { width: 100%; height: 130px; object-fit: cover; display: block; }
+  .deal-card .deal-body { padding: 10px 12px 12px; }
+  .deal-card .deal-name { font-family: 'Rajdhani', sans-serif; font-size: 14.5px; font-weight: 600; color: var(--white); }
+  .deal-card .deal-price {
+    display: flex; align-items: center; gap: 5px; margin-top: 6px;
+    font-size: 13px; color: var(--gold);
+  }
+
+  /* ══════════════ BOTTOM NAV ══════════════ */
+  .bottom-nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 40px; }
+  .bnav-btn {
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--muted);
+    padding: 14px 8px; font-family: 'Rajdhani', sans-serif; font-size: 13px; letter-spacing: 1px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .bnav-btn:hover { color: var(--white); border-color: var(--muted); }
+  .bnav-btn.active { color: var(--white); border-color: var(--red); background: rgba(255,70,85,0.08); }
+
+  .panel {
+    margin-top: 16px; background: var(--panel); border: 1px solid var(--line);
+    padding: 26px clamp(18px, 4vw, 34px);
+    animation: panelIn 0.35s ease;
+  }
+  @keyframes panelIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .panel h3 {
+    font-family: 'Rajdhani', sans-serif; font-size: 14px; letter-spacing: 2px; color: var(--red);
+    margin-bottom: 18px;
+  }
+
+  /* journey / ranks */
+  .rank-row { display: flex; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .rank-row:last-child { border-bottom: none; }
+  .rank-badge {
+    width: 34px; height: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 13px; color: #0a1017;
+  }
+  .rank-info { flex: 1; min-width: 0; }
+  .rank-info .rname { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 1px; }
+  .rank-info .rdesc { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .rank-row.current .rname { color: var(--red); }
+  .rank-row.current { background: rgba(255,70,85,0.05); margin: 0 -14px; padding: 10px 14px; }
+  .rank-row.locked { opacity: 0.7; }
+  .rank-badge.locked {
+    background: transparent !important; border: 1px dashed #5a6570; color: #5a6570 !important;
+  }
+  .rank-row.locked .rname { color: #d8cd9a; display: flex; align-items: center; gap: 8px; }
+  .rank-row.locked .lock-tag {
+    font-family: 'Rajdhani', sans-serif; font-size: 9px; letter-spacing: 1.5px; font-weight: 600;
+    color: #5a6570; border: 1px solid #3a4450; padding: 1px 6px;
+  }
+
+  /* about us */
+  .letter-text p { color: #d3d9dd; font-size: 15px; line-height: 1.8; margin-bottom: 14px; }
+  .letter-sign { text-align: right; color: var(--red); font-family: 'Rajdhani', sans-serif; font-size: 16px; letter-spacing: 1px; margin-top: 8px; }
+
+  /* adventures */
+  .adv-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .adv-list li {
+    display: flex; align-items: flex-start; gap: 10px; color: #d3d9dd; font-size: 14.5px; line-height: 1.5;
+  }
+  .adv-list li svg { flex-shrink: 0; margin-top: 3px; color: var(--red); }
+
+  /* loadout */
+  .loadout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .loadout-slot { border: 1px solid var(--line); background: var(--panel-2); padding: 12px 14px; }
+  .loadout-slot .slot-label { font-family: 'Rajdhani', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--red); margin-bottom: 5px; }
+  .loadout-slot .slot-text { font-size: 14px; color: var(--white); line-height: 1.4; }
+
+  /* footer */
+  .footer-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line);
+  }
+  .footer-left { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+  .footer-dot { width: 7px; height: 7px; border-radius: 50%; background: #44ff88; box-shadow: 0 0 6px #4f8; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .footer-right { color: var(--muted); font-size: 12px; }
+
+  .quote { text-align: center; margin-top: 26px; }
+  .quote p { color: var(--muted); font-size: 15px; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; }
+  .quote .tiny { font-size: 11px; letter-spacing: 2px; color: #4a545c; margin-top: 6px; }
+
+  @media (max-width: 860px) {
+    .topbar-center { display: none; }
+    .hero-body { flex-direction: column; }
+    .hero-photo { height: 240px; }
+    .deals-grid { grid-template-columns: repeat(2, 1fr); }
+    .bottom-nav { grid-template-columns: repeat(2, 1fr); }
+    .loadout-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .crumb { display: none; }
+    .stat-pill span.label { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient" id="ambient"></div>
+<div class="diag-glow"></div>
+
+<div class="shell">
+
+  <!-- ══════════ TOP BAR ══════════ -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="back-link ui">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </a>
+      <span class="crumb ui">// Our Story</span>
+    </div>
+    <div class="topbar-center">
+      <button class="nav-icon-btn" title="Home">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+      </button>
+      <button class="nav-icon-btn" title="Memories">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+      </button>
+      <button class="play-tab ui cut">7 Months</button>
+      <button class="nav-icon-btn is-live" title="Us">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+      </button>
+    </div>
+    <div class="topbar-right">
+      <div class="stat-pill ui">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--red)"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        212 <span class="label">Days</span>
+      </div>
+      <div class="stat-pill ui">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        7 <span class="label">Months</span>
+      </div>
+      <div class="stat-pill ui">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6bd0d0" stroke-width="2"><path d="M12 2 2 12l10 10 10-10Z"/></svg>
+        &#8734; <span class="label">Love</span>
+      </div>
+      <div class="avatar-ring">&#10084;</div>
+    </div>
+  </div>
+
+  <!-- ══════════ HERO ══════════ -->
+  <div class="hero cut">
+    <div class="hero-eyebrow ui">
+      <span>&#9998; Special Collection</span>
+      <span class="timer" id="heroTimer">--:--:--:--</span>
+      <span>until 8 months</span>
+    </div>
+    <h1>Our Story</h1>
+    <p class="hero-sub">212 days &middot; 7 months &middot; still undefeated</p>
+
+    <div class="hero-body">
+      <div class="hero-photo-wrap">
+        <img src="Imagess/image15.jpg" alt="Us" class="hero-photo cut" id="heroPhoto">
+        <span class="hero-photo-tag ui" id="heroTag">Then</span>
+      </div>
+      <div class="hero-side">
+        <p class="hero-caption" id="heroCaption">
+          Every rank climb starts somewhere. This is where it started — nervous, a little clumsy, completely worth it.
+        </p>
+        <div class="hero-price-row">
+          <div class="price-plaque">
+            <span class="ui" style="color:var(--muted); font-size:11px;">Collection</span>
+            <span class="amount">&#10084; Priceless</span>
+          </div>
+          <div class="heart-box cut-sm">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-tabs">
+      <button class="variant-tab active ui" id="tabThen" onclick="setVariant('then')">
+        <span>Then</span><span class="bar"></span>
+      </button>
+      <button class="variant-tab ui" id="tabNow" onclick="setVariant('now')">
+        <span>Now</span><span class="bar"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════ DEALS ROW ══════════ -->
+  <div class="deals-head">
+    <span class="line"></span>
+    <h2 class="ui">Today's Highlights</h2>
+    <span class="timer ui" id="dealsTimer">resets in --:--:--</span>
+    <span class="line"></span>
+  </div>
+
+  <div class="deals-grid">
+    <div class="deal-card cut-sm">
+      <img src="Imagess/image10.png" alt="FiveM" style="object-position: center 35%;">
+      <div class="deal-body">
+        <div class="deal-name ui">FiveM Nights</div>
+        <div class="deal-price">&#10084; 212</div>
+      </div>
+    </div>
+    <div class="deal-card cut-sm">
+      <img src="Imagess/image12.png" alt="Minecraft">
+      <div class="deal-body">
+        <div class="deal-name ui">Minecraft</div>
+        <div class="deal-price">&#10084; 300</div>
+      </div>
+    </div>
+    <div class="deal-card cut-sm">
+      <img src="Imagess/image14.png" alt="Heartopia">
+      <div class="deal-body">
+        <div class="deal-name ui">Heartopia</div>
+        <div class="deal-price">&#10084; 150</div>
+      </div>
+    </div>
+    <div class="deal-card cut-sm">
+      <img src="Imagess/image9.png" alt="Just us">
+      <div class="deal-body">
+        <div class="deal-name ui">Just Us</div>
+        <div class="deal-price">&#10084; &#8734;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ BOTTOM NAV ══════════ -->
+  <div class="bottom-nav">
+    <button class="bnav-btn cut-sm active" id="navJourney" onclick="setPanel('journey')">Our Journey</button>
+    <button class="bnav-btn cut-sm" id="navAbout" onclick="setPanel('about')">About Us</button>
+    <button class="bnav-btn cut-sm" id="navAdventures" onclick="setPanel('adventures')">Adventures</button>
+    <button class="bnav-btn cut-sm" id="navLoadout" onclick="setPanel('loadout')">Little Things I Love</button>
+  </div>
+
+  <div class="panel cut" id="panelContent"></div>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <div class="footer-bar">
+    <div class="footer-left ui">
+      <span class="footer-dot"></span> Connected &#10084;
+    </div>
+    <div class="footer-right ui">v7.0</div>
+  </div>
+
+  <div class="quote">
+    <p>"Still queuing with you. Still choosing you."</p>
+    <p class="tiny">MADE WITH LOVE &middot; HAPPY 7 MONTHS, JASMINE</p>
+  </div>
+
+</div>
+
+<script>
+/* ── ambient floating hearts ── */
+(function(){
+  const wrap = document.getElementById('ambient');
+  const glyphs = ['&#10084;', '&#10022;'];
+  for (let i = 0; i < 16; i++) {
+    const s = document.createElement('span');
+    s.className = 'spark';
+    s.innerHTML = glyphs[i % 2];
+    s.style.left = (Math.random() * 100) + 'vw';
+    s.style.animationDuration = (10 + Math.random() * 10) + 's';
+    s.style.animationDelay = (Math.random() * 12) + 's';
+    s.style.fontSize = (10 + Math.random() * 10) + 'px';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ── countdowns ── */
+const NEXT_MILESTONE = new Date('2026-08-02T00:00:00');
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function tickHero() {
+  const diff = NEXT_MILESTONE - new Date();
+  if (diff <= 0) { document.getElementById('heroTimer').textContent = '08 MONTHS'; return; }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('heroTimer').textContent = `${pad(d)}:${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+function tickDeals() {
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 0, 0);
+  const diff = midnight - now;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('dealsTimer').textContent = `resets in ${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+tickHero(); tickDeals();
+setInterval(() => { tickHero(); tickDeals(); }, 1000);
+
+/* ── then / now variant toggle ── */
+const VARIANTS = {
+  then: {
+    img: 'Imagess/image15.jpg',
+    tag: 'Then',
+    caption: "Every rank climb starts somewhere. This is where it started — nervous, a little clumsy, completely worth it."
+  },
+  now: {
+    img: 'Imagess/IMG-20260427-WA0024.jpg',
+    tag: 'Now',
+    caption: "Seven months in and it still feels like the honeymoon phase never left. Different day, same certainty: it's you."
+  }
+};
+
+function setVariant(key) {
+  const v = VARIANTS[key];
+  document.getElementById('heroPhoto').src = v.img;
+  document.getElementById('heroTag').textContent = v.tag;
+  document.getElementById('heroCaption').textContent = v.caption;
+  document.getElementById('tabThen').classList.toggle('active', key === 'then');
+  document.getElementById('tabNow').classList.toggle('active', key === 'now');
+}
+
+/* ── bottom nav panels ── */
+const RANKS = [
+  { n: 1, name: 'Iron',     color: '#5c6a72', desc: "Our first night was just KLIA, McDonald's, and you teaching me about the A380. Just us."},
+  { n: 2, name: 'Bronze',   color: '#a9744f', desc: "The night we got engaged in MI. It was completely unplanned, unexpected, and somehow the realest thing that's happened to me." },
+  { n: 3, name: 'Silver',   color: '#b6c2ce', desc: "Built a cherry blossom house, named two axolotls after us, and learned it was never about the wins. Just about being there with you." },
+  { n: 4, name: 'Gold',     color: '#f0c419', desc: "Plane spotting, meeting your family, mining for Mega Stones side by side in cobblemon. The small stuff started feeling like home." },
+  { n: 5, name: 'Platinum', color: '#4ad9c4', desc: "Flowers that don't wilt, and a dragon we're still building. Piece by piece, the same way we're building us." },
+  { n: 6, name: 'Diamond',  color: '#8b7fd6', desc: "Caught feelings all over again. Snivy jokes, a whole Pokédex of us, still not tired of you." },
+  { n: 7, name: 'Immortal', color: '#b3243f', desc: 'Still choosing you, every single day. Current rank.', current: true },
+  { n: 8, name: 'Radiant',  color: '#f5e6a8', desc: "The rank we desire to reach. Still climbing toward this forever with you. One day it will be a ring instead of a badge.", locked: true },
+];
+
+const PANELS = {
+  journey: () => {
+    let rows = '';
+    RANKS.forEach(r => {
+      rows += `
+        <div class="rank-row${r.current ? ' current' : ''}${r.locked ? ' locked' : ''}">
+          <div class="rank-badge${r.locked ? ' locked' : ''}" style="${r.locked ? '' : `background:${r.color}`}">${r.locked ? '?' : r.n}</div>
+          <div class="rank-info">
+            <div class="rname ui">${r.name}${r.locked ? '<span class="lock-tag">Not there yet</span>' : ''}</div>
+            <div class="rdesc">${r.desc}</div>
+          </div>
+        </div>`;
+    });
+    return `<h3 class="ui">Rank History</h3>${rows}`;
+  },
+  about: () => `
+    <h3 class="ui">About Us</h3>
+    <div class="letter-text">
+      <p>Sayang, I keep thinking about that first night at KLIA. I was so nervous walking over to meet you, and then somehow a couple hours of McDonald's and plane spotting turned into seven months of this. I still don't know how you did that.</p>
+      <p>I think about it a lot, how random the best parts of us have been. The night we got engaged wasn't planned. Neither was naming two axolotls after ourselves, or somehow ending up on call more than off it. None of it was supposed to mean anything and all of it means everything.</p>
+      <p>The distance is still the hardest part. I don't get to see you most days, but I've never once stopped looking forward to it. Even from far away I hum you to sleep on call, and every scar on you gets a kiss goodnight. Small things, but they are the ones I hold onto the most.</p>
+      <p>I'm already counting down to the 14th of July. ThongBowl isn't much, but any day I get to actually be next to you feels like the whole point.</p>
+      <p>I don't need to know what comes next for us. I've just noticed that every month so far has meant choosing you again, and I plan on doing exactly that for as long as you'll have me.</p>
+    </div>
+    <div class="letter-sign">Yours, always.<br>Khairul</div>
+  `,
+  adventures: () => `
+    <h3 class="ui">Adventures</h3>
+    <ul class="adv-list">
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg> Late-night Valorant queues, having fun and always with each other.</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> A new Minecraft modpack that is yet to be claimed by us.</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg> Overcooked 1 and 2, both of us will be yelling over whose pan that was.</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg> Grinding genshin late into the night for primogems.</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg> A camera roll that's somehow 80% blurry, silly photos of us.</li>
+      <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/></svg> Practically always on call. Neither of us ever really hangs up.</li>
+    </ul>
+  `,
+  loadout: () => `
+    <h3 class="ui">Loadout</h3>
+    <div class="loadout-grid">
+      <div class="loadout-slot"><div class="slot-label ui">Primary</div><div class="slot-text">Your laugh. Full auto, no recoil.</div></div>
+      <div class="loadout-slot"><div class="slot-label ui">Secondary</div><div class="slot-text">The way you say "sayang."</div></div>
+      <div class="loadout-slot"><div class="slot-label ui">Melee</div><div class="slot-text">Your hugs. One-shot, every time.</div></div>
+      <div class="loadout-slot"><div class="slot-label ui">Shield</div><div class="slot-text">How safe you make me feel.</div></div>
+      <div class="loadout-slot"><div class="slot-label ui">Signature Ability</div><div class="slot-text">Turning bad days into inside jokes.</div></div>
+      <div class="loadout-slot"><div class="slot-label ui">Ultimate</div><div class="slot-text">You. Fully charged, changing my whole world.</div></div>
+    </div>
+  `
+};
+
+function setPanel(key) {
+  document.getElementById('panelContent').innerHTML = PANELS[key]();
+  ['journey','about','adventures','loadout'].forEach(k => {
+    document.getElementById('nav' + k[0].toUpperCase() + k.slice(1)).classList.toggle('active', k === key);
+  });
+}
+
+setPanel('journey');
+</script>
+</body>
+</html>
