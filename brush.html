@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I Fell Asleep, Sayang. I'm Sorry</title>
+  <style>
+    :root {
+      --ink:       #5a4a52;
+      --ink-soft:  #7d6b72;
+      --rose:      #d77f86;
+      --rose-deep: #c25f73;
+      --lav:       #a892d1;
+      --mint:      #7fc7a8;
+      --card:      rgba(255, 252, 253, 0.78);
+      --card-edge: rgba(255, 255, 255, 0.9);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto,
+        Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 34px 18px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      background-color: #fff0f2;
+      background-image:
+        linear-gradient(165deg,
+          #fff6ef 0%,
+          #ffe9ec 30%,
+          #fbdcec 58%,
+          #ecdcf4 82%,
+          #e3ddf6 100%);
+      background-attachment: fixed;
+    }
+
+    /* soft glowing orbs in the background */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(46px);
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb.moon {
+      width: 230px; height: 230px;
+      top: -60px; right: -30px;
+      background: radial-gradient(circle, #fff1c9, #ffd89b 60%, transparent 72%);
+      opacity: 0.75;
+      animation: drift 11s ease-in-out infinite;
+    }
+    .orb.rose {
+      width: 210px; height: 210px;
+      bottom: -70px; left: -50px;
+      background: radial-gradient(circle, #ffc2d1, #e6a6d6 60%, transparent 72%);
+      animation: drift 14s ease-in-out infinite reverse;
+    }
+    .orb.lav {
+      width: 170px; height: 170px;
+      top: 45%; left: 8%;
+      background: radial-gradient(circle, #cdbdf0, #b8a3e6 60%, transparent 72%);
+      animation: drift 17s ease-in-out infinite;
+    }
+    @keyframes drift {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%     { transform: translate(18px,-22px) scale(1.06); }
+    }
+
+    /* ---------- Card ---------- */
+    .card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 540px;
+      background: var(--card);
+      border: 1px solid var(--card-edge);
+      border-radius: 30px;
+      padding: 44px 34px 40px;
+      backdrop-filter: blur(16px) saturate(1.2);
+      -webkit-backdrop-filter: blur(16px) saturate(1.2);
+      box-shadow:
+        0 24px 60px rgba(180, 120, 150, 0.28),
+        inset 0 1px 0 rgba(255,255,255,0.7);
+      text-align: center;
+      animation: cardIn 1s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(26px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .envelope {
+      font-size: 60px;
+      display: inline-block;
+      animation: sway 3.4s ease-in-out infinite;
+    }
+    @keyframes sway {
+      0%,100% { transform: rotate(-5deg) translateY(0); }
+      50%     { transform: rotate(5deg) translateY(-6px); }
+    }
+
+    .eyebrow {
+      margin-top: 10px;
+      font-size: 12.5px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--rose-deep);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin-top: 8px;
+      font-size: clamp(26px, 6.5vw, 36px);
+      font-weight: 800;
+      color: var(--rose-deep);
+      letter-spacing: .3px;
+      line-height: 1.25;
+    }
+
+    .sub {
+      margin-top: 12px;
+      color: var(--ink-soft);
+      font-size: 15.5px;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 16px;
+      color: #fff;
+      padding: 14px 30px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+      box-shadow: 0 10px 24px rgba(194, 95, 115, 0.4);
+      transition: transform .18s ease, box-shadow .18s ease, opacity .3s ease;
+    }
+    .btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 14px 30px rgba(194,95,115,.5); }
+    .btn:active { transform: translateY(0) scale(.99); }
+    .btn.ghost {
+      background: linear-gradient(135deg, #b8a3e6, #a892d1);
+      box-shadow: 0 10px 24px rgba(168, 146, 209, 0.42);
+    }
+
+    #openBtn { margin-top: 26px; }
+
+    /* ---------- Reveal section ---------- */
+    .letter {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height .9s ease, opacity .9s ease, margin .9s ease;
+      text-align: left;
+    }
+    .letter.open {
+      max-height: 2600px;
+      opacity: 1;
+      margin-top: 28px;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(199,120,140,.5), transparent);
+      margin: 6px 0 22px;
+    }
+
+    .letter p {
+      color: var(--ink);
+      font-size: 15.5px;
+      margin-bottom: 15px;
+    }
+    .letter p .hl { color: var(--rose-deep); font-weight: 700; }
+
+    .signoff {
+      text-align: right;
+      margin: 4px 0 8px;
+      line-height: 1.5;
+    }
+    .signoff .line1 { color: var(--ink-soft); font-size: 15.5px; }
+    .signoff .name {
+      color: var(--rose-deep);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+
+    /* ---------- Icons row ---------- */
+    .icons {
+      display: flex;
+      justify-content: center;
+      gap: 26px;
+      margin: 6px 0 22px;
+      font-size: 34px;
+    }
+    .icons span { display: inline-block; }
+    .icons .pillow { animation: sway 3.8s ease-in-out infinite; }
+    .icons .brush  { animation: bob 2.6s ease-in-out infinite; }
+    .icons .phone  { animation: buzz 3.2s ease-in-out infinite; }
+    @keyframes bob {
+      0%,100% { transform: translateY(0) rotate(-8deg); }
+      50%     { transform: translateY(-8px) rotate(8deg); }
+    }
+    @keyframes buzz {
+      0%,92%,100% { transform: rotate(0); }
+      94% { transform: rotate(-12deg); }
+      96% { transform: rotate(12deg); }
+      98% { transform: rotate(-8deg); }
+    }
+
+    /* ---------- Timeline / progress ---------- */
+    .tracker {
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.8);
+      border-radius: 20px;
+      padding: 20px 20px 12px;
+      margin: 6px 0 24px;
+    }
+    .tracker h3 {
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--rose-deep);
+      margin-bottom: 14px;
+      text-align: center;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .step .emoji { font-size: 20px; width: 26px; text-align: center; flex-shrink: 0; }
+    .step .body { flex: 1; }
+    .step .label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 5px;
+    }
+    .step .pct { color: var(--ink-soft); font-weight: 700; }
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(199,120,140,0.16);
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      transition: width 1.3s cubic-bezier(.2,.8,.2,1);
+    }
+    .fill.good  { background: linear-gradient(90deg, #7ecba0, #5bb98a); }
+    .fill.warn  { background: linear-gradient(90deg, #ffcf8b, #f6a27a); }
+    .fill.fail  { background: linear-gradient(90deg, #f7a1b4, #d77f86); }
+    .fill.sleep { background: linear-gradient(90deg, #c6b6ee, #a892d1); }
+
+    /* ---------- Forgive section ---------- */
+    .forgive-wrap { text-align: center; }
+    .forgive-wrap .prompt {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--rose-deep);
+      margin-bottom: 16px;
+    }
+    .msg {
+      margin-top: 18px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--rose-deep);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .msg.show { opacity: 1; transform: translateY(0); }
+
+    .footer-note {
+      margin-top: 26px;
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+
+    /* ---------- Floating hearts ---------- */
+    .heart {
+      position: fixed;
+      bottom: -40px;
+      font-size: 24px;
+      pointer-events: none;
+      z-index: 5;
+      animation: floatUp linear forwards;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(0) scale(.6) rotate(0); opacity: 0; }
+      10%  { opacity: 1; }
+      100% { transform: translateY(-108vh) scale(1.2) rotate(40deg); opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 36px 22px 32px; border-radius: 24px; }
+      .icons { gap: 18px; font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb moon"></div>
+  <div class="orb rose"></div>
+  <div class="orb lav"></div>
+
+  <main class="card">
+    <span class="envelope">💌</span>
+    <p class="eyebrow">A letter for you</p>
+    <h1>I'm Sorry I Fell Asleep On You, Sayang</h1>
+    <p class="sub">There's something I really want you to read. 💗</p>
+
+    <button class="btn" id="openBtn" onclick="openLetter()">Open Letter 💗</button>
+
+    <section class="letter" id="letter">
+      <div class="icons">
+        <span class="brush">🪥</span>
+        <span class="pillow">🛏️</span>
+        <span class="phone">📵</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <p>My anje babyy,</p>
+
+      <p>
+        Last night, when you told me to go brush my teeth, I really did mean to.
+        I said yes, I muted my mic, and I fully planned to come right back to you.
+        <span class="hl">A few quiet minutes, then back to your sayang</span> and
+        that was the whole plan.
+      </p>
+
+      <p>
+        But I leaned into my pillow for what was only supposed to be a second,
+        and somewhere in that second, I had fallen asleep. I didn't even feel it 
+        happen. I never meant to drift off on you, and I'm genuinely sorry that I did sayang. 🪥💔
+      </p>
+
+      <p>
+        I feel bad that I hadnt even brushed my teeth but what I feel worst about 
+        isn't the teeth. It's the fact that you were sitting there on a <span class="hl">muted call</span>,
+        waiting, wondering why I'd gone so quiet. You deserved a proper 
+        goodnight from me, and instead you were left holding the silence 
+        all on your own. I'm so sorry, my love.
+      </p>
+
+      <p>
+        Please know it wasn't because I stopped caring, not even for a moment. I
+        was just <span class="hl">so much more tired than I realized</span>, and
+        sleep caught up to me before I could even say goodbye. But even while I
+        was asleep, you were the last thing on my mind and the absolute first
+        thing I thought of when I opened my eyes this morning. 💗
+      </p>
+
+      <div class="tracker">
+        <h3>💭 What Was Really In My Heart</h3>
+
+        <div class="step">
+          <span class="emoji">🎧</span>
+          <div class="body">
+            <div class="label"><span>How much I meant to come right back</span><span class="pct" data-target="100">0%</span></div>
+            <div class="bar"><div class="fill good" data-w="100"></div></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="emoji">🛏️</span>
+          <div class="body">
+            <div class="label"><span>How tired I really was</span><span class="pct" data-target="99">0%</span></div>
+            <div class="bar"><div class="fill sleep" data-w="99"></div></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="emoji">🌙</span>
+          <div class="body">
+            <div class="label"><span>How ready my heart was to say goodbye</span><span class="pct" data-target="3">0%</span></div>
+            <div class="bar"><div class="fill fail" data-w="4"></div></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="emoji">🥺</span>
+          <div class="body">
+            <div class="label"><span>How sorry I am for the silence</span><span class="pct" data-target="100">0%</span></div>
+            <div class="bar"><div class="fill warn" data-w="100"></div></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <span class="emoji">💗</span>
+          <div class="body">
+            <div class="label"><span>How much I love you, even while asleep</span><span class="pct" data-target="100">0%</span></div>
+            <div class="bar"><div class="fill good" data-w="100"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        I'll make it up to you tonight. I'll stay with you until you're the one
+        who's ready to say goodnight, and I'll make sure you never feel left in
+        the quiet like that again. <span class="hl">You always come first.</span> 🌙
+      </p>
+
+      <p>
+        And I know today isn't an easy one, with your period and your very first
+        class all at once. Please don't let this little thing add to any of that.
+        Take today gently, be kind to your body, and go show that class the
+        amazing girl I already know you are. <span class="hl">I'm so proud of you,
+        and I'm cheering you on from here.</span> 🌷📚
+      </p>
+
+      <div class="signoff">
+        <div class="line1">Love you sayang, 💗</div>
+        <div class="name">Khairul</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="forgive-wrap">
+        <p class="prompt">Will you forgive me, my love?</p>
+        <button class="btn ghost" id="forgiveBtn" onclick="forgive()">Forgive me 🥺</button>
+        <p class="msg" id="forgiveMsg">
+          Thank you, sayang. 🥹💞 I promise to be more careful with your heart
+          and your goodnights. I love you so much. 🌙✨
+        </p>
+      </div>
+
+      <p class="footer-note">Written with all my love, and a heart that's truly sorry. 💌</p>
+    </section>
+  </main>
+
+  <script>
+    let opened = false;
+
+    function openLetter() {
+      const letter = document.getElementById('letter');
+      const btn = document.getElementById('openBtn');
+      letter.classList.add('open');
+      btn.style.opacity = '0';
+      btn.style.pointerEvents = 'none';
+      setTimeout(() => { btn.style.display = 'none'; }, 300);
+
+      if (!opened) {
+        opened = true;
+        // animate progress bars once revealed
+        setTimeout(animateTracker, 500);
+        // a couple of gentle hearts on open
+        for (let i = 0; i < 6; i++) setTimeout(spawnHeart, i * 160);
+      }
+      setTimeout(() => letter.scrollIntoView({ behavior: 'smooth', block: 'start' }), 350);
+    }
+
+    function animateTracker() {
+      document.querySelectorAll('.fill').forEach(f => {
+        f.style.width = f.dataset.w + '%';
+      });
+      document.querySelectorAll('.pct').forEach(p => {
+        const target = parseInt(p.dataset.target, 10);
+        let cur = 0;
+        const step = Math.max(1, Math.round(target / 28));
+        const t = setInterval(() => {
+          cur += step;
+          if (cur >= target) { cur = target; clearInterval(t); }
+          p.textContent = cur + '%';
+        }, 40);
+      });
+    }
+
+    function forgive() {
+      document.getElementById('forgiveMsg').classList.add('show');
+      // big burst of hearts
+      const emojis = ['💗','💞','💖','🥺','🌙','✨','💕','🪥'];
+      for (let i = 0; i < 34; i++) {
+        setTimeout(() => spawnHeart(emojis[Math.floor(Math.random()*emojis.length)]), i * 55);
+      }
+    }
+
+    function spawnHeart(emoji) {
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = emoji || '💗';
+      h.style.left = Math.random() * 100 + 'vw';
+      const dur = 3.2 + Math.random() * 2.4;
+      h.style.animationDuration = dur + 's';
+      h.style.fontSize = (18 + Math.random() * 22) + 'px';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), dur * 1000 + 200);
+    }
+  </script>
+</body>
+</html>
