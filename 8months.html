@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>US: 8 Months</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0b0b0b;
+  color: #fff;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  padding-bottom: 60px;
+}
+
+.ui { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+
+/* ─── Top Nav ─── */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
+  transition: background 0.3s;
+}
+.nav.scrolled { background: #0b0b0b; }
+.nav-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  color: #E50914;
+  letter-spacing: 2px;
+  text-decoration: none;
+}
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.nav-back {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 0.82rem;
+  border: 1px solid #555;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.nav-back:hover { border-color: #fff; color: #fff; }
+.avatar-chip {
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f4567a, #d4a574);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+}
+.avatar-chip img { width: 100%; height: 100%; object-fit: cover; object-position: center 38%; }
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  height: 92vh;
+  min-height: 520px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('Imagess/image4.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  animation: kenburns 22s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  0% { transform: scale(1) translate(0,0); }
+  100% { transform: scale(1.08) translate(-1%, -1%); }
+}
+.hero-shade {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to top, #0b0b0b 2%, rgba(11,11,11,0.55) 34%, rgba(11,11,11,0.15) 60%, transparent 78%),
+    linear-gradient(to right, rgba(11,11,11,0.75) 0%, rgba(11,11,11,0.25) 45%, transparent 75%);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 5vw 48px;
+  max-width: 640px;
+  animation: fadeUp 1s ease-out;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+.renewed-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #E50914;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 11vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: 3px;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.6);
+  margin-bottom: 14px;
+}
+.hero-title span { color: #E50914; }
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #d2d2d2;
+  margin-bottom: 16px;
+}
+.match { color: #46d369; font-weight: 700; }
+.pill {
+  border: 1px solid #757575;
+  padding: 1px 6px;
+  font-size: 0.72rem;
+  border-radius: 3px;
+  color: #d2d2d2;
+}
+
+.hero-desc {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: #e4e4e4;
+  margin-bottom: 22px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 4px;
+  padding: 11px 22px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-play { background: #fff; color: #000; }
+.btn-play:hover { opacity: 0.85; }
+.btn-ghost { background: rgba(109,109,110,0.5); color: #fff; }
+.btn-ghost:hover { background: rgba(109,109,110,0.75); }
+.btn svg { width: 18px; height: 18px; }
+
+/* ─── Continue Watching ─── */
+.section { padding: 0 5vw; margin-top: 8px; }
+.cw-wrap { padding: 34px 5vw 6px; }
+.cw-label { font-family:'Bebas Neue'; letter-spacing:1px; font-size: 1.3rem; margin-bottom: 14px; }
+.cw-card {
+  display: flex;
+  gap: 16px;
+  background: #161616;
+  border: 1px solid #262626;
+  border-radius: 6px;
+  padding: 12px;
+  max-width: 460px;
+  align-items: center;
+}
+.cw-thumb {
+  width: 130px; height: 74px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+.cw-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.cw-bar { position:absolute; bottom:0; left:0; right:0; height:3px; background: rgba(255,255,255,0.25); }
+.cw-bar-fill { height: 100%; width: 88%; background: #E50914; }
+.cw-text .ep-num { font-size: 0.72rem; color: #999; letter-spacing: 0.5px; }
+.cw-text .ep-title { font-family:'Bebas Neue'; font-size: 1.05rem; letter-spacing: 0.5px; }
+
+/* ─── Episodes ─── */
+.ep-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 44px 0 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.ep-head h2 { font-family:'Bebas Neue'; font-size: 1.7rem; letter-spacing: 1px; }
+.season-pill {
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 7px 14px;
+  font-size: 0.85rem;
+  color: #ddd;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.ep-list { display: flex; flex-direction: column; }
+.ep-row {
+  display: grid;
+  grid-template-columns: 34px 220px 1fr;
+  gap: 20px;
+  align-items: center;
+  padding: 18px 8px;
+  border-bottom: 1px solid #232323;
+  cursor: default;
+  transition: background 0.2s;
+}
+.ep-row:hover { background: rgba(255,255,255,0.04); }
+.ep-idx { font-family:'Bebas Neue'; font-size: 1.7rem; color: #6b6b6b; text-align: center; }
+.ep-thumb {
+  position: relative;
+  width: 220px; height: 124px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #1c1c1c;
+  flex-shrink: 0;
+}
+.ep-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+.ep-row:hover .ep-thumb img { transform: scale(1.06); }
+.ep-check {
+  position: absolute; top: 8px; right: 8px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+}
+.ep-check svg { width: 13px; height: 13px; stroke: #46d369; }
+.ep-new-badge { background: #E50914; }
+.ep-new-badge svg { width: 13px; height: 13px; stroke: #fff; fill: #fff; }
+.ep-locked-badge {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(10,10,10,0.72);
+  backdrop-filter: blur(1px);
+  gap: 4px;
+}
+.ep-locked-badge svg { width: 24px; height: 24px; stroke: #E50914; }
+.ep-locked-badge .cd { font-family:'Bebas Neue'; font-size: 0.85rem; color: #ddd; letter-spacing: 1px; }
+.ep-thumb.locked img { filter: blur(6px) brightness(0.55) saturate(0.7); }
+
+.ep-body-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.ep-title { font-family:'Bebas Neue'; font-size: 1.15rem; letter-spacing: 0.5px; }
+.ep-dur { font-size: 0.8rem; color: #999; white-space: nowrap; }
+.ep-syn { font-size: 0.88rem; color: #b8b8b8; line-height: 1.5; max-width: 60ch; }
+.new-tag {
+  background: #E50914;
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+/* ─── Cast ─── */
+.cast-row { display: flex; gap: 26px; margin-top: 8px; flex-wrap: wrap; }
+.cast-item { text-align: center; width: 78px; }
+.cast-avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  border: 2px solid #333;
+}
+.cast-name { font-size: 0.78rem; color: #ccc; }
+
+/* ─── More Like This ─── */
+.mlt-scroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+}
+.mlt-card {
+  flex: 0 0 210px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #161616;
+  border: 1px solid #262626;
+  cursor: default;
+  transition: transform 0.25s;
+}
+.mlt-card:hover { transform: translateY(-4px); }
+.mlt-poster {
+  height: 118px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.mlt-poster img { width: 100%; height: 100%; object-fit: cover; }
+.mlt-poster svg { width: 34px; height: 34px; stroke: rgba(255,255,255,0.85); }
+.mlt-poster .badge {
+  position: absolute; bottom: 6px; left: 8px;
+  font-size: 0.62rem;
+  background: rgba(0,0,0,0.55);
+  padding: 2px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+}
+.mlt-info { padding: 10px 12px 14px; }
+.mlt-title { font-family:'Bebas Neue'; font-size: 0.95rem; letter-spacing: 0.5px; margin-bottom: 3px; }
+.mlt-sub { font-size: 0.72rem; color: #999; }
+
+/* ─── Modal ─── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.82);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 100;
+  padding: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+.modal-overlay.open { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 82vh;
+  overflow-y: auto;
+  padding: 32px 28px;
+  position: relative;
+  animation: fadeUp 0.35s ease-out;
+}
+.modal-close {
+  position: absolute; top: 14px; right: 14px;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-label { font-family:'Bebas Neue'; color: #E50914; font-size: 0.85rem; letter-spacing: 1.5px; margin-bottom: 6px; }
+.modal h3 { font-family:'Bebas Neue'; font-size: 1.6rem; letter-spacing: 0.5px; margin-bottom: 16px; }
+.modal p { font-size: 0.92rem; line-height: 1.7; color: #d8d8d8; margin-bottom: 12px; }
+.modal .sign { font-family: 'Bebas Neue'; letter-spacing: 1px; color: #E50914; margin-top: 18px; font-size: 1.1rem; }
+
+/* ─── Slideshow ─── */
+.slideshow-overlay {
+  position: fixed; inset: 0;
+  background: #000;
+  z-index: 200;
+  display: none;
+}
+.slideshow-overlay.open { display: block; }
+
+.ss-stage { position: absolute; inset: 0; }
+.ss-slide {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  overflow: hidden;
+}
+.ss-slide.active { opacity: 1; z-index: 2; }
+.ss-slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1); }
+.ss-slide.active img { animation: ssKenBurns 5s ease-out forwards; }
+@keyframes ssKenBurns { from { transform: scale(1); } to { transform: scale(1.14); } }
+.ss-slide::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 42%, rgba(0,0,0,0.4) 100%);
+}
+
+.ss-progress { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; gap: 5px; z-index: 5; }
+.ss-progress .seg { flex: 1; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px; overflow: hidden; }
+.ss-progress .seg .fill { height: 100%; width: 0%; background: #fff; }
+
+.ss-topbar { position: absolute; top: 28px; left: 14px; right: 14px; display: flex; justify-content: space-between; align-items: center; z-index: 6; }
+.ss-ep-label { font-family: 'Bebas Neue'; letter-spacing: 1px; color: #ddd; font-size: 0.85rem; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+.ss-actions { display: flex; gap: 10px; }
+.ss-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s;
+}
+.ss-btn:hover { background: rgba(255,255,255,0.26); }
+
+.ss-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 6;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s;
+}
+.ss-nav:hover { background: rgba(255,255,255,0.22); }
+.ss-nav-left { left: 16px; }
+.ss-nav-right { right: 16px; }
+
+.ss-caption { position: absolute; left: 6vw; right: 6vw; bottom: 9vh; z-index: 6; }
+.ss-caption .ep-tag { display: block; font-family: 'Bebas Neue'; font-size: 0.8rem; letter-spacing: 1.5px; color: #E50914; margin-bottom: 8px; }
+.ss-caption h3 { font-family: 'Bebas Neue'; font-size: clamp(1.8rem, 6vw, 3rem); letter-spacing: 1px; margin-bottom: 10px; text-shadow: 0 3px 14px rgba(0,0,0,0.6); }
+.ss-caption p { font-size: 0.95rem; color: #e6e6e6; max-width: 52ch; line-height: 1.55; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+.ss-caption.animate .ep-tag, .ss-caption.animate h3, .ss-caption.animate p { animation: ssFadeUp 0.7s ease-out both; }
+.ss-caption.animate h3 { animation-delay: 0.06s; }
+.ss-caption.animate p { animation-delay: 0.14s; }
+@keyframes ssFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 640px) {
+  .ep-row { grid-template-columns: 26px 1fr; }
+  .ep-thumb { width: 100%; height: 180px; grid-column: 1 / -1; order: -1; }
+  .ep-idx { text-align: left; }
+  .cw-card { max-width: 100%; }
+  .ss-nav { width: 36px; height: 36px; font-size: 1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="nav-brand" href="index.html">OURFLIX</a>
+  <div class="nav-right">
+    <a class="nav-back" href="index.html">&larr; Hub</a>
+    <div class="avatar-chip"><img src="Imagess/IMG-20260707-WA0024.jpg" alt="Anje"></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-shade"></div>
+  <div class="hero-content">
+    <div class="renewed-tag">✓ Renewed for Season 8</div>
+    <h1 class="hero-title"><span>US</span></h1>
+    <div class="hero-meta">
+      <span class="match">98% Match</span>
+      <span>2026</span>
+      <span class="pill">LD</span>
+      <span>8 Episodes</span>
+      <span>Romance &middot; Comedy &middot; Slow Burn &middot; Long-Distance Drama</span>
+    </div>
+    <p class="hero-desc">Two people, one save file. What started as plane spotting and a McDonald's bag at KLIA is now eight months deep with no cancellation in sight. Critics call it "unrealistically soft." We call it Thursday.</p>
+    <div class="hero-btns">
+      <button class="btn btn-play" onclick="openSlideshow()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Play
+      </button>
+      <button class="btn btn-ghost" onclick="openModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        More Info
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="cw-wrap">
+  <div class="cw-label ui">Continue Watching for Anje Baby</div>
+  <div class="cw-card">
+    <div class="cw-thumb">
+      <img src="Imagess/image15.jpg" alt="Episode 7">
+      <div class="cw-bar"><div class="cw-bar-fill"></div></div>
+    </div>
+    <div class="cw-text">
+      <div class="ep-num">S1:E7</div>
+      <div class="ep-title ui">No Decay</div>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="ep-head">
+    <h2>Episodes</h2>
+    <div class="season-pill">Season 1 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div>
+  </div>
+
+  <div class="ep-list" id="epList"></div>
+</section>
+
+<section class="section" style="margin-top:52px;">
+  <div class="ep-head"><h2>Starring</h2></div>
+  <div class="cast-row">
+    <div class="cast-item">
+      <div class="cast-avatar" style="background:linear-gradient(135deg,#ffd1df,#f4567a); color:#3d2c35;">J</div>
+      <div class="cast-name">Jasmine</div>
+    </div>
+    <div class="cast-item">
+      <div class="cast-avatar" style="background:linear-gradient(135deg,#d4a574,#7c3aed); color:#fff;">K</div>
+      <div class="cast-name">Khairul</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="margin-top:52px;">
+  <div class="ep-head"><h2>More Like This</h2></div>
+  <div class="mlt-scroll" id="mltRow"></div>
+</section>
+
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-label">A NOTE FROM THE WRITER</div>
+    <h3>8 Months In</h3>
+    <p>Sayang, I keep coming back to how this started. A random night at KLIA, a McDonald's bag between us, me pointing out planes you didn't ask about. I didn't know that was the pilot episode of anything. I just knew I didn't want the night to end.</p>
+    <p>Eight months later and it's still the same feeling, just with more evidence now. A cherry blossom house we built together, axolotls with our names on them, a Snivy plush sitting next to your letter on my desk. Every "episode" since has just been us choosing to keep going, even from far away, even on the hard nights on call.</p>
+    <p>We're still climbing toward whatever comes after this. I don't mind taking it slow with you. Happy 8 months, Sayang. Renewed indefinitely.</p>
+    <div class="sign">Yours, always. Khairul</div>
+  </div>
+</div>
+
+<div class="slideshow-overlay" id="slideshowOverlay">
+  <div class="ss-stage" id="ssStage"></div>
+  <div class="ss-progress" id="ssProgress"></div>
+  <div class="ss-topbar">
+    <div class="ss-ep-label" id="ssEpLabel"></div>
+    <div class="ss-actions">
+      <button class="ss-btn" onclick="ssToggleMute()" id="ssMuteBtn">🔊</button>
+      <button class="ss-btn" onclick="ssTogglePause()" id="ssPauseBtn">❚❚</button>
+      <button class="ss-btn" onclick="closeSlideshow()">✕</button>
+    </div>
+  </div>
+  <button class="ss-nav ss-nav-left" onclick="ssPrev()">‹</button>
+  <button class="ss-nav ss-nav-right" onclick="ssNext()">›</button>
+  <div class="ss-caption" id="ssCaption"></div>
+  <audio id="ssAudio" src="Imagess/Us.mp3" loop preload="none"></audio>
+</div>
+
+<script>
+const EPISODES = [
+  { n:1, title:'Pilot', dur:'1 month', img:'Imagess/image4.jpg',
+    syn:'A first night at the airport turns into hours of McDonald\'s, plane talk, and an ending neither of them wanted.', watched:true },
+  { n:2, title:'Unplanned', dur:'1 month', img:'Imagess/image6.jpg',
+    syn:'Nobody saw it coming, least of all them. The most unscripted moment of the season becomes the realest one.', watched:true },
+  { n:3, title:'Cherry Blossom House', dur:'1 month', img:'Imagess/image12.png',
+    syn:'They build a home out of blocks and name two axolotls after themselves. Somehow, it sticks.', watched:true },
+  { n:4, title:'Home Base', dur:'1 month', img:'Imagess/image19.png',
+    syn:'Between plane spotting and meeting the family, the small stuff quietly starts to feel like everything.', watched:true },
+  { n:5, title:'Flowers That Don\'t Wilt', dur:'1 month', img:'Imagess/image13.png',
+    syn:'A dragon still under construction, flowers that never die. Some things are just built to last.', watched:true },
+  { n:6, title:'Caught Feelings (Again)', dur:'1 month', img:'Imagess/image16.jpg',
+    syn:'Snivy jokes and a whole Pokédex of memories. Still, somehow, not tired of each other.', watched:true },
+  { n:7, title:'No Decay', dur:'1 month', img:'Imagess/image15.jpg',
+    syn:'No plot twist required, just the same two people choosing each other again and again. Some stories don\'t need a cliffhanger to stay worth watching.', watched:true },
+  { n:8, title:'The Climb', dur:'1 month', img:'Imagess/image17.jpg',
+    syn:'Not the finale, more like the start of something bigger. They\'re still figuring out what comes after forever, together.', watched:true, isNew:true },
+];
+
+const AIR_DATE = new Date('2026-08-02T00:00:00');
+
+function renderEpisodes() {
+  const list = document.getElementById('epList');
+  list.innerHTML = EPISODES.map(ep => `
+    <div class="ep-row">
+      <div class="ep-idx">${ep.n}</div>
+      <div class="ep-thumb${ep.locked ? ' locked' : ''}">
+        <img src="${ep.img}" alt="${ep.title}">
+        ${ep.isNew ? `<div class="ep-check ep-new-badge"><svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 1.9 5.8a2 2 0 0 0 1.3 1.3L21 11l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 20l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 11l5.8-1.9a2 2 0 0 0 1.3-1.3Z"/></svg></div>` : (ep.watched ? `<div class="ep-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>` : '')}
+        ${ep.locked ? `<div class="ep-locked-badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="cd" id="countdown"></span></div>` : ''}
+      </div>
+      <div>
+        <div class="ep-body-top">
+          <div class="ep-title">${ep.title}${ep.isNew ? '<span class="new-tag">New</span>' : ''}</div>
+          <div class="ep-dur">${ep.dur ? ep.dur : 'Aug 2, 2026'}</div>
+        </div>
+        <div class="ep-syn">${ep.syn}</div>
+      </div>
+    </div>
+  `).join('');
+  updateCountdown();
+}
+
+function updateCountdown() {
+  const el = document.getElementById('countdown');
+  if (!el) return;
+  const diff = AIR_DATE - new Date();
+  if (diff <= 0) { el.textContent = 'Out now'; return; }
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  el.textContent = days > 0 ? `${days}d ${hours}h` : `${hours}h`;
+}
+setInterval(updateCountdown, 60000);
+
+const MLT = [
+  { title: 'Late Night Valorant Queues', sub: 'Reality &middot; Ongoing', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>`, grad: 'linear-gradient(135deg,#2b0f14,#7a0f22)' },
+  { title: 'Genshin Grind Diaries', sub: 'Drama &middot; Nightly', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>`, grad: 'linear-gradient(135deg,#1c1030,#4a2a8f)' },
+  { title: 'Overcooked: The Duo', sub: 'Comedy &middot; Chaotic', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg>`, grad: 'linear-gradient(135deg,#3a1a05,#c2530f)' },
+  { title: 'Vanilla Server, Cobblemon Arc', sub: 'Adventure &middot; Currently Mining', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>`, grad: 'linear-gradient(135deg,#14200c,#4c7a1f)' },
+  { title: 'Roblox Horror Night', sub: 'Horror &middot; Screaming Together', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8Z"/><path d="M9 10h.01M15 10h.01"/></svg>`, grad: 'linear-gradient(135deg,#3a0d0d,#8f1f1f)' },
+  { title: 'Victory Royale (Sometimes)', sub: 'Action &middot; Squad of Two', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/></svg>`, grad: 'linear-gradient(135deg,#0d1b3a,#4a1f8f)' },
+  { title: 'MLBB Late Night Ranked', sub: 'Esports &middot; Sweaty', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 3.8 9 9 10 5.2-1 9-5 9-10V6l-9-4Z"/></svg>`, grad: 'linear-gradient(135deg,#0d2438,#1f6a8f)' },
+  { title: 'Always On Call', sub: 'Documentary', img: 'Imagess/image8.png' },
+  { title: 'Camera Roll: 80% Blurry', sub: 'Anthology', img: 'images/collage1.jpg' },
+];
+
+function renderMLT() {
+  document.getElementById('mltRow').innerHTML = MLT.map(m => `
+    <div class="mlt-card">
+      <div class="mlt-poster" style="${m.img ? '' : `background:${m.grad}`}">
+        ${m.img ? `<img src="${m.img}" alt="${m.title}">` : m.icon}
+        <div class="badge">More Like This</div>
+      </div>
+      <div class="mlt-info">
+        <div class="mlt-title">${m.title}</div>
+        <div class="mlt-sub">${m.sub}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openModal() { document.getElementById('modalOverlay').classList.add('open'); }
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+renderEpisodes();
+renderMLT();
+
+/* ─── Slideshow ─── */
+let ssIndex = 0, ssTimer = null, ssElapsed = 0, ssPaused = false;
+const SS_DURATION = 4800, SS_TICK = 50;
+
+function buildSlideshow() {
+  document.getElementById('ssStage').innerHTML = EPISODES.map((ep, i) => `
+    <div class="ss-slide" data-i="${i}"><img src="${ep.img}" alt="${ep.title}"></div>
+  `).join('');
+  document.getElementById('ssProgress').innerHTML = EPISODES.map(() => `<div class="seg"><div class="fill"></div></div>`).join('');
+}
+
+function openSlideshow() {
+  document.getElementById('slideshowOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  ssPaused = false;
+  document.getElementById('ssPauseBtn').textContent = '❚❚';
+  goToSlide(0);
+  const audio = document.getElementById('ssAudio');
+  audio.currentTime = 0;
+  audio.muted = false;
+  audio.volume = 0.55;
+  audio.play().catch(() => {});
+  document.getElementById('ssMuteBtn').textContent = '🔊';
+  startTimer();
+}
+
+function closeSlideshow() {
+  document.getElementById('slideshowOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  stopTimer();
+  const audio = document.getElementById('ssAudio');
+  audio.pause();
+}
+
+function goToSlide(i) {
+  ssIndex = ((i % EPISODES.length) + EPISODES.length) % EPISODES.length;
+  ssElapsed = 0;
+
+  document.querySelectorAll('.ss-slide').forEach((el, idx) => el.classList.toggle('active', idx === ssIndex));
+  const activeImg = document.querySelector('.ss-slide.active img');
+  if (activeImg) { activeImg.style.animation = 'none'; void activeImg.offsetWidth; activeImg.style.animation = ''; }
+
+  document.querySelectorAll('.ss-progress .seg .fill').forEach((fill, idx) => {
+    fill.style.transition = 'none';
+    fill.style.width = idx < ssIndex ? '100%' : '0%';
+  });
+
+  const ep = EPISODES[ssIndex];
+  document.getElementById('ssEpLabel').textContent = `EPISODE ${ep.n} OF ${EPISODES.length}`;
+  const cap = document.getElementById('ssCaption');
+  cap.classList.remove('animate');
+  void cap.offsetWidth;
+  cap.innerHTML = `<span class="ep-tag">EPISODE ${ep.n}</span><h3>${ep.title}</h3><p>${ep.syn}</p>`;
+  cap.classList.add('animate');
+}
+
+function startTimer() {
+  stopTimer();
+  ssTimer = setInterval(() => {
+    if (ssPaused) return;
+    ssElapsed += SS_TICK;
+    const pct = Math.min(100, (ssElapsed / SS_DURATION) * 100);
+    const fills = document.querySelectorAll('.ss-progress .seg .fill');
+    if (fills[ssIndex]) { fills[ssIndex].style.transition = 'width 0.05s linear'; fills[ssIndex].style.width = pct + '%'; }
+    if (ssElapsed >= SS_DURATION) {
+      if (ssIndex === EPISODES.length - 1) { closeSlideshow(); return; }
+      goToSlide(ssIndex + 1);
+    }
+  }, SS_TICK);
+}
+function stopTimer() { if (ssTimer) clearInterval(ssTimer); ssTimer = null; }
+
+function ssNext() { goToSlide(ssIndex + 1); }
+function ssPrev() { goToSlide(ssIndex - 1); }
+function ssTogglePause() {
+  ssPaused = !ssPaused;
+  document.getElementById('ssPauseBtn').textContent = ssPaused ? '▶' : '❚❚';
+  const audio = document.getElementById('ssAudio');
+  if (ssPaused) audio.pause(); else audio.play().catch(() => {});
+}
+function ssToggleMute() {
+  const audio = document.getElementById('ssAudio');
+  audio.muted = !audio.muted;
+  document.getElementById('ssMuteBtn').textContent = audio.muted ? '🔇' : '🔊';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('slideshowOverlay').classList.contains('open')) return;
+  if (e.key === 'ArrowRight') ssNext();
+  if (e.key === 'ArrowLeft') ssPrev();
+  if (e.key === ' ') { e.preventDefault(); ssTogglePause(); }
+  if (e.key === 'Escape') closeSlideshow();
+});
+
+buildSlideshow();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+
+</body>
+</html>
