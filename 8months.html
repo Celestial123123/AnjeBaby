@@ -58,7 +58,7 @@ body {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 13px;
 }
-.avatar-chip img { width: 100%; height: 100%; object-fit: cover; object-position: center 38%; }
+.avatar-chip img { width: 100%; height: 100%; object-fit: cover; }
 
 /* ─── Hero ─── */
 .hero {
@@ -257,6 +257,12 @@ body {
 .ep-locked-badge svg { width: 24px; height: 24px; stroke: #E50914; }
 .ep-locked-badge .cd { font-family:'Bebas Neue'; font-size: 0.85rem; color: #ddd; letter-spacing: 1px; }
 .ep-thumb.locked img { filter: blur(6px) brightness(0.55) saturate(0.7); }
+.ep-thumb-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, rgba(244,86,122,0.22), rgba(212,165,116,0.14));
+}
+.ep-thumb.locked .ep-thumb-placeholder { filter: blur(2px) brightness(0.6); }
 
 .ep-body-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
 .ep-title { font-family:'Bebas Neue'; font-size: 1.15rem; letter-spacing: 0.5px; }
@@ -285,7 +291,9 @@ body {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.4rem;
   border: 2px solid #333;
+  overflow: hidden;
 }
+.cast-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .cast-name { font-size: 0.78rem; color: #ccc; }
 
 /* ─── More Like This ─── */
@@ -324,6 +332,18 @@ body {
 .mlt-info { padding: 10px 12px 14px; }
 .mlt-title { font-family:'Bebas Neue'; font-size: 0.95rem; letter-spacing: 0.5px; margin-bottom: 3px; }
 .mlt-sub { font-size: 0.72rem; color: #999; }
+
+/* ─── Footer ─── */
+.site-footer {
+  text-align: center;
+  padding: 56px 24px 24px;
+  color: #6b6b6b;
+  font-size: 0.85rem;
+  border-top: 1px solid #1e1e1e;
+  margin-top: 52px;
+}
+.site-footer a { color: #999; text-decoration: none; border-bottom: 1px solid transparent; transition: color 0.2s, border-color 0.2s; }
+.site-footer a:hover { color: #fff; border-color: #fff; }
 
 /* ─── Modal ─── */
 .modal-overlay {
@@ -389,6 +409,7 @@ body {
   content: '';
   position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.2) 42%, rgba(0,0,0,0.4) 100%);
+  pointer-events: none;
 }
 
 .ss-progress { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; gap: 5px; z-index: 5; }
@@ -440,6 +461,38 @@ body {
 .ss-caption.animate p { animation-delay: 0.14s; }
 @keyframes ssFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
+.ss-bonus {
+  background: radial-gradient(circle at 50% 40%, #3a0f1a, #17080c 75%);
+  display: flex; align-items: center; justify-content: center;
+}
+.ss-bonus-inner { text-align: center; max-width: 560px; padding: 0 24px; }
+.ss-bonus-tag {
+  display: inline-block;
+  background: #E50914;
+  color: #fff;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  padding: 4px 12px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.ss-bonus-inner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.8rem, 6vw, 3rem); letter-spacing: 1px; color: #fff; margin-bottom: 14px; }
+.ss-bonus-inner p { font-size: 0.98rem; color: #d8d8d8; line-height: 1.6; margin-bottom: 30px; }
+.ss-bonus-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #E50914; color: #fff;
+  border: none; border-radius: 4px;
+  padding: 12px 26px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700; font-size: 0.95rem;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.ss-bonus-btn:hover { opacity: 0.85; }
+.ss-bonus-btn:active { transform: scale(0.97); }
+
 @media (max-width: 640px) {
   .ep-row { grid-template-columns: 26px 1fr; }
   .ep-thumb { width: 100%; height: 180px; grid-column: 1 / -1; order: -1; }
@@ -447,15 +500,156 @@ body {
   .cw-card { max-width: 100%; }
   .ss-nav { width: 36px; height: 36px; font-size: 1.3rem; }
 }
+
+/* ─── Who's Watching gate ─── */
+.gate {
+  position: fixed; inset: 0;
+  background: #141414;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+.gate.leaving { opacity: 0; pointer-events: none; }
+.gate-logo {
+  position: absolute; top: 28px; left: 5vw;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  color: #E50914;
+  letter-spacing: 2px;
+}
+.gate h1 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+  color: #fff;
+  margin-bottom: 46px;
+  animation: fadeUp 0.8s ease-out;
+}
+.gate-profiles { display: flex; gap: 34px; flex-wrap: wrap; justify-content: center; padding: 0 24px; animation: fadeUp 0.8s ease-out 0.1s both; }
+.gate-profile { display: flex; flex-direction: column; align-items: center; gap: 14px; cursor: pointer; border: none; background: none; padding: 0; }
+.gate-avatar {
+  width: 130px; height: 130px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 3px solid transparent;
+  transition: border-color 0.2s, transform 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.gate-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.gate-profile:hover .gate-avatar { border-color: #fff; transform: scale(1.04); }
+.gate-name { color: #808080; font-size: 1rem; transition: color 0.2s; }
+.gate-profile:hover .gate-name { color: #fff; }
+@media (max-width: 640px) {
+  .gate-avatar { width: 100px; height: 100px; }
+  .gate-profiles { gap: 22px; }
+}
+
+/* ─── PIN screen ─── */
+.gate-close {
+  position: absolute; top: 24px; right: 5vw;
+  background: none; border: none;
+  color: #fff; opacity: 0.75;
+  font-size: 1.6rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: opacity 0.2s;
+}
+.gate-close:hover { opacity: 1; }
+.gate-pin { display: none; flex-direction: column; align-items: center; text-align: center; padding: 0 24px; animation: fadeUp 0.6s ease-out; }
+.pin-sub { color: #808080; font-size: 0.95rem; margin-bottom: 10px; }
+.pin-title { font-family: 'Inter', sans-serif; font-weight: 700; font-size: clamp(1.3rem, 4vw, 2rem); color: #fff; max-width: 560px; margin-bottom: 34px; }
+.pin-boxes { display: flex; gap: 12px; cursor: text; }
+.pin-box {
+  width: 54px; height: 70px;
+  border: 2px solid #808080;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; font-weight: 700; color: #fff;
+  transition: border-color 0.15s;
+}
+.pin-box.filled { border-color: #fff; }
+.pin-box.error { border-color: #E50914; color: #E50914; }
+.pin-boxes.shake { animation: pinShake 0.4s; }
+@keyframes pinShake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(6px); } }
+.pin-hidden-input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.pin-forgot { color: #808080; font-size: 0.9rem; margin-top: 26px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.pin-forgot:hover { color: #fff; }
+.pin-hint { color: #e4e4e4; font-size: 0.88rem; margin-top: 14px; }
+@media (max-width: 640px) {
+  .pin-box { width: 46px; height: 60px; font-size: 1.5rem; }
+}
+
+/* ─── Boot intro ─── */
+.boot-intro {
+  position: fixed; inset: 0;
+  background: #000;
+  z-index: 600;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.5s ease;
+}
+.boot-intro.leaving { opacity: 0; pointer-events: none; }
+.boot-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.4rem, 10vw, 5rem);
+  color: #E50914;
+  letter-spacing: 6px;
+  opacity: 0;
+  transform: scale(0.4);
+  filter: blur(6px);
+  text-shadow: 0 0 40px rgba(229,9,20,0.55);
+  animation: bootLogo 1.7s cubic-bezier(.2,.8,.3,1) forwards;
+}
+@keyframes bootLogo {
+  0% { opacity: 0; transform: scale(0.4); letter-spacing: 0px; filter: blur(6px); }
+  40% { opacity: 1; transform: scale(1.1); letter-spacing: 9px; filter: blur(0); }
+  60% { transform: scale(1); letter-spacing: 6px; }
+  100% { opacity: 1; transform: scale(1); letter-spacing: 6px; }
+}
 </style>
 </head>
 <body>
+
+<div class="boot-intro" id="bootIntro">
+  <div class="boot-logo">OURFLIX</div>
+</div>
+
+<div class="gate" id="gate">
+  <div class="gate-logo">OURFLIX</div>
+
+  <div id="gateProfiles">
+    <h1>Who's watching?</h1>
+    <div class="gate-profiles">
+      <button class="gate-profile" onclick="showPin()">
+        <div class="gate-avatar"><img src="Imagess/ayangnetflix.png" alt="Jasmine"></div>
+        <div class="gate-name">Jasmine</div>
+      </button>
+    </div>
+  </div>
+
+  <div class="gate-pin" id="gatePin">
+    <button class="gate-close" onclick="showProfiles()">&#10005;</button>
+    <div class="pin-sub">Profile Lock is currently on.</div>
+    <div class="pin-title">Enter your PIN to access this profile.</div>
+    <div class="pin-boxes" id="pinBoxes" onclick="document.getElementById('pinInput').focus()">
+      <div class="pin-box"></div>
+      <div class="pin-box"></div>
+      <div class="pin-box"></div>
+      <div class="pin-box"></div>
+    </div>
+    <input type="tel" inputmode="numeric" maxlength="4" id="pinInput" class="pin-hidden-input" autocomplete="off">
+    <div class="pin-forgot" onclick="toggleHint()">Forgot PIN?</div>
+    <div class="pin-hint" id="pinHint" style="display:none;">Hint: the day it all started. 🩷</div>
+  </div>
+</div>
 
 <nav class="nav" id="nav">
   <a class="nav-brand" href="index.html">OURFLIX</a>
   <div class="nav-right">
     <a class="nav-back" href="index.html">&larr; Hub</a>
-    <div class="avatar-chip"><img src="Imagess/IMG-20260707-WA0024.jpg" alt="Anje"></div>
+    <div class="avatar-chip"><img src="Imagess/ayangnetflix.png" alt="Anje"></div>
   </div>
 </nav>
 
@@ -469,7 +663,7 @@ body {
       <span class="match">98% Match</span>
       <span>2026</span>
       <span class="pill">LD</span>
-      <span>8 Episodes</span>
+      <span>12 Episodes</span>
       <span>Romance &middot; Comedy &middot; Slow Burn &middot; Long-Distance Drama</span>
     </div>
     <p class="hero-desc">Two people, one save file. What started as plane spotting and a McDonald's bag at KLIA is now eight months deep with no cancellation in sight. Critics call it "unrealistically soft." We call it Thursday.</p>
@@ -513,11 +707,11 @@ body {
   <div class="ep-head"><h2>Starring</h2></div>
   <div class="cast-row">
     <div class="cast-item">
-      <div class="cast-avatar" style="background:linear-gradient(135deg,#ffd1df,#f4567a); color:#3d2c35;">J</div>
+      <div class="cast-avatar"><img src="Imagess/anje.jpg" alt="Jasmine"></div>
       <div class="cast-name">Jasmine</div>
     </div>
     <div class="cast-item">
-      <div class="cast-avatar" style="background:linear-gradient(135deg,#d4a574,#7c3aed); color:#fff;">K</div>
+      <div class="cast-avatar"><img src="Imagess/me.jpg" alt="Khairul"></div>
       <div class="cast-name">Khairul</div>
     </div>
   </div>
@@ -528,14 +722,18 @@ body {
   <div class="mlt-scroll" id="mltRow"></div>
 </section>
 
+<footer class="site-footer">
+  made with 💗 just for you, Jasmine · <a href="index.html">back to our hub</a>
+</footer>
+
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-label">A NOTE FROM THE WRITER</div>
     <h3>8 Months In</h3>
-    <p>Sayang, I keep coming back to how this started. A random night at KLIA, a McDonald's bag between us, me pointing out planes you didn't ask about. I didn't know that was the pilot episode of anything. I just knew I didn't want the night to end.</p>
-    <p>Eight months later and it's still the same feeling, just with more evidence now. A cherry blossom house we built together, axolotls with our names on them, a Snivy plush sitting next to your letter on my desk. Every "episode" since has just been us choosing to keep going, even from far away, even on the hard nights on call.</p>
-    <p>We're still climbing toward whatever comes after this. I don't mind taking it slow with you. Happy 8 months, Sayang. Renewed indefinitely.</p>
+    <p>Sayang, I keep coming back to how this started. A random night at KLIA, a McDonald's bag between us, you pointing out planes that was hard to see because it was night. I didn't know that was the pilot episode of anything. I just knew I didn't want the night to end.</p>
+    <p>Eight months later and it's still the same feeling, just with more evidence now. A cherry blossom house we built together, axolotls with our names on them, a Snivy plushie attached to your bag alongside the toothless keychain. Every "episode" since has just been us choosing to keep going, even from far away, even on the hard nights on call.</p>
+    <p>We're still climbing toward whatever comes after this. I don't mind taking it slow with you. Happy 8 months, Sayang. I love you so so much, Nur Liyana Jasmine.</p>
     <div class="sign">Yours, always. Khairul</div>
   </div>
 </div>
@@ -573,11 +771,17 @@ const EPISODES = [
     syn:'Snivy jokes and a whole Pokédex of memories. Still, somehow, not tired of each other.', watched:true },
   { n:7, title:'No Decay', dur:'1 month', img:'Imagess/image15.jpg',
     syn:'No plot twist required, just the same two people choosing each other again and again. Some stories don\'t need a cliffhanger to stay worth watching.', watched:true },
-  { n:8, title:'The Climb', dur:'1 month', img:'Imagess/image17.jpg',
+  { n:8, title:'The Climb', dur:'1 month', img:'Imagess/WhatsApp Image 2026-07-29 at 02.13.04.jpeg', pos:'center 30%', ssPos:'center 30%',
     syn:'Not the finale, more like the start of something bigger. They\'re still figuring out what comes after forever, together.', watched:true, isNew:true },
+  { n:9, title:'September', air:'2026-09-02T00:00:00', airLabel:'Sep 2, 2026',
+    syn:'The next chapter, not written yet.', watched:false, locked:true },
+  { n:10, title:'October', air:'2026-10-02T00:00:00', airLabel:'Oct 2, 2026',
+    syn:'Still ahead of them, still worth waiting for.', watched:false, locked:true },
+  { n:11, title:'November', air:'2026-11-02T00:00:00', airLabel:'Nov 2, 2026',
+    syn:'A page that hasn\'t turned yet.', watched:false, locked:true },
+  { n:12, title:'December', air:'2026-12-02T00:00:00', airLabel:'Dec 2, 2026',
+    syn:'Where Season 1 ends. Or maybe just where it really begins.', watched:false, locked:true },
 ];
-
-const AIR_DATE = new Date('2026-08-02T00:00:00');
 
 function renderEpisodes() {
   const list = document.getElementById('epList');
@@ -585,14 +789,14 @@ function renderEpisodes() {
     <div class="ep-row">
       <div class="ep-idx">${ep.n}</div>
       <div class="ep-thumb${ep.locked ? ' locked' : ''}">
-        <img src="${ep.img}" alt="${ep.title}">
+        ${ep.img ? `<img src="${ep.img}" alt="${ep.title}" style="object-position:${ep.pos || 'center'};">` : `<div class="ep-thumb-placeholder"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></div>`}
         ${ep.isNew ? `<div class="ep-check ep-new-badge"><svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 1.9 5.8a2 2 0 0 0 1.3 1.3L21 11l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 20l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 11l5.8-1.9a2 2 0 0 0 1.3-1.3Z"/></svg></div>` : (ep.watched ? `<div class="ep-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>` : '')}
-        ${ep.locked ? `<div class="ep-locked-badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="cd" id="countdown"></span></div>` : ''}
+        ${ep.locked ? `<div class="ep-locked-badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span class="cd" data-air="${ep.air}"></span></div>` : ''}
       </div>
       <div>
         <div class="ep-body-top">
           <div class="ep-title">${ep.title}${ep.isNew ? '<span class="new-tag">New</span>' : ''}</div>
-          <div class="ep-dur">${ep.dur ? ep.dur : 'Aug 2, 2026'}</div>
+          <div class="ep-dur">${ep.dur ? ep.dur : (ep.airLabel || '')}</div>
         </div>
         <div class="ep-syn">${ep.syn}</div>
       </div>
@@ -602,13 +806,14 @@ function renderEpisodes() {
 }
 
 function updateCountdown() {
-  const el = document.getElementById('countdown');
-  if (!el) return;
-  const diff = AIR_DATE - new Date();
-  if (diff <= 0) { el.textContent = 'Out now'; return; }
-  const days = Math.floor(diff / 86400000);
-  const hours = Math.floor((diff % 86400000) / 3600000);
-  el.textContent = days > 0 ? `${days}d ${hours}h` : `${hours}h`;
+  document.querySelectorAll('.cd[data-air]').forEach(el => {
+    const target = new Date(el.dataset.air);
+    const diff = target - new Date();
+    if (diff <= 0) { el.textContent = 'Out now'; return; }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    el.textContent = days > 0 ? `${days}d ${hours}h` : `${hours}h`;
+  });
 }
 setInterval(updateCountdown, 60000);
 
@@ -650,14 +855,43 @@ renderEpisodes();
 renderMLT();
 
 /* ─── Slideshow ─── */
+const SS_EPISODES = EPISODES.filter(ep => ep.img);
+const BLOOPER_YT_URL = 'https://youtu.be/0LkZ3MHhK04';
+const SS_ALL = [...SS_EPISODES, { bonus: true }];
 let ssIndex = 0, ssTimer = null, ssElapsed = 0, ssPaused = false;
 const SS_DURATION = 4800, SS_TICK = 50;
 
+function watchBloopers() {
+  if (BLOOPER_YT_URL) {
+    window.open(BLOOPER_YT_URL, '_blank', 'noopener');
+    return;
+  }
+  const btn = document.getElementById('ssBonusBtn');
+  if (!btn) return;
+  const original = btn.innerHTML;
+  btn.innerHTML = 'Coming soon!';
+  setTimeout(() => { btn.innerHTML = original; }, 1600);
+}
+
 function buildSlideshow() {
-  document.getElementById('ssStage').innerHTML = EPISODES.map((ep, i) => `
-    <div class="ss-slide" data-i="${i}"><img src="${ep.img}" alt="${ep.title}"></div>
-  `).join('');
-  document.getElementById('ssProgress').innerHTML = EPISODES.map(() => `<div class="seg"><div class="fill"></div></div>`).join('');
+  document.getElementById('ssStage').innerHTML = SS_ALL.map((item, i) => {
+    if (item.bonus) {
+      return `
+        <div class="ss-slide ss-bonus" data-i="${i}">
+          <div class="ss-bonus-inner">
+            <div class="ss-bonus-tag">Bonus</div>
+            <h2>Bloopers &amp; Behind the Scenes</h2>
+            <p>The clips that didn't make the cut. All the messy, unfiltered, real parts of us.</p>
+            <button class="ss-bonus-btn" id="ssBonusBtn" onclick="watchBloopers()">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              Watch on YouTube
+            </button>
+          </div>
+        </div>`;
+    }
+    return `<div class="ss-slide" data-i="${i}"><img src="${item.img}" alt="${item.title}" style="object-position:${item.ssPos || 'center'};"></div>`;
+  }).join('');
+  document.getElementById('ssProgress').innerHTML = SS_ALL.map(() => `<div class="seg"><div class="fill"></div></div>`).join('');
 }
 
 function openSlideshow() {
@@ -684,7 +918,7 @@ function closeSlideshow() {
 }
 
 function goToSlide(i) {
-  ssIndex = ((i % EPISODES.length) + EPISODES.length) % EPISODES.length;
+  ssIndex = ((i % SS_ALL.length) + SS_ALL.length) % SS_ALL.length;
   ssElapsed = 0;
 
   document.querySelectorAll('.ss-slide').forEach((el, idx) => el.classList.toggle('active', idx === ssIndex));
@@ -696,25 +930,30 @@ function goToSlide(i) {
     fill.style.width = idx < ssIndex ? '100%' : '0%';
   });
 
-  const ep = EPISODES[ssIndex];
-  document.getElementById('ssEpLabel').textContent = `EPISODE ${ep.n} OF ${EPISODES.length}`;
+  const item = SS_ALL[ssIndex];
   const cap = document.getElementById('ssCaption');
   cap.classList.remove('animate');
-  void cap.offsetWidth;
-  cap.innerHTML = `<span class="ep-tag">EPISODE ${ep.n}</span><h3>${ep.title}</h3><p>${ep.syn}</p>`;
-  cap.classList.add('animate');
+  if (item.bonus) {
+    document.getElementById('ssEpLabel').textContent = 'BONUS';
+    cap.innerHTML = '';
+  } else {
+    document.getElementById('ssEpLabel').textContent = `EPISODE ${item.n} OF ${SS_EPISODES.length}`;
+    void cap.offsetWidth;
+    cap.innerHTML = `<span class="ep-tag">EPISODE ${item.n}</span><h3>${item.title}</h3><p>${item.syn}</p>`;
+    cap.classList.add('animate');
+  }
 }
 
 function startTimer() {
   stopTimer();
   ssTimer = setInterval(() => {
     if (ssPaused) return;
+    if (SS_ALL[ssIndex].bonus) return;
     ssElapsed += SS_TICK;
     const pct = Math.min(100, (ssElapsed / SS_DURATION) * 100);
     const fills = document.querySelectorAll('.ss-progress .seg .fill');
     if (fills[ssIndex]) { fills[ssIndex].style.transition = 'width 0.05s linear'; fills[ssIndex].style.width = pct + '%'; }
     if (ssElapsed >= SS_DURATION) {
-      if (ssIndex === EPISODES.length - 1) { closeSlideshow(); return; }
       goToSlide(ssIndex + 1);
     }
   }, SS_TICK);
@@ -744,6 +983,94 @@ document.addEventListener('keydown', (e) => {
 });
 
 buildSlideshow();
+
+/* ─── Boot intro ─── */
+function playThud() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(130, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(38, ctx.currentTime + 0.4);
+    gain.gain.setValueAtTime(0.5, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.7);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.7);
+  } catch (e) {}
+}
+(function bootSequence() {
+  const boot = document.getElementById('bootIntro');
+  setTimeout(playThud, 550);
+  setTimeout(() => {
+    boot.classList.add('leaving');
+    setTimeout(() => { boot.style.display = 'none'; }, 500);
+  }, 1900);
+})();
+
+/* ─── Who's Watching gate ─── */
+document.body.style.overflow = 'hidden';
+function enterSite() {
+  const gate = document.getElementById('gate');
+  gate.classList.add('leaving');
+  document.body.style.overflow = '';
+  setTimeout(() => { gate.style.display = 'none'; }, 500);
+}
+
+const PROFILE_PIN = '7275';
+
+function showPin() {
+  document.getElementById('gateProfiles').style.display = 'none';
+  document.getElementById('gatePin').style.display = 'flex';
+  document.getElementById('pinHint').style.display = 'none';
+  const input = document.getElementById('pinInput');
+  input.value = '';
+  renderPinBoxes('');
+  setTimeout(() => input.focus(), 50);
+}
+
+function showProfiles() {
+  document.getElementById('gatePin').style.display = 'none';
+  document.getElementById('gateProfiles').style.display = 'block';
+  document.getElementById('pinInput').value = '';
+  renderPinBoxes('');
+}
+
+function renderPinBoxes(val) {
+  document.querySelectorAll('.pin-box').forEach((box, i) => {
+    box.textContent = val[i] || '';
+    box.classList.toggle('filled', !!val[i]);
+    box.classList.remove('error');
+  });
+}
+
+function toggleHint() {
+  const hint = document.getElementById('pinHint');
+  hint.style.display = hint.style.display === 'none' ? 'block' : 'none';
+}
+
+document.getElementById('pinInput').addEventListener('input', (e) => {
+  const val = e.target.value.replace(/\D/g, '').slice(0, 4);
+  e.target.value = val;
+  renderPinBoxes(val);
+  if (val.length < 4) return;
+
+  if (val === PROFILE_PIN) {
+    document.querySelectorAll('.pin-box').forEach(b => b.classList.add('filled'));
+    setTimeout(enterSite, 200);
+  } else {
+    const wrap = document.getElementById('pinBoxes');
+    document.querySelectorAll('.pin-box').forEach(b => b.classList.add('error'));
+    wrap.classList.add('shake');
+    setTimeout(() => {
+      wrap.classList.remove('shake');
+      e.target.value = '';
+      renderPinBoxes('');
+      e.target.focus();
+    }, 450);
+  }
+});
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
