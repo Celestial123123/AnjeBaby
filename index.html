@@ -283,6 +283,132 @@ body {
   box-shadow: 0 4px 16px rgba(244, 86, 122, 0.25);
 }
 
+/* ===== "Just Added" Strip ===== */
+.new-strip {
+  margin-bottom: 36px;
+  animation: fadeUp 0.8s ease-out 0.25s both;
+}
+
+.new-strip-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.new-strip-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.new-strip-head::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--rose-200), transparent);
+}
+
+.new-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--rose-400), var(--rose-500));
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  box-shadow: 0 4px 14px rgba(244, 86, 122, 0.28);
+  animation: new-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes new-pulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(244, 86, 122, 0.28); }
+  50%      { box-shadow: 0 4px 22px rgba(244, 86, 122, 0.5); }
+}
+
+.new-rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.new-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  text-decoration: none;
+  color: var(--text);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 232, 238, 0.6));
+  border: 1.5px solid var(--rose-200);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  overflow: hidden;
+}
+
+.new-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--rose-400), var(--gold));
+}
+
+.new-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--rose-300);
+}
+
+.new-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #ffe4ec, #ffd1df);
+  color: var(--rose-500);
+}
+
+.new-card-body { min-width: 0; }
+
+.new-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.98rem;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.new-card-date {
+  font-size: 0.7rem;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.new-card-date i { font-size: 0.62rem; color: var(--rose-300); }
+
+.new-card-arrow {
+  margin-left: auto;
+  color: var(--rose-400);
+  font-size: 0.8rem;
+  transition: transform 0.3s;
+}
+
+.new-card:hover .new-card-arrow { transform: translateX(4px); }
+
 /* ===== Card Grid ===== */
 .grid {
   display: grid;
@@ -375,6 +501,23 @@ body {
   background: #ecfdf5;
   color: #059669;
   border: 1px solid #a7f3d0;
+}
+
+/* "NEW" pill — must come after .badge so it can override the 30px circle */
+.badge-new {
+  width: auto;
+  height: 20px;
+  padding: 0 10px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--rose-400), var(--rose-500));
+  color: #fff;
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.9px;
+  line-height: 1;
+  align-self: center;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .badge-desktop {
@@ -574,6 +717,15 @@ body {
       <i class="fas fa-desktop"></i>&ensp;Desktop Only
     </button>
   </div>
+
+  <!-- Just Added — the single newest card, filled in automatically by the script below -->
+  <section class="new-strip" id="newStrip" hidden>
+    <div class="new-strip-head">
+      <span class="new-tag"><i class="fas fa-star"></i> NEW</span>
+      <h2>Just Added</h2>
+    </div>
+    <div class="new-rail" id="newRail"></div>
+  </section>
 
   <!-- Card Grid -->
   <div class="grid" id="cardGrid">
@@ -806,6 +958,19 @@ body {
       <a href="TakeCare.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
     </div>
 
+    <div class="card" data-category="messages" data-device="both" data-title="Thinking About Us">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-pen-nib"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Thinking About Us</div>
+      <div class="card-date"><i class="fas fa-calendar-alt"></i> August 11, 2026</div>
+      <a href="Thinking%20about%20us.html" class="card-link">Open <i class="fas fa-arrow-right"></i></a>
+    </div>
+
     <!-- ─── Apology Pages ─── -->
     <div class="section-label" data-category="apology">Apologies</div>
 
@@ -923,8 +1088,70 @@ body {
 </div>
 
 <script>
+/* ── "Just Added": whichever card has the latest date wins the NEW badge ──
+   Nothing to maintain by hand — add a card with its date and this picks it up. */
+(function() {
+  const MONTHS = ['january','february','march','april','may','june',
+                  'july','august','september','october','november','december'];
+
+  // Reads "August 11, 2026" off a card's date line. Returns null if unparseable.
+  function cardTime(card) {
+    const el = card.querySelector('.card-date');
+    if (!el) return null;
+    const m = el.textContent.trim().match(/([A-Za-z]+)\s+(\d{1,2}),\s*(\d{4})/);
+    if (!m) return null;
+    const month = MONTHS.indexOf(m[1].toLowerCase());
+    if (month === -1) return null;
+    return new Date(+m[3], month, +m[2]).getTime();
+  }
+
+  const cards = document.querySelectorAll('#cardGrid .card');
+  let newest = null, newestTime = -Infinity;
+
+  cards.forEach(card => {
+    const t = cardTime(card);
+    if (t !== null && t > newestTime) { newestTime = t; newest = card; }
+  });
+
+  if (!newest) return;
+
+  // 1. Badge it in the grid.
+  const badges = newest.querySelector('.device-badges');
+  if (badges) {
+    const pill = document.createElement('span');
+    pill.className = 'badge badge-new';
+    pill.textContent = 'NEW';
+    badges.prepend(pill);
+  }
+
+  // 2. Mirror it into the "Just Added" strip.
+  const rail = document.getElementById('newRail');
+  const link = newest.querySelector('.card-link');
+  const icon = newest.querySelector('.card-icon i');
+  const title = newest.querySelector('.card-title');
+  const date = newest.querySelector('.card-date');
+  if (!rail || !link || !title) return;
+
+  const a = document.createElement('a');
+  a.className = 'new-card';
+  a.href = link.getAttribute('href');
+  a.innerHTML =
+    '<div class="new-card-icon"><i class="' + (icon ? icon.className : 'fas fa-heart') + '"></i></div>' +
+    '<div class="new-card-body">' +
+      '<div class="new-card-title"></div>' +
+      '<div class="new-card-date"><i class="fas fa-calendar-alt"></i> <span></span></div>' +
+    '</div>' +
+    '<i class="fas fa-arrow-right new-card-arrow"></i>';
+  a.querySelector('.new-card-title').textContent = title.textContent.trim();
+  a.querySelector('.new-card-date span').textContent = date ? date.textContent.trim() : '';
+
+  rail.appendChild(a);
+  document.getElementById('newStrip').hidden = false;
+})();
+
 (function() {
   const grid = document.getElementById('cardGrid');
+  const newStrip = document.getElementById('newStrip');
   const searchInput = document.getElementById('searchInput');
   const filterBtns = document.querySelectorAll('.filter-btn');
   const cards = grid.querySelectorAll('.card');
@@ -935,6 +1162,9 @@ body {
   function applyFilters() {
     const query = searchInput.value.toLowerCase().trim();
     const categoriesVisible = new Set();
+
+    // The "Just Added" strip only makes sense on the unfiltered view
+    newStrip.style.display = (!query && activeFilter === 'all') ? '' : 'none';
 
     cards.forEach(card => {
       const cat = card.dataset.category;

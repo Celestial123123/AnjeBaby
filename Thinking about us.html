@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Thinking About Us</title>
+<meta name="theme-color" content="#f7f2ec">
+<link rel="icon" href="icons/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:          #f7f2ec;
+  --bg-tint:     #efe6dc;
+  --card:        #fffdfa;
+  --ink:         #3a3330;
+  --ink-soft:    #6f6459;
+  --ink-faint:   #a3968a;
+  --accent:      #c2a289;
+  --accent-soft: #e6d7c8;
+  --shadow:      0 20px 60px rgba(88, 68, 52, 0.10), 0 2px 8px rgba(88, 68, 52, 0.04);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% 0%, rgba(232, 214, 197, 0.55), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 90% 100%, rgba(238, 226, 214, 0.6), transparent 60%);
+  background-attachment: fixed;
+  color: var(--ink);
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 5vw, 64px) clamp(16px, 4vw, 32px);
+  padding-top: max(clamp(20px, 5vw, 64px), env(safe-area-inset-top));
+  padding-bottom: max(clamp(20px, 5vw, 64px), env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Card ===== */
+.letter {
+  width: 100%;
+  max-width: 660px;
+  background: var(--card);
+  border: 1px solid rgba(194, 162, 137, 0.16);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  padding: clamp(32px, 7vw, 72px) clamp(24px, 6vw, 68px);
+  position: relative;
+  overflow: hidden;
+}
+
+.letter::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent-soft) 25%, var(--accent) 50%, var(--accent-soft) 75%, transparent);
+}
+
+/* ===== Header ===== */
+h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 7vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: 0.3px;
+  color: var(--ink);
+}
+
+.rule {
+  width: 56px;
+  height: 1px;
+  margin: 26px auto 40px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+/* ===== Letter body ===== */
+.salutation {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.3rem, 4.5vw, 1.6rem);
+  color: var(--ink);
+  margin-bottom: 28px;
+}
+
+.body p {
+  font-size: clamp(1rem, 2.6vw, 1.06rem);
+  font-weight: 300;
+  line-height: 2;
+  color: var(--ink-soft);
+  letter-spacing: 0.1px;
+  margin-bottom: 30px;
+}
+
+.body p:last-child { margin-bottom: 0; }
+
+/* ===== Footer ===== */
+.sign-off {
+  margin-top: 48px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(194, 162, 137, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sign-off .mark {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ink-faint);
+}
+
+.home-link {
+  font-size: 0.75rem;
+  letter-spacing: 0.6px;
+  color: var(--ink-faint);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.home-link:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent-soft);
+}
+
+/* ===== Ambient sound toggle ===== */
+.ambient-btn {
+  position: fixed;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(194, 162, 137, 0.28);
+  background: rgba(255, 253, 250, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--ink-faint);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(88, 68, 52, 0.10);
+  transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, opacity 0.6s ease;
+  opacity: 0;
+  animation: fadeIn 1s ease-out 2.9s forwards;
+  z-index: 10;
+}
+
+.ambient-btn:hover { transform: scale(1.06); border-color: var(--accent); color: var(--accent); }
+.ambient-btn.on { color: var(--accent); border-color: var(--accent); }
+
+.ambient-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ambient-btn .wave { opacity: 0; transition: opacity 0.4s ease; }
+.ambient-btn.on .wave { opacity: 1; }
+
+/* ===== Entry animations ===== */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes grow {
+  from { opacity: 0; transform: scaleX(0); }
+  to   { opacity: 1; transform: scaleX(1); }
+}
+
+.letter { opacity: 0; animation: rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards; }
+
+.reveal { opacity: 0; animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.title      { animation-delay: 0.45s; }
+.rule       { opacity: 0; animation: grow 1s ease-out 0.85s forwards; }
+.salutation { animation-delay: 1.00s; }
+.body p:nth-of-type(1) { animation-delay: 1.20s; }
+.body p:nth-of-type(2) { animation-delay: 1.38s; }
+.body p:nth-of-type(3) { animation-delay: 1.56s; }
+.body p:nth-of-type(4) { animation-delay: 1.74s; }
+.body p:nth-of-type(5) { animation-delay: 1.92s; }
+.sign-off   { animation-delay: 2.15s; }
+
+/* ===== Responsive ===== */
+@media (max-width: 520px) {
+  body { padding-left: 14px; padding-right: 14px; }
+  .letter { border-radius: 18px; }
+  .body p { line-height: 1.95; margin-bottom: 26px; }
+  .rule { margin: 22px auto 34px; }
+  .sign-off { margin-top: 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .letter, .reveal, .rule, .ambient-btn {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .letter { box-shadow: none; border: none; max-width: none; }
+  .ambient-btn { display: none; }
+}
+</style>
+</head>
+<body>
+
+<main class="letter">
+
+  <h1 class="title reveal">Thinking About Us</h1>
+  <div class="rule"></div>
+
+  <p class="salutation reveal">Sayang,</p>
+
+  <div class="body">
+    <p class="reveal">I have been reflecting a lot on everything lately, and I need to tell you what is on my heart. Hearing you say that you dont see a future with the current me hurt deeply, because my goal has always been to build a healthy, happy life with you.</p>
+
+    <p class="reveal">I know I was wrong in those moments. When you joined Discord the other day while I was playing Valo with Aydan, I was mid conversation and checking who joined, so I didnt say hello to you before you left. Earlier today with Kung Fu Panda 4, I already had the movie pulled up and ready for us, but I sat there waiting for you to say something instead of just streaming the movie and taking initiative.</p>
+
+    <p class="reveal">My being passive and silent in those moments were wrong, and I take responsibility for not communicating with you properly. I know I sometimes misread situations or struggle to find the right words in the moment and I am truly sorry for making you feel ignored or frustrated.</p>
+
+    <p class="reveal">I also want to be honest about something Ive been carrying. Lately it feels like every small delay or moment of hesitation from me turns into a much bigger issue, and that makes it hard for me to relax around you. I want to give you my full attention and make you feel loved, and I cant do that as well when Im acting out of anxiety or fear of getting it wrong. None of this means I dont want to be with you. I never mean you any harm.</p>
+
+    <p class="reveal">I am fully willing to grow, listen, and show up for you. But a future together needs patience and room for both of us, not just one. I want us to connect out of love and comfort, not pressure or fear of making a mistake. I love you, and I want us to meet in the middle, somewhere where we both feel respected, safe, and heard.</p>
+  </div>
+
+  <div class="sign-off reveal">
+    <span class="mark">With all my love</span>
+    <a href="index.html" class="home-link">&larr; Back to hub</a>
+  </div>
+
+</main>
+
+<button class="ambient-btn" id="ambientBtn" aria-pressed="false" aria-label="Toggle soft ambient sound" title="Soft ambient sound">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M11 5 6 9H3v6h3l5 4z"></path>
+    <path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+    <path class="wave" d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+  </svg>
+</button>
+
+<script>
+/* A very soft, generated ambient pad — no audio files, nothing external. */
+(function () {
+  const btn = document.getElementById('ambientBtn');
+  let ctx = null, master = null, nodes = [], playing = false;
+
+  function start() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    if (!ctx) ctx = new AC();
+    if (ctx.state === 'suspended') ctx.resume();
+
+    master = ctx.createGain();
+    master.gain.setValueAtTime(0.0001, ctx.currentTime);
+    master.gain.exponentialRampToValueAtTime(0.045, ctx.currentTime + 3);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 750;
+    filter.connect(ctx.destination);
+    master.connect(filter);
+
+    // Two quiet, slightly detuned tones with a slow breathing swell.
+    [174.61, 261.63].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.detune.value = i === 0 ? -4 : 5;
+      gain.gain.value = i === 0 ? 0.6 : 0.32;
+
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      lfo.frequency.value = 0.05 + i * 0.021;   // ~20s breathing cycle
+      lfoGain.gain.value = i === 0 ? 0.22 : 0.14;
+      lfo.connect(lfoGain).connect(gain.gain);
+
+      osc.connect(gain).connect(master);
+      osc.start();
+      lfo.start();
+      nodes.push(osc, lfo);
+    });
+    return true;
+  }
+
+  function stop() {
+    if (!ctx || !master) return;
+    const now = ctx.currentTime;
+    master.gain.cancelScheduledValues(now);
+    master.gain.setValueAtTime(master.gain.value, now);
+    master.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
+    const dying = nodes;
+    nodes = [];
+    setTimeout(() => dying.forEach(n => { try { n.stop(); } catch (e) {} }), 1800);
+  }
+
+  btn.addEventListener('click', () => {
+    if (playing) {
+      stop();
+      playing = false;
+    } else {
+      if (!start()) return;
+      playing = true;
+    }
+    btn.classList.toggle('on', playing);
+    btn.setAttribute('aria-pressed', String(playing));
+  });
+})();
+</script>
+
+</body>
+</html>
