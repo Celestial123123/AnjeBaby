@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>I'm So Sorry, Lyna</title>
+<meta name="theme-color" content="#17130f">
+<link rel="icon" href="icons/favicon.png">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:         #17130f;
+  --bg-deep:    #0f0c0a;
+  --ember:      #c68e6a;
+  --ember-deep: #a47052;
+  --amber:      #d8bd97;
+  --ink:        #ece5dc;
+  --ink-soft:   #b8ab9e;
+  --ink-faint:  #857a6f;
+  --glass:      rgba(255, 244, 232, 0.035);
+  --glass-edge: rgba(216, 189, 151, 0.14);
+  --shadow:     0 34px 90px rgba(0, 0, 0, 0.55), 0 2px 12px rgba(0, 0, 0, 0.3);
+  --font:       'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  --serif:      Georgia, 'Times New Roman', Cambria, serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background:
+    radial-gradient(90% 55% at 50% -8%, rgba(198, 142, 106, 0.07), transparent 68%),
+    radial-gradient(75% 50% at 50% 108%, rgba(164, 112, 82, 0.05), transparent 64%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--ink);
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 5vw, 64px) clamp(14px, 4vw, 32px);
+  padding-top: max(clamp(20px, 5vw, 64px), env(safe-area-inset-top));
+  padding-bottom: max(clamp(20px, 5vw, 64px), env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ===== Return to hub ===== */
+.hub-link {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  color: var(--ink-soft);
+  background: rgba(23, 19, 15, 0.72);
+  border: 1px solid rgba(216, 189, 151, 0.16);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  transition: color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  animation: fadeIn 1.4s ease 0.5s both;
+}
+.hub-link:hover {
+  color: var(--amber);
+  border-color: rgba(216, 189, 151, 0.3);
+  transform: translateX(-2px);
+}
+.hub-link:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.hub-link .arrow { font-size: 0.9rem; line-height: 1; }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ===== Ambient embers drifting upward ===== */
+.embers { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.ember-mote {
+  position: absolute;
+  bottom: -12px;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 6px rgba(216, 189, 151, 0.4);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: drift linear infinite;
+}
+.ember-mote.hot {
+  background: var(--ember);
+  box-shadow: 0 0 6px rgba(198, 142, 106, 0.45);
+}
+@keyframes drift {
+  0%   { opacity: 0;    transform: translateY(0) translateX(0) scale(0.7); }
+  15%  { opacity: 0.4;  }
+  70%  { opacity: 0.22; }
+  100% { opacity: 0;    transform: translateY(-104vh) translateX(var(--sway, 30px)) scale(1.1); }
+}
+
+/* ===== Card ===== */
+.letter {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 660px;
+  background: var(--glass);
+  border: 1px solid rgba(255, 235, 210, 0.09);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: clamp(34px, 7vw, 68px) clamp(22px, 6vw, 60px);
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(20px) saturate(125%);
+  backdrop-filter: blur(20px) saturate(125%);
+  animation: rise 1.2s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+/* warm light spilling from the top of the card */
+.letter::before {
+  content: '';
+  position: absolute;
+  top: -40%; left: 50%;
+  width: 380px; height: 380px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(198, 142, 106, 0.08), transparent 70%);
+  pointer-events: none;
+  animation: flicker 6s ease-in-out infinite;
+}
+.letter::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 22%; right: 22%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent);
+  opacity: 0.3;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes flicker {
+  0%, 100% { opacity: 0.75; transform: translateX(-50%) scale(1); }
+  40%      { opacity: 1;    transform: translateX(-50%) scale(1.07); }
+  62%      { opacity: 0.85; transform: translateX(-50%) scale(0.98); }
+}
+
+/* ===== Header ===== */
+.flame-badge {
+  position: relative;
+  width: 62px; height: 62px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  background: radial-gradient(circle at 50% 62%, rgba(198, 142, 106, 0.16), rgba(198, 142, 106, 0.03) 72%);
+  border: 1px solid rgba(216, 189, 151, 0.2);
+  box-shadow: 0 0 26px rgba(198, 142, 106, 0.14), inset 0 0 18px rgba(198, 142, 106, 0.07);
+  animation: candle 4.2s ease-in-out infinite;
+}
+.flame-badge span { display: block; animation: sway 3.4s ease-in-out infinite; }
+@keyframes candle {
+  0%, 100% { box-shadow: 0 0 22px rgba(198, 142, 106, 0.12), inset 0 0 16px rgba(198, 142, 106, 0.06); }
+  45%      { box-shadow: 0 0 34px rgba(198, 142, 106, 0.22), inset 0 0 22px rgba(198, 142, 106, 0.1); }
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(-4deg) scale(1); }
+  50%      { transform: rotate(4deg)  scale(1.08); }
+}
+
+h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.85rem, 6.4vw, 2.7rem);
+  line-height: 1.18;
+  text-align: center;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  animation: glow 6s ease-in-out infinite;
+}
+h1 em { font-style: italic; color: var(--amber); }
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 22px rgba(198, 142, 106, 0.12), 0 0 56px rgba(216, 189, 151, 0.06); }
+  50%      { text-shadow: 0 0 32px rgba(198, 142, 106, 0.22), 0 0 78px rgba(216, 189, 151, 0.12); }
+}
+
+.sub {
+  text-align: center;
+  font-size: 0.74rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 16px;
+}
+
+/* three-mark divider */
+.rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 28px 0 32px;
+}
+.rule i {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--ember-deep);
+  opacity: 0.45;
+}
+.rule i:nth-child(2) {
+  width: 7px; height: 7px;
+  background: var(--amber);
+  opacity: 0.8;
+  box-shadow: 0 0 10px rgba(216, 189, 151, 0.25);
+}
+
+/* ===== Body copy ===== */
+p {
+  font-size: clamp(1rem, 2.5vw, 1.06rem);
+  line-height: 1.85;
+  color: var(--ink-soft);
+  font-weight: 300;
+  margin-bottom: 1.2em;
+}
+p strong { color: var(--ink); font-weight: 500; }
+p .accent { color: var(--amber); font-weight: 400; }
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.69rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--amber);
+  opacity: 0.7;
+  margin: 40px 0 16px;
+}
+.section-label::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  flex: none;
+  background: var(--ember-deep);
+  opacity: 0.6;
+}
+
+/* ===== What I got wrong ===== */
+.slips { list-style: none; margin: 0 0 1.4em; display: grid; gap: 12px; }
+.slips li {
+  position: relative;
+  padding: 16px 18px 16px 46px;
+  border-radius: 12px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  font-weight: 300;
+  color: var(--ink-soft);
+  background: rgba(255, 244, 232, 0.028);
+  border: 1px solid rgba(255, 244, 232, 0.05);
+  border-left: 2px solid rgba(164, 112, 82, 0.4);
+}
+.slips li::before {
+  content: attr(data-icon);
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  font-size: 1.02rem;
+  opacity: 0.9;
+}
+.slips li b { display: block; color: var(--ink); font-weight: 500; margin-bottom: 3px; }
+
+/* ===== Reassurance ===== */
+.vow {
+  position: relative;
+  margin: 6px 0 4px;
+  padding: 24px 26px;
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgba(198, 142, 106, 0.055), rgba(198, 142, 106, 0.015));
+  border: 1px solid rgba(216, 189, 151, 0.14);
+}
+.vow p { margin: 0; }
+.vow p + p { margin-top: 0.9em; }
+
+/* ===== Discord-style showcase card ===== */
+.profile {
+  margin: 8px 0 6px;
+  border-radius: 16px;
+  background: rgba(11, 9, 8, 0.55);
+  border: 1px solid rgba(216, 189, 151, 0.1);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+.profile-banner {
+  height: 84px;
+  background:
+    linear-gradient(180deg, rgba(15, 12, 10, 0.15), rgba(15, 12, 10, 0.45)),
+    url('Imagess/yes.gif') center / cover no-repeat,
+    linear-gradient(115deg, #322620, #4b382c 48%, #2a2320);
+  position: relative;
+}
+.profile-body { padding: 0 22px 22px; }
+
+.avatar-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  margin-top: -30px;
+  margin-bottom: 16px;
+}
+.avatar {
+  width: 68px; height: 68px;
+  border-radius: 50%;
+  flex: none;
+  background: linear-gradient(150deg, var(--ember), var(--amber));
+  border: 4px solid #131010;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  position: relative;
+  overflow: visible;
+  box-shadow: 0 0 22px rgba(198, 142, 106, 0.18);
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.avatar::after {
+  content: '';
+  position: absolute;
+  right: -1px; bottom: -1px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #6aa987;
+  border: 4px solid #131010;
+}
+.handle { padding-bottom: 4px; }
+.handle .name { font-size: 1.05rem; font-weight: 600; color: var(--ink); }
+.handle .tag { font-size: 0.82rem; color: var(--ink-faint); }
+
+.status-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(216, 189, 151, 0.05);
+  border: 1px solid rgba(216, 189, 151, 0.14);
+  font-size: 0.95rem;
+  color: var(--ink);
+  animation: chipGlow 4.5s ease-in-out infinite;
+}
+@keyframes chipGlow {
+  0%, 100% { box-shadow: 0 0 0 rgba(216, 189, 151, 0); }
+  50%      { box-shadow: 0 0 18px rgba(216, 189, 151, 0.12); }
+}
+.status-chip .emoji { font-size: 1.1rem; }
+
+.clear-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: #9cc4ac;
+  background: rgba(67, 181, 129, 0.07);
+  border: 1px solid rgba(67, 181, 129, 0.18);
+}
+.clear-flag .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #6aa987;
+  box-shadow: 0 0 6px rgba(106, 169, 135, 0.6);
+}
+
+.field-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 20px 0 8px;
+}
+.about-box {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(255, 244, 232, 0.028);
+  border: 1px solid rgba(255, 244, 232, 0.055);
+  font-size: 0.94rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  font-weight: 300;
+  white-space: pre-line;
+}
+.about-box .accent { color: var(--amber); }
+
+/* ===== Button ===== */
+.actions { text-align: center; margin-top: 42px; }
+.btn {
+  font-family: inherit;
+  font-size: 0.97rem;
+  font-weight: 500;
+  color: #241a13;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  background: linear-gradient(120deg, #d3b58f, #bf876a);
+  box-shadow: 0 10px 30px rgba(164, 112, 82, 0.18);
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.25, 1), box-shadow 0.28s ease, opacity 0.4s ease;
+  animation: pulse 4.2s ease-in-out infinite;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(164, 112, 82, 0.28); }
+.btn:active { transform: translateY(0); }
+.btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 4px; }
+.btn[hidden] { display: none; }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 10px 28px rgba(164, 112, 82, 0.16); }
+  50%      { box-shadow: 0 12px 40px rgba(216, 189, 151, 0.22); }
+}
+
+/* ===== Closing note ===== */
+.closing {
+  margin-top: 30px;
+  padding: 28px 24px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(216, 189, 151, 0.06), rgba(164, 112, 82, 0.025));
+  border: 1px solid rgba(216, 189, 151, 0.16);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+.closing[hidden] { display: none; }
+.closing.show { opacity: 1; transform: none; }
+.closing p {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 3.6vw, 1.3rem);
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--ink);
+  margin: 0;
+  text-shadow: 0 0 26px rgba(198, 142, 106, 0.18);
+}
+.closing .sig {
+  display: block;
+  margin-top: 16px;
+  font-family: var(--font);
+  font-style: normal;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ===== Click particles ===== */
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
+.particle {
+  position: absolute;
+  bottom: -30px;
+  font-size: 1rem;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: float-up linear forwards;
+}
+@keyframes float-up {
+  0%   { opacity: 0;    transform: translateY(0) translateX(0) scale(0.6) rotate(0deg); }
+  12%  { opacity: 0.7; }
+  75%  { opacity: 0.45; }
+  100% { opacity: 0;    transform: translateY(-108vh) translateX(var(--drift, 0px)) scale(1.15) rotate(var(--spin, 20deg)); }
+}
+
+footer {
+  margin-top: 34px;
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  opacity: 0.65;
+}
+
+@media (max-width: 420px) {
+  .avatar { width: 58px; height: 58px; font-size: 1.3rem; }
+  .profile-body { padding: 0 16px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<a class="hub-link" href="index.html"><span class="arrow" aria-hidden="true">&larr;</span> Hub</a>
+
+<div class="embers" id="embers" aria-hidden="true"></div>
+<div class="particles" id="particles" aria-hidden="true"></div>
+
+<main class="letter">
+
+  <header>
+    <div class="flame-badge" aria-hidden="true"><span>🕯️</span></div>
+    <h1>I'm So Sorry, <em>Sayangg</em> ✨</h1>
+    <p class="sub">To my world, sayang</p>
+  </header>
+
+  <div class="rule" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <section aria-label="Apology">
+    <p>
+      I need to say this properly, without excuses. I made you feel like you weren't
+      on my mind, and that's the one thing I never, ever want you to feel.
+      <strong>You are my entire world</strong>, and I didn't show it in the small ways
+      that matter to you.
+    </p>
+
+    <p class="section-label">What I got wrong</p>
+
+    <ul class="slips">
+      <li data-icon="📝">
+        <b>I forgot to update my "About Me"</b>
+        I promised you I'd put you there, and then I just… didn't get to it.
+        You shouldn't have to remind me to claim you. That was my job and I forgot.
+      </li>
+      <li data-icon="⏳">
+        <b>I let my status clear on its own</b>
+        I never set it to "Don't clear," so it quietly disappeared, and I know how that
+        must have looked to you. Like I let something about us fade without noticing.
+      </li>
+      <li data-icon="💔">
+        <b>I made you feel forgotten</b>
+        That's the part that actually hurts me. Not the setting, but the fact that you sat there
+        wondering if you're in my heart. Sayang, you never left it.
+      </li>
+    </ul>
+
+    <p class="section-label">What I want you to know</p>
+
+    <div class="vow">
+      <p>
+        Forgetting about my profile setting is <strong>not</strong> forgetting <span class="accent">you</span>.
+        Not for a second. You are in my head and my heart when I wake up, in the middle of my
+        most boring afternoons, and in the last thought I have before I sleep.
+      </p>
+      <p>
+        But I understand <em>why</em> it hurt, because those little details are how you feel
+        chosen, and you deserve to feel chosen out loud. So I'm promising you this:
+        <strong>I'll be far more attentive with the small things.</strong> Not because you asked
+        twice, but because they're yours, and anything that's yours matters to me.
+      </p>
+    </div>
+
+    <p class="section-label">And it's already done, sayang</p>
+
+    <article class="profile" aria-label="Updated Discord profile">
+      <div class="profile-banner" aria-hidden="true"></div>
+      <div class="profile-body">
+        <div class="avatar-row">
+          <div class="avatar">
+            <img src="Imagess/mhmm.jpg" alt="My profile picture" loading="lazy">
+          </div>
+          <div class="handle">
+            <div class="name">Dystivia</div>
+            <div class="tag">Taken by Lyna Rose 💗</div>
+          </div>
+        </div>
+
+        <div class="status-chip">
+          <span class="emoji" aria-hidden="true">✨</span>
+          <span>𝓢𝔀𝓸𝓻𝓷 𝓽𝓸 𝓛𝔂𝓷𝓪 𝓾𝓷𝓭𝓮𝓻 𝓽𝓱𝓮 𝓷𝓲𝓰𝓱𝓽 𝓼𝓴𝔂 ✨</span>
+        </div>
+
+        <div class="clear-flag">
+          <span class="dot" aria-hidden="true"></span>
+          Don't clear, set to stay
+        </div>
+
+        <p class="field-label">About Me</p>
+        <div class="about-box">Everything here belongs to <span class="accent">Lyna</span>. 💗
+
+She's the love of my life, my calm, my favourite person in every room,
+and the reason my night sky has stars in it at all.
+
+If you're reading this, you've found the one thing
+I'll never let clear on its own.</div>
+      </div>
+    </article>
+  </section>
+
+  <div class="actions">
+    <button class="btn" id="revealBtn" type="button" aria-controls="closing" aria-expanded="false">
+      Take All The Time You Need, Sayang 🌙
+    </button>
+  </div>
+
+  <section class="closing" id="closing" hidden>
+    <p>
+      I'll be right here whenever you're ready.<br>
+      I love you so much ❤️
+    </p>
+    <span class="sig">Only Yours with no timer and no auto clearing</span>
+  </section>
+
+  <footer>For Lyna 🔥</footer>
+
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Ambient embers ---- */
+  (function buildEmbers() {
+    if (reduced) return;
+
+    var field = document.getElementById('embers');
+    var frag = document.createDocumentFragment();
+    var count = window.innerWidth < 600 ? 22 : 38;
+
+    for (var i = 0; i < count; i++) {
+      var e = document.createElement('span');
+      e.className = 'ember-mote' + (i % 3 === 0 ? ' hot' : '');
+      e.style.left = (Math.random() * 100).toFixed(2) + '%';
+      e.style.setProperty('--sway', (Math.random() * 120 - 60).toFixed(0) + 'px');
+      e.style.animationDelay = '-' + (Math.random() * 18).toFixed(2) + 's';
+      e.style.animationDuration = (13 + Math.random() * 12).toFixed(2) + 's';
+      frag.appendChild(e);
+    }
+    field.appendChild(frag);
+  })();
+
+  /* ---- Reveal + particles ---- */
+  var btn = document.getElementById('revealBtn');
+  var closing = document.getElementById('closing');
+  var layer = document.getElementById('particles');
+  var GLYPHS = ['✨', '💗', '⭐', '❤️', '🌙', '💫', '🔥'];
+
+  function spawnParticle() {
+    var p = document.createElement('span');
+    p.className = 'particle';
+    p.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+    p.style.left = (Math.random() * 100).toFixed(2) + '%';
+    p.style.fontSize = (0.75 + Math.random() * 1.1).toFixed(2) + 'rem';
+    p.style.setProperty('--drift', (Math.random() * 140 - 70).toFixed(0) + 'px');
+    p.style.setProperty('--spin', (Math.random() * 80 - 40).toFixed(0) + 'deg');
+    p.style.animationDuration = (7 + Math.random() * 6).toFixed(2) + 's';
+    layer.appendChild(p);
+
+    p.addEventListener('animationend', function () {
+      p.remove();
+    });
+  }
+
+  btn.addEventListener('click', function () {
+    closing.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+
+    // next frame, so the transition actually runs
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        closing.classList.add('show');
+      });
+    });
+
+    btn.hidden = true;
+    closing.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' });
+
+    if (reduced) return;
+
+    // a warm initial burst, then a gentle drift that keeps going
+    for (var i = 0; i < 14; i++) {
+      setTimeout(spawnParticle, i * 130);
+    }
+    setInterval(function () {
+      if (!document.hidden) spawnParticle();
+    }, 900);
+  });
+})();
+</script>
+
+</body>
+</html>
