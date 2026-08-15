@@ -401,7 +401,7 @@ body {
     <div class="head-icon"><i class="fas fa-feather-pointed"></i></div>
     <h1>Let It Out</h1>
     <p>
-      Whatever it is, sayang heavy, messy, or small.
+      Whatever it is, sayang. Heavy, messy, or small.
       Write it here and it goes straight to me.
       <i class="fas fa-heart"></i>
     </p>
@@ -430,7 +430,7 @@ body {
       <p class="hint">No one else sees this. It only goes to me.</p>
       <button type="button" class="send" id="send">
         <i class="fas fa-paper-plane"></i>
-        <span id="sendLabel">Send it to him</span>
+        <span id="sendLabel">Send it to me</span>
       </button>
     </div>
 
@@ -440,9 +440,9 @@ body {
   <!-- Confirmation (replaces the composer after a successful send) -->
   <section class="sent" id="sent">
     <div class="sent-icon"><i class="fas fa-heart"></i></div>
-    <h2>It's with him now</h2>
+    <h2>It's with me now</h2>
     <p>
-      He'll see it the moment he looks at his phone.
+      I'll see it the moment I look at my phone.
       You don't have to hold it on your own anymore.
     </p>
     <button type="button" class="again" id="again">
@@ -468,7 +468,7 @@ const WEBHOOK_URL = 'https://discord.com/api/webhooks/1537972718316552282/1LIw_u
 /* Sender name + face that her messages arrive under in Discord */
 const SENDER_NAME = 'Sayang';
 
-/* Discord embeds cap at 4096 chars — long vents get split into parts */
+/* Discord embeds cap at 4096 chars, so long vents get split into parts */
 const CHUNK_SIZE = 3800;
 const DRAFT_KEY  = 'vent-draft';
 
@@ -591,7 +591,11 @@ async function post(text, index, total) {
     })
   });
 
-  if (!res.ok) throw new Error('Discord returned ' + res.status);
+  if (!res.ok) {
+    const err = new Error('Discord returned ' + res.status);
+    err.status = res.status;
+    throw err;
+  }
 }
 
 async function send() {
@@ -599,7 +603,7 @@ async function send() {
   if (!text) { note.focus(); return; }
 
   if (!WEBHOOK_URL) {
-    showStatus("This page isn't connected yet — tell him the webhook still needs setting up.");
+    showStatus("This page isn't connected yet. Let me know it still needs setting up.");
     console.warn('vent.html: WEBHOOK_URL is empty. Paste your Discord webhook URL at the top of the script.');
     return;
   }
@@ -627,11 +631,19 @@ async function send() {
 
   } catch (err) {
     console.error(err);
-    showStatus("It didn't go through — check your connection and try again. Your words are still here, nothing's lost.");
+
+    // 401/403/404 mean the webhook itself is gone or refused us. Retrying won't
+    // help and it has nothing to do with her connection, so don't send her
+    // chasing a fix that isn't hers to make.
+    if (err.status === 401 || err.status === 403 || err.status === 404) {
+      showStatus("This one didn't reach me, and it's nothing you did. Something on my end needs fixing. Your words are saved right here, so nothing's lost. Just let me know.");
+    } else {
+      showStatus("It didn't go through. Check your connection and try again. Your words are still here, nothing's lost.");
+    }
   } finally {
     sendBtn.disabled = false;
     sendBtn.querySelector('i').className = 'fas fa-paper-plane';
-    sendLabel.textContent = 'Send it to him';
+    sendLabel.textContent = 'Send it to me';
   }
 }
 
