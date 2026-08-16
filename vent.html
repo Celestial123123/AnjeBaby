@@ -177,6 +177,20 @@ body {
   margin-bottom: 22px;
 }
 
+/* Full-width label that forces a new row of chips underneath it */
+.mood-group {
+  flex-basis: 100%;
+  margin: 6px 0 -2px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  opacity: 0.55;
+}
+
+.mood-group:first-child { margin-top: 0; }
+
 .mood {
   padding: 7px 14px;
   border-radius: 50px;
@@ -409,15 +423,32 @@ body {
 
   <!-- Composer -->
   <section class="composer" id="composer">
-    <span class="field-label">How are you feeling?&ensp;<span style="text-transform:none;letter-spacing:0;font-weight:400;opacity:0.7">(optional)</span></span>
+    <span class="field-label">How are you feeling?&ensp;<span style="text-transform:none;letter-spacing:0;font-weight:400;opacity:0.7">(pick as many as fit)</span></span>
     <div class="moods" id="moods">
-      <button type="button" class="mood" data-mood="Sad"      data-color="#7c9fd4">😔&ensp;Sad</button>
-      <button type="button" class="mood" data-mood="Hurt"     data-color="#f4567a">💔&ensp;Hurt</button>
-      <button type="button" class="mood" data-mood="Angry"    data-color="#e06c5a">😤&ensp;Angry</button>
-      <button type="button" class="mood" data-mood="Anxious"  data-color="#b89ad4">😰&ensp;Anxious</button>
-      <button type="button" class="mood" data-mood="Tired"    data-color="#8c8c9e">😮‍💨&ensp;Tired</button>
-      <button type="button" class="mood" data-mood="Lonely"   data-color="#6f8fa8">🌙&ensp;Lonely</button>
-      <button type="button" class="mood" data-mood="Just talking" data-color="#7bb08f">💬&ensp;Just talking</button>
+      <span class="mood-group">Heavy</span>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Sad"         data-color="#7c9fd4">😔&ensp;Sad</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Hurt"        data-color="#f4567a">💔&ensp;Hurt</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Angry"       data-color="#e06c5a">😤&ensp;Angry</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Grumpy"      data-color="#b5836b">😾&ensp;Grumpy</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Anxious"     data-color="#b89ad4">😰&ensp;Anxious</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Overwhelmed" data-color="#9a7fa8">🌊&ensp;Overwhelmed</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Tired"       data-color="#8c8c9e">😮‍💨&ensp;Tired</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Lonely"      data-color="#6f8fa8">🌙&ensp;Lonely</button>
+
+      <span class="mood-group">Lighter</span>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Happy"    data-color="#f2b134">😊&ensp;Happy</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Loved"    data-color="#ff7ea6">🥰&ensp;Loved</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Grateful" data-color="#d4a574">🥹&ensp;Grateful</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Excited"  data-color="#ef8354">✨&ensp;Excited</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Calm"     data-color="#7fb3a8">🌿&ensp;Calm</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Proud"    data-color="#c98bb9">🌟&ensp;Proud</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Hopeful"  data-color="#8fbcd4">🌤️&ensp;Hopeful</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Silly"    data-color="#e3a5c7">😄&ensp;Silly</button>
+
+      <span class="mood-group">Anything else</span>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Hungry"       data-color="#c98a3e">🍜&ensp;Hungry</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Missing you"  data-color="#a88fc4">🫶&ensp;Missing you</button>
+      <button type="button" class="mood" aria-pressed="false" data-mood="Yapping"      data-color="#7bb08f">💬&ensp;Yapping</button>
     </div>
 
     <label class="field-label" for="note">What's on your mind</label>
@@ -480,25 +511,32 @@ const statusBox = document.getElementById('status');
 const composer  = document.getElementById('composer');
 const sentBox   = document.getElementById('sent');
 
-let mood = null;      // { name, color } or null
+/* Every feeling she picks, in the order she picked them: [{ name, color }] */
+let moods = [];
 
-/* ── Mood chips: click to pick, click again to clear ── */
-document.getElementById('moods').addEventListener('click', (e) => {
-  const btn = e.target.closest('.mood');
-  if (!btn) return;
-
-  const wasOn = btn.getAttribute('aria-pressed') === 'true';
+function clearMoods() {
   document.querySelectorAll('.mood').forEach(b => {
     b.setAttribute('aria-pressed', 'false');
     b.style.removeProperty('--mood');
   });
+  moods = [];
+}
 
-  if (wasOn) {
-    mood = null;
+/* ── Mood chips: pick as many as she wants, click again to drop one ── */
+document.getElementById('moods').addEventListener('click', (e) => {
+  const btn = e.target.closest('.mood');
+  if (!btn) return;
+
+  const name = btn.dataset.mood;
+
+  if (btn.getAttribute('aria-pressed') === 'true') {
+    btn.setAttribute('aria-pressed', 'false');
+    btn.style.removeProperty('--mood');
+    moods = moods.filter(m => m.name !== name);
   } else {
     btn.setAttribute('aria-pressed', 'true');
     btn.style.setProperty('--mood', btn.dataset.color);
-    mood = { name: btn.dataset.mood, color: parseInt(btn.dataset.color.slice(1), 16) };
+    moods.push({ name, color: parseInt(btn.dataset.color.slice(1), 16) });
   }
 });
 
@@ -567,7 +605,8 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 async function post(text, index, total) {
   const embed = {
     description: text,
-    color: mood ? mood.color : 0xf4567a,
+    // The first feeling she reached for sets the stripe down the side
+    color: moods.length ? moods[0].color : 0xf4567a,
     timestamp: new Date().toISOString()
   };
 
@@ -576,7 +615,7 @@ async function post(text, index, total) {
   }
 
   const footer = [];
-  if (mood) footer.push('Feeling: ' + mood.name);
+  if (moods.length) footer.push('Feeling: ' + moods.map(m => m.name).join(', '));
   if (total > 1) footer.push('Part ' + (index + 1) + ' of ' + total);
   if (footer.length) embed.footer = { text: footer.join('  •  ') };
 
@@ -654,11 +693,7 @@ document.getElementById('again').addEventListener('click', () => {
   sentBox.classList.remove('show');
   composer.style.display = '';
 
-  document.querySelectorAll('.mood').forEach(b => {
-    b.setAttribute('aria-pressed', 'false');
-    b.style.removeProperty('--mood');
-  });
-  mood = null;
+  clearMoods();
 
   autoSize();
   refreshCounter();
