@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>I don't want to hide this from you anymore</title>
+<meta name="theme-color" content="#0f111a">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --midnight:   #0f111a;
+  --blush:      #f2c4ce;
+  --blush-soft: rgba(242, 196, 206, 0.7);
+  --rose-gold:  #e0a89c;
+  --warm-white: #f6efe9;
+  --text-soft:  rgba(246, 239, 233, 0.72);
+  --glass:      rgba(255, 255, 255, 0.045);
+  --glass-line: rgba(242, 196, 206, 0.16);
+  --shadow:     0 24px 70px rgba(0, 0, 0, 0.55);
+  --radius:     26px;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--midnight);
+  color: var(--warm-white);
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  padding-bottom: calc(clamp(1rem, 4vw, 3rem) + env(safe-area-inset-bottom));
+  overflow-x: hidden;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Ambient glow behind everything ===== */
+.ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+
+.ambient::before,
+.ambient::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: 0.34;
+}
+
+.ambient::before {
+  width: 46vmax; height: 46vmax;
+  top: -16vmax; left: -14vmax;
+  background: radial-gradient(circle, #4a3550, transparent 70%);
+  animation: drift 26s ease-in-out infinite;
+}
+
+.ambient::after {
+  width: 40vmax; height: 40vmax;
+  bottom: -18vmax; right: -12vmax;
+  background: radial-gradient(circle, #3a3350, transparent 70%);
+  animation: drift 32s ease-in-out infinite reverse;
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(4vmax, -3vmax) scale(1.12); }
+}
+
+/* ===== The card ===== */
+.card {
+  position: relative;
+  z-index: 1;
+  width: min(680px, 100%);
+  padding: clamp(1.75rem, 5vw, 3.25rem);
+  background: var(--glass);
+  border: 1px solid var(--glass-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  animation: rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  overflow: hidden;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.moon {
+  display: block;
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 0.85rem;
+  animation: breathe 6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.75; transform: translateY(0); }
+  50%      { opacity: 1;    transform: translateY(-4px); }
+}
+
+h1 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 5.5vw, 2.15rem);
+  line-height: 1.3;
+  text-align: center;
+  color: var(--blush);
+  letter-spacing: 0.01em;
+}
+
+.rule {
+  width: 74px;
+  height: 1px;
+  margin: 1.6rem auto 2rem;
+  background: linear-gradient(90deg, transparent, var(--rose-gold), transparent);
+}
+
+.letter p {
+  font-size: clamp(1rem, 3.4vw, 1.06rem);
+  color: var(--text-soft);
+  margin-bottom: 1.4rem;
+  animation: fade-in 0.9s ease both;
+}
+
+.letter p:last-child { margin-bottom: 0; color: var(--warm-white); }
+
+.letter p:nth-child(1) { animation-delay: 0.25s; }
+.letter p:nth-child(2) { animation-delay: 0.40s; }
+.letter p:nth-child(3) { animation-delay: 0.55s; }
+.letter p:nth-child(4) { animation-delay: 0.70s; }
+.letter p:nth-child(5) { animation-delay: 0.85s; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sign {
+  margin-top: 2.25rem;
+  text-align: right;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--blush-soft);
+}
+
+/* ===== Back to the hub ===== */
+.hub-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2.5rem auto 0;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  color: var(--blush);
+  text-decoration: none;
+  background: rgba(242, 196, 206, 0.06);
+  border: 1px solid rgba(242, 196, 206, 0.22);
+  border-radius: 999px;
+  transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+
+.hub-link:hover,
+.hub-link:focus-visible {
+  background: rgba(242, 196, 206, 0.13);
+  border-color: rgba(242, 196, 206, 0.4);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.hub-row { display: flex; justify-content: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true"></div>
+
+<main class="card" id="card">
+  <span class="moon" aria-hidden="true">&#127769;</span>
+  <h1>I don't want to hide this from you anymore, sayang &#127769;</h1>
+  <div class="rule" aria-hidden="true"></div>
+
+  <div class="letter">
+    <p>I took some time to think about why this keeps happening between us, and I want to be completely honest with you.</p>
+
+    <p>I realize now that I have a hard time saying no to you specifically, even when my body is completely exhausted. I can say no to other people without a problem, but with you it's different, it's so hard. I get so scared of disappointing you that I convince myself if I just push a little harder and force myself to stay awake, I can prove how much you mean to me.</p>
+
+    <p>Instead, I ended up doing the exact opposite. By forcing things when I had nothing left to give, I gave you anxiety and what felt like 'fake hope.' You were never asking for me to run myself into the ground. You just wanted honesty and consistency.</p>
+
+    <p>I'm sorry for letting my fear get in the way of giving you the calm, steady love you deserve. Next time I feel that panic coming on, I want to just tell you I'm tired instead of pretending I'm fine and pushing through. I don't want to hide it from you anymore. Saying 'no' when I'm tired doesn't mean I love you any less. It's how I make sure that when I'm with you, I'm actually with you.</p>
+  </div>
+
+  <div class="hub-row">
+    <a class="hub-link" href="index.html">&larr; Back to Hub</a>
+  </div>
+</main>
+
+</body>
+</html>
