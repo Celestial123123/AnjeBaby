@@ -313,8 +313,8 @@
       s.style.height = size + 'px';
       s.style.left = Math.random() * 100 + 'vw';
       s.style.top = (Math.random() * 120) + 'vh';
-      const driftDur = Math.random() * 30 + 30;   // 30–60s slow drift
-      const twinkleDur = Math.random() * 4 + 3;   // 3–7s
+      const driftDur = Math.random() * 30 + 30;   // 30-60s slow drift
+      const twinkleDur = Math.random() * 4 + 3;   // 3-7s
       s.style.animationDuration = driftDur + 's, ' + twinkleDur + 's';
       s.style.animationDelay = (-Math.random() * driftDur) + 's, ' + (-Math.random() * twinkleDur) + 's';
       sky.appendChild(s);

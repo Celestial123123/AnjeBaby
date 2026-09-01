@@ -1,0 +1,2374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>US · 9 Months</title>
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="US · 9 Months">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --tab-h: 58px;
+  --pink:  #fe2c55;   /* the "like" red */
+  --teal:  #25f4ee;   /* the accent cyan */
+  --ink:   #ffffff;
+  --dim:   rgba(255,255,255,0.72);
+  --faint: rgba(255,255,255,0.45);
+  --line:  rgba(255,255,255,0.12);
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #000;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* On a desktop screen the whole thing sits inside a phone. On a phone it just
+   fills the screen, which is where it's actually meant to be seen. */
+.phone {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  max-width: 100%;
+  background: #000;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+@media (min-width: 620px) {
+  body { background: radial-gradient(ellipse at 50% 0%, #1c1016 0%, #0a0a0a 55%, #000 100%); }
+  .phone {
+    width: 412px;
+    height: min(92svh, 880px);
+    border-radius: 42px;
+    box-shadow: 0 0 0 10px #121212, 0 0 0 12px #2a2a2a, 0 40px 90px rgba(0,0,0,0.8), 0 0 80px rgba(254,44,85,0.12);
+  }
+}
+
+/* ═══════════════ Views ═══════════════ */
+.view {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+.view.is-active { display: flex; }
+
+/* ═══════════════ Splash / start gate ═══════════════
+   Doubles as the tap that lets the soundtrack play, mobile browsers won't
+   start audio without one, and TikTok opens on a tap anyway. */
+.splash {
+  position: absolute;
+  inset: 0;
+  z-index: 400;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  transition: opacity 0.6s ease;
+}
+.splash.leaving { opacity: 0; pointer-events: none; }
+
+.splash-logo {
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  position: relative;
+  animation: logoIn 1.1s cubic-bezier(.2,.9,.3,1) both;
+}
+.splash-logo .a, .splash-logo .b {
+  position: absolute; inset: 0;
+  opacity: 0.9;
+  animation: glitch 2.6s ease-in-out infinite;
+}
+.splash-logo .a { color: var(--teal); transform: translateX(-3px); }
+.splash-logo .b { color: var(--pink); transform: translateX(3px); animation-delay: 0.12s; }
+.splash-logo .c { position: relative; color: #fff; }
+@keyframes logoIn {
+  0%   { opacity: 0; transform: scale(0.7); filter: blur(8px); }
+  100% { opacity: 1; transform: scale(1);   filter: blur(0); }
+}
+@keyframes glitch {
+  0%, 100% { transform: translateX(-3px); }
+  50%      { transform: translateX(-6px); }
+}
+.splash-logo .b { animation-name: glitchB; }
+@keyframes glitchB {
+  0%, 100% { transform: translateX(3px); }
+  50%      { transform: translateX(6px); }
+}
+
+.splash-sub {
+  font-size: 0.82rem;
+  color: var(--faint);
+  letter-spacing: 0.4px;
+  animation: fadeIn 1s ease 0.7s both;
+}
+.splash-tap {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 26px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  animation: fadeIn 1s ease 1s both, breathe 2.6s ease-in-out 1.6s infinite;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(254,44,85,0); }
+  50%      { transform: scale(1.04); box-shadow: 0 0 26px 0 rgba(254,44,85,0.28); }
+}
+
+/* ═══════════════ Feed ═══════════════ */
+.feed {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.feed::-webkit-scrollbar { display: none; }
+
+.clip {
+  position: relative;
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+  background: #000;
+}
+
+.clip-media { position: absolute; inset: 0; overflow: hidden; }
+.clip-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.clip-media img.on { opacity: 1; }
+.clip.is-active .clip-media img.on { animation: kenburns 14s ease-out forwards; }
+.clip:nth-child(even).is-active .clip-media img.on { animation-name: kenburnsAlt; }
+@keyframes kenburns    { from { transform: scale(1.02) translate(0,0); }     to { transform: scale(1.17) translate(-1.5%, -2%); } }
+@keyframes kenburnsAlt { from { transform: scale(1.15) translate(1%, 1.5%); } to { transform: scale(1.02) translate(0,0); } }
+
+/* montage clips cut fast, so the slow pan would fight them */
+.clip.is-montage.is-active .clip-media img.on { animation: none; transform: scale(1.06); }
+
+.clip-media.blur img { filter: blur(14px) brightness(0.5); transform: scale(1.2); }
+.clip-media.dim::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to top, rgba(0,0,0,0.86) 0%, rgba(0,0,0,0.25) 34%, rgba(0,0,0,0.10) 60%, rgba(0,0,0,0.5) 100%);
+}
+
+/* Text-only clip (the "text post" look) */
+.clip-media.textbg { background: var(--grad, linear-gradient(160deg, #2b0d18, #10060a)); }
+.clip-media.textbg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.07), transparent 62%);
+}
+
+/* ─── The big line stamped over the clip ─── */
+.clip-hook {
+  position: absolute;
+  left: 26px;
+  right: 76px;
+  top: 50%;
+  transform: translateY(-58%);
+  z-index: 3;
+  font-size: clamp(1.5rem, 6.6vw, 1.95rem);
+  font-weight: 800;
+  line-height: 1.28;
+  letter-spacing: -0.4px;
+  text-shadow: 0 3px 22px rgba(0,0,0,0.72), 0 1px 4px rgba(0,0,0,0.6);
+  white-space: pre-line;
+}
+.clip.is-active .clip-hook { animation: hookIn 0.75s cubic-bezier(.2,.85,.3,1) both; }
+@keyframes hookIn { from { opacity: 0; transform: translateY(-46%); } to { opacity: 1; transform: translateY(-58%); } }
+.clip-hook .hl { color: var(--pink); }
+.clip-hook .hl2 { color: var(--teal); }
+
+.clip-eyebrow {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 12px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+}
+
+/* ─── Bottom-left caption block ─── */
+.clip-info {
+  position: absolute;
+  left: 14px;
+  right: 78px;
+  /* clears the tab bar, the caption and sound line must never sit behind it */
+  bottom: calc(var(--tab-h) + env(safe-area-inset-bottom) + 12px);
+  z-index: 4;
+}
+.clip.is-active .clip-info { animation: infoIn 0.7s ease-out 0.1s both; }
+@keyframes infoIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+.clip-handle {
+  font-size: 0.94rem;
+  font-weight: 700;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+.verified { width: 15px; height: 15px; flex: none; }
+
+.clip-caption {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.94);
+  margin-bottom: 10px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.65);
+}
+.clip-caption .tag { color: #fff; font-weight: 600; }
+
+.clip-sound {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 100%;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.92);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.65);
+}
+.clip-sound svg { flex: none; animation: noteBob 2.4s ease-in-out infinite; }
+@keyframes noteBob { 0%,100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-3px) rotate(6deg); } }
+.clip-sound .marq { overflow: hidden; white-space: nowrap; }
+
+/* Jump button for the clip that points at the DMs */
+.clip-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 11px 20px;
+  border: none;
+  border-radius: 8px;
+  background: var(--pink);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 22px rgba(254,44,85,0.42);
+  animation: ctaPulse 2.4s ease-in-out infinite;
+}
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 6px 22px rgba(254,44,85,0.34); }
+  50%      { box-shadow: 0 6px 32px rgba(254,44,85,0.62); }
+}
+
+/* Episode-10 teaser on the last clip */
+.clip-teaser {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(0,0,0,0.42);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  font-size: 0.74rem;
+  color: var(--dim);
+}
+.clip-teaser b { color: #fff; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ─── Right-hand action rail ─── */
+.rail {
+  position: absolute;
+  right: 8px;
+  bottom: calc(var(--tab-h) + env(safe-area-inset-bottom) + 16px);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 17px;
+}
+.clip.is-active .rail { animation: infoIn 0.7s ease-out 0.15s both; }
+
+.rail-avatar {
+  position: relative;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+  overflow: hidden;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+.rail-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.rail-avatar .plus {
+  position: absolute;
+  bottom: -7px; left: 50%;
+  transform: translateX(-50%);
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  background: var(--pink);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: center;
+  border: 1.5px solid #000;
+}
+
+.rail-btn {
+  border: none;
+  background: none;
+  color: #fff;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.55));
+}
+.rail-btn svg { width: 33px; height: 33px; }
+.rail-btn span { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.2px; }
+.rail-btn:active { transform: scale(0.9); }
+.rail-btn.liked svg { fill: var(--pink); color: var(--pink); animation: pop 0.42s cubic-bezier(.2,1.6,.4,1); }
+.rail-btn.saved svg { fill: #fcd34d; color: #fcd34d; animation: pop 0.42s cubic-bezier(.2,1.6,.4,1); }
+@keyframes pop { 0% { transform: scale(1); } 45% { transform: scale(1.42); } 100% { transform: scale(1); } }
+
+.rail-disc {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  margin-top: 2px;
+  background: linear-gradient(150deg, #2a2a2a, #050505 62%);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 5px solid #131313;
+  animation: spin 5.5s linear infinite;
+  animation-play-state: paused;
+}
+.clip.is-active .rail-disc { animation-play-state: running; }
+.rail-disc img { width: 100%; height: 100%; object-fit: cover; opacity: 0.92; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Double-tap heart burst ─── */
+.burst {
+  position: absolute;
+  z-index: 8;
+  width: 96px; height: 96px;
+  margin: -48px 0 0 -48px;
+  pointer-events: none;
+  color: var(--pink);
+  animation: burst 0.95s cubic-bezier(.2,.9,.3,1) forwards;
+}
+@keyframes burst {
+  0%   { opacity: 0; transform: scale(0.2) rotate(-18deg); }
+  22%  { opacity: 1; transform: scale(1.22) rotate(8deg); }
+  42%  { transform: scale(1) rotate(-4deg); }
+  100% { opacity: 0; transform: scale(1.5) translateY(-46px) rotate(-8deg); }
+}
+
+/* ─── Top bar over the feed ─── */
+.feed-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: calc(env(safe-area-inset-top) + 13px) 14px 22px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent);
+  pointer-events: none;
+}
+.feed-top .tab {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  position: relative;
+  pointer-events: auto;
+}
+.feed-top .tab.on { color: #fff; font-weight: 700; }
+.feed-top .tab.on::after {
+  content: '';
+  position: absolute;
+  left: 50%; bottom: -7px;
+  transform: translateX(-50%);
+  width: 26px; height: 2.5px;
+  border-radius: 2px;
+  background: #fff;
+}
+.feed-hub {
+  position: absolute;
+  left: 12px;
+  top: calc(env(safe-area-inset-top) + 11px);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.42);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+/* thin progress rail on the far right edge */
+.scroll-rail {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 3px;
+  height: 120px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.14);
+  overflow: hidden;
+  pointer-events: none;
+}
+.scroll-rail span {
+  display: block;
+  width: 100%;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.85);
+  transition: transform 0.35s ease;
+}
+
+/* swipe-up nudge, only on the first clip */
+.nudge {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--tab-h) + env(safe-area-inset-bottom) + 42px);
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.7rem;
+  letter-spacing: 0.4px;
+  animation: nudge 2s ease-in-out infinite;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.nudge.gone { opacity: 0; }
+@keyframes nudge {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.55; }
+  50%      { transform: translateX(-50%) translateY(-9px); opacity: 1; }
+}
+
+/* ═══════════════ Comment sheet ═══════════════ */
+.sheet-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0,0,0,0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.sheet-scrim.open { opacity: 1; pointer-events: auto; }
+
+.sheet {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 61;
+  height: 66%;
+  background: #161616;
+  border-radius: 14px 14px 0 0;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(101%);
+  transition: transform 0.36s cubic-bezier(.2,.85,.3,1);
+}
+.sheet.open { transform: translateY(0); }
+
+.sheet-grab {
+  width: 36px; height: 4px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.22);
+  margin: 9px auto 4px;
+  flex: none;
+}
+.sheet-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--dim);
+  position: relative;
+}
+.sheet-close {
+  position: absolute;
+  right: 12px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  color: var(--faint);
+  font-size: 1.15rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 14px 18px;
+  scrollbar-width: thin;
+}
+
+.cmt { display: flex; gap: 10px; margin-bottom: 17px; }
+.cmt-av {
+  width: 33px; height: 33px;
+  border-radius: 50%;
+  flex: none;
+  display: grid;
+  place-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  overflow: hidden;
+}
+.cmt-av img { width: 100%; height: 100%; object-fit: cover; }
+.cmt-main { flex: 1; min-width: 0; }
+.cmt-name { font-size: 0.74rem; color: var(--faint); margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+.pin-flag {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #fcd34d;
+  background: rgba(252,211,77,0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.cmt-text { font-size: 0.86rem; line-height: 1.45; color: rgba(255,255,255,0.93); }
+.cmt-meta { font-size: 0.7rem; color: var(--faint); margin-top: 6px; display: flex; gap: 14px; }
+.cmt-like { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--faint); font-size: 0.68rem; flex: none; }
+.cmt-like svg { width: 15px; height: 15px; }
+.cmt-reply {
+  margin-top: 10px;
+  padding-left: 14px;
+  border-left: 1.5px solid var(--line);
+}
+.creator-heart { color: var(--pink); }
+
+.sheet-foot {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 14px calc(11px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+}
+.fake-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  color: var(--faint);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+/* ═══════════════ Toast ═══════════════ */
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--tab-h) + 26px);
+  transform: translate(-50%, 14px);
+  z-index: 90;
+  max-width: 84%;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: rgba(28,28,28,0.96);
+  border: 1px solid var(--line);
+  color: #fff;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ═══════════════ Generic sub-page header ═══════════════ */
+.page-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(env(safe-area-inset-top) + 13px) 14px 13px;
+  border-bottom: 1px solid var(--line);
+  background: #000;
+}
+.page-back {
+  background: none; border: none;
+  color: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 2px;
+}
+.page-title { font-size: 0.98rem; font-weight: 700; }
+.page-title small { display: block; font-size: 0.68rem; font-weight: 400; color: var(--faint); margin-top: 2px; }
+
+/* ═══════════════ Search (gag) ═══════════════ */
+.search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.09);
+}
+.search-bar input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.86rem;
+}
+.search-bar input::placeholder { color: var(--faint); }
+.search-go {
+  border: none;
+  background: none;
+  color: var(--pink);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.search-body { flex: 1; overflow-y: auto; padding: 18px 16px calc(var(--tab-h) + 24px); }
+.search-label { font-size: 0.76rem; color: var(--faint); font-weight: 600; margin-bottom: 14px; letter-spacing: 0.3px; }
+.recent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  color: rgba(255,255,255,0.88);
+  font-size: 0.87rem;
+  cursor: pointer;
+}
+.recent svg { color: var(--faint); flex: none; }
+.recent .x { margin-left: auto; color: var(--faint); font-size: 0.9rem; }
+
+.result {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  cursor: pointer;
+}
+.result-thumb {
+  width: 82px; height: 108px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex: none;
+  background: #1a1a1a;
+  position: relative;
+}
+.result-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.result-thumb .views {
+  position: absolute;
+  left: 6px; bottom: 5px;
+  font-size: 0.64rem;
+  font-weight: 600;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+.result-body { flex: 1; min-width: 0; }
+.result-title { font-size: 0.88rem; font-weight: 600; line-height: 1.4; margin-bottom: 6px; }
+.result-sub { font-size: 0.75rem; color: var(--faint); line-height: 1.5; }
+.result-note {
+  margin-top: 22px;
+  padding: 15px 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--line);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--dim);
+  text-align: center;
+}
+
+/* ═══════════════ Post (gag) ═══════════════ */
+.post-stage {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 20px;
+  text-align: center;
+  overflow: hidden;
+}
+.post-stage::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.018) 3px 4px),
+    radial-gradient(ellipse at 50% 40%, #1d1216, #000 70%);
+}
+.post-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+
+.rec-ring {
+  width: 92px; height: 92px;
+  border-radius: 50%;
+  border: 5px solid rgba(255,255,255,0.22);
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+.rec-dot {
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  background: var(--pink);
+  animation: recPulse 1.3s ease-in-out infinite;
+}
+@keyframes recPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(0.86); opacity: 0.72; }
+}
+.rec-ring::after {
+  content: '';
+  position: absolute; inset: -5px;
+  border-radius: 50%;
+  border: 5px solid transparent;
+  border-top-color: var(--pink);
+  animation: spin 1.1s linear infinite;
+}
+.post-status { font-size: 0.92rem; font-weight: 600; }
+.post-hint { font-size: 0.78rem; color: var(--faint); line-height: 1.6; max-width: 260px; }
+
+.post-reject {
+  display: none;
+  position: relative;
+  z-index: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: infoIn 0.5s ease-out both;
+}
+.post-reject.show { display: flex; }
+.reject-icon {
+  width: 66px; height: 66px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(254,44,85,0.13);
+  border: 1px solid rgba(254,44,85,0.3);
+  color: var(--pink);
+  font-size: 1.5rem;
+}
+.reject-title { font-size: 1.05rem; font-weight: 700; }
+.reject-body {
+  font-size: 0.84rem;
+  line-height: 1.65;
+  color: var(--dim);
+  max-width: 280px;
+}
+.reject-code { font-size: 0.68rem; color: var(--faint); letter-spacing: 0.6px; margin-top: 2px; }
+.reject-btn {
+  margin-top: 6px;
+  padding: 11px 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.07);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ═══════════════ Inbox ═══════════════ */
+.chat-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: calc(env(safe-area-inset-top) + 11px) 14px 11px;
+  border-bottom: 1px solid var(--line);
+  background: #000;
+}
+.chat-av {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex: none;
+  position: relative;
+}
+.chat-av img { width: 100%; height: 100%; object-fit: cover; }
+.chat-av::after {
+  content: '';
+  position: absolute;
+  right: 0; bottom: 0;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #46d369;
+  border: 2px solid #000;
+}
+.chat-who { flex: 1; min-width: 0; }
+.chat-who .n { font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+.chat-who .s { font-size: 0.7rem; color: #46d369; margin-top: 1px; }
+
+.chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 14px calc(var(--tab-h) + 12px);
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.chat-day {
+  align-self: center;
+  font-size: 0.68rem;
+  color: var(--faint);
+  padding: 6px 0 14px;
+  letter-spacing: 0.4px;
+}
+
+.bub {
+  max-width: 82%;
+  align-self: flex-start;
+  padding: 11px 15px;
+  border-radius: 18px 18px 18px 5px;
+  background: #262626;
+  font-size: 0.88rem;
+  line-height: 1.62;
+  color: rgba(255,255,255,0.95);
+  animation: bubIn 0.45s cubic-bezier(.2,.9,.3,1) both;
+  margin-bottom: 7px;
+}
+.bub + .bub { border-top-left-radius: 5px; }
+.bub.long { border-radius: 18px 18px 18px 5px; }
+@keyframes bubIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.bub em { font-style: normal; color: var(--pink); font-weight: 600; }
+.bub b  { font-weight: 700; color: #fff; }
+
+/* the closing bubble gets the warm treatment */
+.bub.final {
+  background: linear-gradient(135deg, #fe2c55, #b91d3f);
+  border-radius: 18px;
+  font-weight: 600;
+  box-shadow: 0 8px 30px rgba(254,44,85,0.3);
+}
+
+.typing {
+  align-self: flex-start;
+  display: none;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 17px;
+  border-radius: 18px 18px 18px 5px;
+  background: #262626;
+  margin-bottom: 7px;
+}
+.typing.show { display: flex; }
+.typing i {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.55);
+  animation: dot 1.3s ease-in-out infinite;
+}
+.typing i:nth-child(2) { animation-delay: 0.18s; }
+.typing i:nth-child(3) { animation-delay: 0.36s; }
+@keyframes dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30%           { transform: translateY(-5px); opacity: 1; }
+}
+
+.seen {
+  align-self: flex-end;
+  font-size: 0.68rem;
+  color: var(--faint);
+  margin: 4px 4px 10px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.seen.show { opacity: 1; }
+
+/* optional voice note, hides itself if the file isn't there */
+.vnote {
+  align-self: flex-start;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  max-width: 82%;
+  padding: 11px 16px 11px 13px;
+  border-radius: 18px;
+  background: #262626;
+  margin-bottom: 7px;
+  animation: bubIn 0.45s cubic-bezier(.2,.9,.3,1) both;
+}
+.vnote.ready { display: flex; }
+.vnote button {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: none;
+  flex: none;
+  background: var(--pink);
+  color: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.vwave { display: flex; align-items: center; gap: 2.5px; height: 24px; }
+.vwave i {
+  width: 2.5px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.42);
+  transition: background 0.2s;
+}
+.vwave i.played { background: var(--pink); }
+.vtime { font-size: 0.7rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+
+.chat-foot {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+  background: #000;
+}
+.react-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.05);
+  font-size: 1.05rem;
+  cursor: pointer;
+  flex: none;
+  transition: transform 0.18s;
+}
+.react-btn:active { transform: scale(0.86); }
+.write-back {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 11px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  color: var(--dim);
+  font-size: 0.83rem;
+  text-decoration: none;
+}
+.write-back b { color: var(--pink); font-weight: 700; font-size: 0.8rem; }
+
+/* ═══════════════ Profile ═══════════════ */
+.prof-body { flex: 1; overflow-y: auto; padding-bottom: calc(var(--tab-h) + 20px); scrollbar-width: thin; }
+
+.prof-top { text-align: center; padding: 22px 18px 0; }
+.prof-av {
+  width: 94px; height: 94px;
+  border-radius: 50%;
+  margin: 0 auto 13px;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.18);
+  position: relative;
+}
+.prof-av img { width: 100%; height: 100%; object-fit: cover; }
+.prof-handle { font-size: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+.prof-stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 0 16px;
+}
+.stat { text-align: center; }
+.stat b { display: block; font-size: 1.05rem; font-weight: 700; }
+.stat span { font-size: 0.72rem; color: var(--faint); }
+
+.prof-actions { display: flex; gap: 8px; justify-content: center; padding: 0 18px; }
+.follow-btn {
+  padding: 10px 40px;
+  border: none;
+  border-radius: 6px;
+  background: var(--pink);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.follow-btn.following { background: rgba(255,255,255,0.1); }
+.icon-btn {
+  width: 40px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.prof-bio {
+  padding: 18px 26px 20px;
+  text-align: center;
+  font-size: 0.83rem;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.85);
+  white-space: pre-line;
+}
+.prof-bio .link { color: var(--teal); }
+
+.prof-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+}
+.prof-tab {
+  flex: 1;
+  padding: 12px 0;
+  text-align: center;
+  border: none;
+  background: none;
+  color: var(--faint);
+  cursor: pointer;
+  position: relative;
+}
+.prof-tab svg { width: 19px; height: 19px; }
+.prof-tab.on { color: #fff; }
+.prof-tab.on::after {
+  content: '';
+  position: absolute;
+  left: 22%; right: 22%; bottom: -1px;
+  height: 2px;
+  background: #fff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  padding: 2px 0;
+}
+.tile {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #141414;
+  cursor: pointer;
+}
+.tile img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease, opacity 0.4s ease;
+  opacity: 0;
+}
+.tile img.loaded { opacity: 1; }
+.tile:active img { transform: scale(0.96); }
+.tile .plays {
+  position: absolute;
+  left: 5px; bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.85);
+}
+.tile .plays svg { width: 11px; height: 11px; }
+.tile.pinned::after {
+  content: 'Pinned';
+  position: absolute;
+  right: 4px; top: 4px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.6);
+}
+
+.locked-tab {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 30px;
+  text-align: center;
+  color: var(--faint);
+}
+.locked-tab.show { display: flex; }
+.locked-tab svg { color: rgba(255,255,255,0.3); }
+.locked-tab p { font-size: 0.84rem; line-height: 1.6; }
+
+/* ─── Lightbox ─── */
+.lightbox {
+  position: absolute;
+  inset: 0;
+  z-index: 120;
+  background: rgba(0,0,0,0.96);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox.open { display: flex; animation: fadeIn 0.28s ease; }
+.lb-stage {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 54px 12px 0;
+  position: relative;
+}
+.lb-stage img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  animation: lbIn 0.32s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes lbIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+.lb-close {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 12px);
+  right: 14px;
+  z-index: 3;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.lb-count {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.76rem;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+.lb-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+.lb-prev { left: 10px; }
+.lb-next { right: 10px; }
+.lb-cap {
+  flex: none;
+  padding: 18px 26px calc(24px + env(safe-area-inset-bottom));
+  text-align: center;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.9);
+  max-width: 420px;
+}
+.lb-cap span { display: block; font-size: 0.7rem; color: var(--faint); margin-top: 6px; }
+
+/* ═══════════════ Bottom tab bar ═══════════════ */
+.tabbar {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 50;
+  height: calc(var(--tab-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex;
+  align-items: center;
+  background: #000;
+  border-top: 1px solid rgba(255,255,255,0.09);
+}
+.tabbar.transparent {
+  background: linear-gradient(to top, rgba(0,0,0,0.92), rgba(0,0,0,0.55) 70%, transparent);
+  border-top-color: transparent;
+}
+
+.tab-btn {
+  flex: 1;
+  border: none;
+  background: none;
+  color: rgba(255,255,255,0.55);
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+  position: relative;
+  transition: color 0.2s;
+}
+.tab-btn svg { width: 23px; height: 23px; }
+.tab-btn span { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1px; }
+.tab-btn.on { color: #fff; }
+.tab-btn:active { transform: scale(0.92); }
+
+/* the centre "post" key */
+.tab-post {
+  flex: none;
+  width: 46px; height: 30px;
+  margin: 0 12px;
+  border-radius: 9px;
+  border: none;
+  background: #fff;
+  position: relative;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: #000;
+}
+.tab-post::before, .tab-post::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 46px;
+  border-radius: 9px;
+  z-index: -1;
+}
+.tab-post::before { background: var(--teal); left: -4px; }
+.tab-post::after  { background: var(--pink); left: 4px; }
+.tab-post:active { transform: scale(0.93); }
+
+.tab-badge {
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  margin-left: 4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--pink);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  animation: pop 0.5s cubic-bezier(.2,1.6,.4,1);
+}
+.tab-badge[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+
+  <!-- ═══════════ Splash ═══════════ -->
+  <div class="splash" id="splash">
+    <div class="splash-logo">
+      <span class="a" aria-hidden="true">UsTok</span>
+      <span class="b" aria-hidden="true">UsTok</span>
+      <span class="c">UsTok</span>
+    </div>
+    <p class="splash-sub">9 months · 1 subscriber · 0 regrets</p>
+    <button class="splash-tap" id="splashTap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      Tap to start, sayang
+    </button>
+  </div>
+
+  <!-- ═══════════ FEED ═══════════ -->
+  <section class="view is-active" id="view-feed">
+    <div class="feed-top">
+      <a class="feed-hub" href="index.html">&larr; Hub</a>
+      <span class="tab">Following</span>
+      <span class="tab on">For You</span>
+    </div>
+    <div class="scroll-rail"><span id="scrollRail"></span></div>
+    <div class="feed" id="feed"></div>
+    <div class="nudge" id="nudge">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+      swipe up
+    </div>
+  </section>
+
+  <!-- ═══════════ SEARCH (gag) ═══════════ -->
+  <section class="view" id="view-search">
+    <div class="page-head">
+      <button class="page-back" data-go="feed" aria-label="Back">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div class="search-bar">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color:var(--faint)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="searchInput" type="text" placeholder="Search" autocomplete="off">
+      </div>
+      <button class="search-go" id="searchGo">Search</button>
+    </div>
+
+    <div class="search-body">
+      <div id="searchIdle">
+        <p class="search-label">Recent searches</p>
+        <!-- His search history. Swap these for whatever's funnier to her. -->
+        <div class="recent" data-q="how to tell her you love her without being weird">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          how to tell her you love her without being weird
+          <span class="x">&times;</span>
+        </div>
+        <div class="recent" data-q="is it normal to miss someone this much">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          is it normal to miss someone this much
+          <span class="x">&times;</span>
+        </div>
+        <div class="recent" data-q="is 3am too late to call her">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          is 3am too late to call her
+          <span class="x">&times;</span>
+        </div>
+        <div class="recent" data-q="how to stop smiling at my phone in public">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          how to stop smiling at my phone in public
+          <span class="x">&times;</span>
+        </div>
+        <div class="recent" data-q="flowers that never wilt">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          flowers that never wilt
+          <span class="x">&times;</span>
+        </div>
+        <div class="recent" data-q="cheap flights to her">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          cheap flights to her
+          <span class="x">&times;</span>
+        </div>
+        <div class="recent" data-q="how to say i love you in every language">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          how to say i love you in every language
+          <span class="x">&times;</span>
+        </div>
+        <div class="recent" data-q="axolotl names">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          axolotl names
+          <span class="x">&times;</span>
+        </div>
+      </div>
+
+      <div id="searchResults" hidden>
+        <p class="search-label" id="searchLabel"></p>
+        <div class="result" data-go="feed">
+          <div class="result-thumb">
+            <img src="Imagess/image4.jpg" alt="">
+            <span class="views">∞</span>
+          </div>
+          <div class="result-body">
+            <p class="result-title">US · Episode 9 · 9 months today 🤍</p>
+            <p class="result-sub">@us · 9 months ago<br>The only thing on this app, apparently.</p>
+          </div>
+        </div>
+        <p class="result-note" id="searchNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ POST (gag) ═══════════ -->
+  <section class="view" id="view-post">
+    <div class="post-stage">
+      <div class="post-inner" id="postRecording">
+        <div class="rec-ring"><div class="rec-dot"></div></div>
+        <p class="post-status" id="postStatus">Uploading…</p>
+        <p class="post-hint">Hold still. Compressing nine months into 60 seconds.</p>
+      </div>
+
+      <div class="post-reject" id="postReject">
+        <div class="reject-icon">⚠</div>
+        <p class="reject-title">Upload blocked</p>
+        <p class="reject-body" id="rejectBody"></p>
+        <p class="reject-code" id="rejectCode"></p>
+        <button class="reject-btn" id="rejectRetry">Try again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ INBOX ═══════════ -->
+  <section class="view" id="view-inbox">
+    <div class="chat-head">
+      <button class="page-back" data-go="feed" aria-label="Back">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div class="chat-av"><img src="Imagess/me.jpg" alt=""></div>
+      <div class="chat-who">
+        <div class="n">Khairul
+          <svg class="verified" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#20d5ec"/><path d="m8 12.5 2.8 2.8L16 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="s">Active now</div>
+      </div>
+    </div>
+
+    <div class="chat-body" id="chatBody">
+      <div class="chat-day" id="chatDay"></div>
+      <div class="typing" id="typing"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="chat-foot">
+      <button class="react-btn" data-react="🤍">🤍</button>
+      <button class="react-btn" data-react="🥹">🥹</button>
+      <a class="write-back" href="vent.html">Write back to me… <b>SEND</b></a>
+    </div>
+  </section>
+
+  <!-- ═══════════ PROFILE ═══════════ -->
+  <section class="view" id="view-profile">
+    <div class="prof-body">
+      <div class="prof-top">
+        <div class="prof-av"><img src="Imagess/anje.jpg" alt="Jasmine"></div>
+        <div class="prof-handle">@us
+          <svg class="verified" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#20d5ec"/><path d="m8 12.5 2.8 2.8L16 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <div class="prof-stats">
+          <div class="stat"><b id="statDays">-</b><span>Days</span></div>
+          <div class="stat"><b>1</b><span>Follower</span></div>
+          <div class="stat"><b>∞</b><span>Likes</span></div>
+        </div>
+
+        <div class="prof-actions">
+          <button class="follow-btn following" id="followBtn">Following</button>
+          <button class="icon-btn" id="shareProfile" aria-label="Share">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="m8 8 4-4 4 4"/><path d="M12 4v12"/></svg>
+          </button>
+        </div>
+
+        <p class="prof-bio">Nur Liyana Jasmine &amp; Khairul 🤍
+since 02.12.2025
+<span class="link">two axolotls · one snivy · a house made of cherry blossoms</span></p>
+      </div>
+
+      <div class="prof-tabs">
+        <button class="prof-tab on" data-tab="grid" aria-label="Posts">
+          <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </button>
+        <button class="prof-tab" data-tab="locked" aria-label="Private">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        </button>
+        <button class="prof-tab" data-tab="liked" aria-label="Liked">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+        </button>
+      </div>
+
+      <div class="grid" id="photoGrid"></div>
+
+      <div class="locked-tab" id="lockedTab">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <p>These ones stay between us.<br>Not for the internet. 🤍</p>
+      </div>
+
+      <div class="locked-tab" id="likedTab">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+        <p>Liked: <b>everything she's ever posted.</b><br>All of it. Every single one.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ Comment sheet ═══════════ -->
+  <div class="sheet-scrim" id="sheetScrim"></div>
+  <div class="sheet" id="sheet">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <span id="sheetCount">Comments</span>
+      <button class="sheet-close" id="sheetClose">&times;</button>
+    </div>
+    <div class="sheet-body" id="sheetBody"></div>
+    <div class="sheet-foot">
+      <div class="fake-input" id="fakeInput">Add comment…</div>
+      <span style="font-size:1.05rem">🤍</span>
+    </div>
+  </div>
+
+  <!-- ═══════════ Lightbox ═══════════ -->
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose">&times;</button>
+    <span class="lb-count" id="lbCount"></span>
+    <div class="lb-stage" id="lbStage">
+      <button class="lb-nav lb-prev" id="lbPrev">&lsaquo;</button>
+      <button class="lb-nav lb-next" id="lbNext">&rsaquo;</button>
+    </div>
+    <p class="lb-cap" id="lbCap"></p>
+  </div>
+
+  <!-- ═══════════ Toast ═══════════ -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ═══════════ Tab bar ═══════════ -->
+  <nav class="tabbar transparent" id="tabbar">
+    <button class="tab-btn on" data-go="feed">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 11h3v9h5v-6h4v6h5v-9h3L12 3z"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="tab-btn" data-go="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+      <span>Search</span>
+    </button>
+    <button class="tab-post" data-go="post" aria-label="Post">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+    <button class="tab-btn" data-go="inbox">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.5 9.5 0 0 1-3.3-.6L3 21l1.8-5a8.2 8.2 0 0 1-.8-3.5C4 7.2 7.8 3.5 12.5 3.5S21 7.2 21 11.5z"/></svg>
+      <span>Inbox</span>
+      <i class="tab-badge" id="inboxBadge">1</i>
+    </button>
+    <button class="tab-btn" data-go="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.8 7.8 0 0 1 15 0"/></svg>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+</div>
+
+<audio id="bgm" src="music/Loved.mp3" loop preload="auto"></audio>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════════════
+   The feed. Nine clips for nine months.
+
+   Each clip: a photo (or a stack of them for the montage cuts), the big
+   line stamped over it, and the caption underneath. Swap `img` / `imgs`
+   for any file in Imagess/ and it just works.
+   ═══════════════════════════════════════════════════════════════ */
+
+const HANDLE = '@us';
+
+const CLIPS = [
+  {
+    id: 'hook',
+    img: 'Imagess/image4.jpg',
+    treat: 'blur',
+    eyebrow: 'Episode 9',
+    hook: "pov: it's been 9 months\nand he <span class='hl'>still</span> won't\nshut up about you",
+    caption: "9 months today, sayang. don't skip this one 🤍",
+    sound: 'original sound · us',
+    likes: '9M', saves: '1', shares: '1'
+  },
+  {
+    id: 'recap',
+    // Real-life chronology. The Minecraft / Cobblemon shots deliberately sit out
+    // of this one so the nostalgia clip further down still has something new.
+    imgs: ['Imagess/image4.jpg','Imagess/image6.jpg','Imagess/image1.jpg','Imagess/image5.jpg',
+           'Imagess/image7.jpg','Imagess/image11.jpg','Imagess/image15.jpg',
+           'Imagess/WhatsApp%20Image%202026-07-29%20at%2002.13.04.jpeg'],
+    cut: 420,
+    eyebrow: 'The story so far',
+    hook: "8 months of\n<span class='hl2'>evidence</span> →",
+    caption: "december to august in six seconds. episode 9 loading…",
+    sound: 'the story so far · us',
+    likes: '842k', saves: '88', shares: '14'
+  },
+  {
+    id: 'august',
+    img: 'Imagess/image17.jpg',
+    treat: 'dim',
+    eyebrow: 'Not every month made the edit',
+    hook: "august was hard.\ni'm not cutting\nthat part out.",
+    caption: "some months you post. some months you survive. this one was both.",
+    sound: 'quiet one · us',
+    likes: '61k', saves: '203', shares: '2'
+  },
+  {
+    id: 'stay',
+    img: 'Imagess/image18.jpg',
+    eyebrow: 'The part that mattered',
+    hook: "and then we\n<span class='hl'>chose to stay</span>",
+    caption: "one step at a time, together ✦",
+    sound: 'redo · us',
+    likes: '404k', saves: '512', shares: '9'
+  },
+  {
+    id: 'kitchen',
+    img: 'Imagess/image14.png',
+    eyebrow: 'Certified bit',
+    hook: "met at an airport.\nnow we argue about\n<span class='hl'>onions</span> at 2am.",
+    caption: "nine months, one shared kitchen, zero casualties. so far 🍳",
+    sound: 'kitchen chaos · us',
+    likes: '128k', saves: '31', shares: '6'
+  },
+  {
+    id: 'threeam',
+    img: 'Imagess/image8.png',
+    treat: 'dim',
+    eyebrow: 'Day in my life',
+    hook: "3am.\nneither of us\nhanging up first.",
+    caption: "the boring nights are my favourite ones btw. always have been.",
+    sound: 'still on call · us',
+    likes: '77k', saves: '119', shares: '3'
+  },
+  {
+    id: 'nostalgia',
+    imgs: ['Imagess/image12.png','Imagess/image16.jpg','Imagess/image13.png','Imagess/image19.png'],
+    cut: 1500,
+    eyebrow: 'Rent free',
+    hook: "things that live\nin my head\nrent free",
+    caption: "two axolotls with our names, one snivy plushie, a toothless keychain, and a cherry blossom house 🌸",
+    sound: 'rent free · us',
+    likes: '215k', saves: '640', shares: '12'
+  },
+  {
+    id: 'dm',
+    img: 'Imagess/mhmm.jpg',
+    treat: 'dim',
+    eyebrow: 'Not for the comments',
+    hook: "i wrote you\nsomething.\nit's in your dms.",
+    caption: "the caption version was too short. the real one's downstairs 💬",
+    sound: 'original sound · us',
+    cta: 'Open your messages',
+    likes: '1', saves: '1', shares: '0'
+  },
+  {
+    id: 'outro',
+    img: 'images/collage1.jpg',
+    eyebrow: 'Season 1 · Episode 9',
+    hook: "happy 9 months,\n<span class='hl'>sayang</span> 🤍",
+    caption: "see you next month. and the one after that. and the one after that.",
+    sound: 'original sound · us',
+    teaser: true,
+    likes: '9M', saves: '∞', shares: '1'
+  }
+];
+
+/* Comments per clip.
+   ── SWAP THESE HANDLES for her actual friends / family and they'll land 10x harder. */
+const COMMENTS = {
+  hook: [
+    { pin: true, av: 'Imagess/me.jpg', name: 'us', text: "9 months of you. this one's my favourite episode so far 🤍", likes: '9M', time: 'now', heart: true },
+    { name: 'yourbestie', text: 'not me opening this at work and immediately tearing up', likes: '1.2k', time: '2h' },
+    { name: 'thegroupchat', text: 'they are STILL doing this. 9 months in. incredible', likes: '834', time: '4h' }
+  ],
+  recap: [
+    { name: 'yourbestie', text: 'the KLIA one. every time. every single time', likes: '620', time: '1h' },
+    { name: 'adik', text: 'ok but the cherry blossom house genuinely goes hard', likes: '412', time: '3h' }
+  ],
+  august: [
+    { pin: true, av: 'Imagess/me.jpg', name: 'us', text: "leaving this one up on purpose.", likes: '2.1k', time: 'now', heart: true },
+    { name: 'yourbestie', text: 'respect for not pretending it was all perfect tbh', likes: '980', time: '2h' }
+  ],
+  stay: [
+    { name: 'thegroupchat', text: 'THE CHARACTER DEVELOPMENT', likes: '1.5k', time: '1h' },
+    { name: 'adik', text: 'crying. actually crying', likes: '733', time: '2h', reply: { name: 'yourbestie', text: 'same. every month with these two' } }
+  ],
+  kitchen: [
+    { name: 'yourbestie', text: 'the way she screams PLATES. every single time', likes: '2.4k', time: '30m' },
+    { name: 'thegroupchat', text: 'no relationship survives overcooked. except apparently theirs', likes: '1.9k', time: '45m', reply: { name: 'us', text: "we've come close 😭", heart: true } },
+    { name: 'adik', text: 'put them in a real kitchen. i dare you', likes: '88', time: '1h' }
+  ],
+  threeam: [
+    { name: 'yourbestie', text: "she told me she doesn't hang up first on purpose", likes: '3.1k', time: '20m', reply: { name: 'us', text: 'neither do i. that\'s the whole problem 🤍', heart: true } },
+    { name: 'thegroupchat', text: 'go to SLEEP. both of you', likes: '1.1k', time: '1h' }
+  ],
+  nostalgia: [
+    { name: 'adik', text: 'the snivy plushie has been through everything with her', likes: '904', time: '2h' },
+    { name: 'yourbestie', text: 'axolotls named after each other is insane behaviour and i love it', likes: '1.3k', time: '3h' }
+  ],
+  dm: [
+    { pin: true, av: 'Imagess/me.jpg', name: 'us', text: "comments closed on this one. go read it 💬", likes: '1', time: 'now', heart: true }
+  ],
+  outro: [
+    { name: 'thegroupchat', text: 'when is episode 10 dropping', likes: '2.2k', time: '10m', reply: { name: 'us', text: 'october 2nd. same as always 👀', heart: true } },
+    { name: 'yourbestie', text: 'happy 9 months you two 🥹🤍', likes: '4.4k', time: '25m' }
+  ]
+};
+
+/* ═══════════ The letter, as a DM thread ═══════════
+   `d` = how long the typing dots run before this bubble lands. */
+const LETTER = [
+  { d: 700,  t: "hey" },
+  { d: 900,  t: "before you scroll the rest of that feed" },
+  { d: 1400, t: "i wanted to say this properly. not in a caption." },
+  { d: 2600, t: "nine months ago we were sitting at KLIA with a McDonald's bag between us and you were pointing at planes i genuinely could not see because it was pitch black. i didn't know that was the start of anything. i just knew i didn't want to go home yet." },
+  { d: 2400, t: "since then we built a whole house out of cherry blossoms, named two axolotls after ourselves, and you're somehow <b>still</b> carrying that snivy around. the small things stuck. they always do with you." },
+  { d: 2600, t: "and august was hard, sayang. i'm not going to sit here and pretend it wasn't. but you stayed. i stayed. and we rebuilt it slower and more carefully than it was before." },
+  { d: 2000, t: "that's the month i'm actually proudest of. not the easy ones. the one where we proved we'd still choose each other when it wasn't effortless." },
+  { d: 1600, t: "i don't need us to be perfect. i just need us to keep being <em>us</em>." },
+  { d: 1500, t: "happy 9 months, <b>Nur Liyana Jasmine</b>." },
+  { d: 1200, t: "i love you so much 🤍", final: true }
+];
+
+/* Optional: record a fresh voice note, drop it in as this file, and the
+   bubble appears on its own. If the file isn't there, nothing shows. */
+const VOICE_NOTE = 'Imagess/9months-voice.mp4';
+
+/* ═══════════ Profile grid ═══════════ */
+const GRID = [
+  { src: 'Imagess/image4.jpg',   cap: 'where it started', sub: 'KLIA · 2 December 2025', pin: true, plays: '9M' },
+  { src: 'Imagess/image6.jpg',   cap: 'spotted in aisle 3', sub: "we'll photograph ourselves in anything reflective", plays: '1.2M' },
+  { src: 'Imagess/image12.png',  cap: 'the cherry blossom grove', sub: 'petals everywhere, and the dogs we tamed', plays: '880k' },
+  { src: 'Imagess/image19.png',  cap: 'home base', sub: 'our cobblemon room, built block by block', plays: '640k' },
+  { src: 'Imagess/image13.png',  cap: 'cobblemon nights', sub: 'past midnight, still logged in', plays: '712k' },
+  { src: 'Imagess/image16.jpg',  cap: 'caught feelings (again)', sub: 'snivy arc', plays: '533k' },
+  { src: 'Imagess/image15.jpg',  cap: 'flowers that never wilt', sub: 'handmade, and still exactly that red', plays: '498k' },
+  { src: 'Imagess/WhatsApp%20Image%202026-07-29%20at%2002.13.04.jpeg', cap: 'the in-between places', sub: 'stations, terminals, always on the way to you', plays: '455k' },
+  { src: 'Imagess/image1.jpg',   cap: 'plane spotting', sub: 'you always see them before i do', plays: '301k' },
+  { src: 'Imagess/image2.jpg',   cap: 'blurry but perfect', sub: '80% of our photos tbh', plays: '288k' },
+  { src: 'Imagess/image5.jpg',   cap: 'the first time we met', sub: 'i was so nervous', plays: '270k' },
+  { src: 'Imagess/image7.jpg',   cap: 'the airport again', sub: 'we keep ending up where we started', plays: '262k' },
+  { src: 'Imagess/image9.png',   cap: 'saved without asking', sub: 'sorry not sorry', plays: '244k' },
+  { src: 'Imagess/image10.png',  cap: 'under the red tree', sub: 'no words, no rush', plays: '231k' },
+  { src: 'Imagess/image11.jpg',  cap: 'proof we were here', sub: 'somewhere in the middle', plays: '219k' },
+  { src: 'Imagess/IMG-20260707-WA0024.jpg', cap: 'sent this with no warning', sub: 'july, and i still think about it', plays: '198k' },
+  { src: 'Imagess/image17.jpg',  cap: 'the quiet one', sub: 'not every month is loud', plays: '187k' },
+  { src: 'Imagess/IMG-20260427-WA0024.jpg', cap: 'boba and every plushie in the shop', sub: 'april, and you wanted all of them', plays: '176k' },
+  { src: 'Imagess/image22.png',  cap: 'not letting go', sub: 'fountain, palm trees, you', plays: '164k' },
+  { src: 'Imagess/image20.png',  cap: 'main character behaviour', sub: 'the fit was insane, no notes', plays: '151k' },
+  { src: 'Imagess/image21.png',  cap: 'different city, same us', sub: 'server date night', plays: '9M' }
+];
+
+/* ═══════════ Small helpers ═══════════ */
+const $  = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let toastTimer = null;
+function toast(msg) {
+  const el = $('#toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+const ICON = {
+  heart: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8.5-5.6-8.5-11A5 5 0 0 1 12 6.6 5 5 0 0 1 20.5 10c0 5.4-8.5 11-8.5 11z"/></svg>',
+  comment: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.9 3 3 6.6 3 11c0 2.4 1.2 4.6 3.1 6L5 21l4.3-2.2c.85.2 1.75.3 2.7.3 5.1 0 9-3.6 9-8s-3.9-8-9-8z"/></svg>',
+  save: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.2L5 21V4a1 1 0 0 1 1-1z"/></svg>',
+  share: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12 11 4v4.6C5.5 9.3 3 13.4 3 20c1.9-3.9 4.6-5.6 8-5.6V19l10-7z"/></svg>',
+  note: '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2.6"/><circle cx="17" cy="16" r="2.6"/></svg>',
+  verified: '<svg class="verified" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#20d5ec"/><path d="m8 12.5 2.8 2.8L16 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  play: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>'
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   Build the feed
+   ═══════════════════════════════════════════════════════════════ */
+function buildFeed() {
+  $('#feed').innerHTML = CLIPS.map((c, i) => {
+    const imgs = c.imgs || [c.img];
+    const media = imgs.map((src, k) =>
+      `<img src="${src}" alt="" ${k === 0 ? 'class="on"' : ''} loading="${i < 2 ? 'eager' : 'lazy'}">`
+    ).join('');
+
+    const treat = ['clip-media', c.treat === 'blur' ? 'blur dim' : 'dim'].join(' ');
+
+    return `
+      <article class="clip${c.imgs ? ' is-montage' : ''}" data-id="${c.id}" data-i="${i}">
+        <div class="${treat}">${media}</div>
+
+        <div class="clip-hook">
+          ${c.eyebrow ? `<span class="clip-eyebrow">${c.eyebrow}</span><br>` : ''}
+          ${c.hook}
+        </div>
+
+        <div class="clip-info">
+          <div class="clip-handle">${HANDLE} ${ICON.verified}</div>
+          <p class="clip-caption">${c.caption}</p>
+          ${c.cta ? `<button class="clip-cta" data-go="inbox">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.9 3 3 6.6 3 11c0 2.4 1.2 4.6 3.1 6L5 21l4.3-2.2c.85.2 1.75.3 2.7.3 5.1 0 9-3.6 9-8s-3.9-8-9-8z"/></svg>
+              ${c.cta}
+            </button><br>` : ''}
+          ${c.teaser ? `<div class="clip-teaser">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              Episode 10 · <b class="ep10">-</b>
+            </div><br>` : ''}
+          <div class="clip-sound">${ICON.note}<span class="marq">${c.sound}</span></div>
+        </div>
+
+        <div class="rail">
+          <div class="rail-avatar" data-go="profile">
+            <img src="Imagess/anje.jpg" alt="">
+            <span class="plus">+</span>
+          </div>
+          <button class="rail-btn act-like">${ICON.heart}<span>${c.likes}</span></button>
+          <button class="rail-btn act-comment">${ICON.comment}<span>${(COMMENTS[c.id] || []).length}</span></button>
+          <button class="rail-btn act-save">${ICON.save}<span>${c.saves}</span></button>
+          <button class="rail-btn act-share">${ICON.share}<span>${c.shares}</span></button>
+          <div class="rail-disc"><img src="Imagess/anje.jpg" alt=""></div>
+        </div>
+      </article>`;
+  }).join('');
+}
+
+/* ── Which clip is on screen: drives Ken Burns, montage cuts, the rail ── */
+let activeClip = 0;
+let montageTimer = null;
+
+function setActive(el) {
+  const i = +el.dataset.i;
+  if (i === activeClip && el.classList.contains('is-active')) return;
+  activeClip = i;
+
+  $$('.clip').forEach(c => c.classList.toggle('is-active', c === el));
+
+  // progress rail
+  const rail = $('#scrollRail');
+  const frac = 1 / CLIPS.length;
+  rail.style.height = (frac * 100) + '%';
+  rail.style.transform = `translateY(${i * 100}%)`;
+
+  // first-clip nudge retires once she moves
+  if (i > 0) $('#nudge').classList.add('gone');
+
+  // Montage cuts. Reduced motion slows these right down rather than switching
+  // them off, the fast cutting is the thing to avoid, but dropping an
+  // eight-photo recap down to one still photo would lose the clip entirely.
+  clearInterval(montageTimer);
+  const clip = CLIPS[i];
+  if (clip.imgs) {
+    const shots = $$('img', $('.clip-media', el));
+    let k = 0;
+    montageTimer = setInterval(() => {
+      shots[k].classList.remove('on');
+      k = (k + 1) % shots.length;
+      shots[k].classList.add('on');
+    }, REDUCED ? 2600 : (clip.cut || 900));
+  }
+}
+
+/* Clips are full-height and snap, so scroll position tells us exactly which one
+   is on screen. Cheaper and far more reliable than an IntersectionObserver,
+   which needs the tab to actually be compositing to fire at all. */
+function watchClips() {
+  const feed = $('#feed');
+  const clips = $$('.clip');
+
+  // Height is read fresh every time rather than cached: on a phone the address
+  // bar collapses as she scrolls, which changes the viewport mid-feed and would
+  // leave a cached height pointing at the wrong clip. setActive() early-returns
+  // when the index is unchanged, so this costs a division and nothing else.
+  const sync = () => {
+    const h = feed.clientHeight || 1;
+    const i = Math.max(0, Math.min(clips.length - 1, Math.round(feed.scrollTop / h)));
+    if (clips[i]) setActive(clips[i]);
+  };
+
+  feed.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  sync();
+}
+
+/* ═══════════ Likes, saves, shares, double-tap ═══════════ */
+function heartBurst(x, y, host) {
+  const b = document.createElement('div');
+  b.className = 'burst';
+  b.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" width="96" height="96"><path d="M12 21s-8.5-5.6-8.5-11A5 5 0 0 1 12 6.6 5 5 0 0 1 20.5 10c0 5.4-8.5 11-8.5 11z"/></svg>';
+  b.style.left = x + 'px';
+  b.style.top = y + 'px';
+  b.style.transform = `rotate(${(Math.random() * 36 - 18).toFixed(0)}deg)`;
+  host.appendChild(b);
+  b.addEventListener('animationend', () => b.remove());
+}
+
+function likeClip(clipEl, on) {
+  const btn = $('.act-like', clipEl);
+  if (!btn) return;
+  const want = on === undefined ? !btn.classList.contains('liked') : on;
+  btn.classList.toggle('liked', want);
+}
+
+function bindFeed() {
+  const feed = $('#feed');
+  let lastTap = 0;
+
+  feed.addEventListener('click', (e) => {
+    const clip = e.target.closest('.clip');
+    if (!clip) return;
+
+    if (e.target.closest('.act-like'))    { likeClip(clip); return; }
+    if (e.target.closest('.act-comment')) { openSheet(clip.dataset.id); return; }
+    if (e.target.closest('.act-save'))    {
+      const b = e.target.closest('.act-save');
+      b.classList.toggle('saved');
+      toast(b.classList.contains('saved')
+        ? "Saved to: things i'll reread at 3am"
+        : 'Removed. (are you sure)');
+      return;
+    }
+    if (e.target.closest('.act-share'))   { toast("there's no one else to share this with 🤍"); return; }
+    if (e.target.closest('[data-go]'))    { return; }   // handled globally
+
+    // double-tap anywhere else on the clip
+    const now = Date.now();
+    if (now - lastTap < 320) {
+      const r = clip.getBoundingClientRect();
+      heartBurst(e.clientX - r.left, e.clientY - r.top, clip);
+      likeClip(clip, true);
+      lastTap = 0;
+    } else {
+      lastTap = now;
+    }
+  });
+}
+
+/* ═══════════ Comment sheet ═══════════ */
+function openSheet(id) {
+  const list = COMMENTS[id] || [];
+
+  $('#sheetCount').textContent = list.length + (list.length === 1 ? ' comment' : ' comments');
+  $('#sheetBody').innerHTML = list.map(c => renderComment(c)).join('') +
+    `<p style="text-align:center;color:var(--faint);font-size:0.76rem;padding:14px 0 4px">
+       comments are closed after this. it's just us in here anyway.
+     </p>`;
+
+  $('#sheet').classList.add('open');
+  $('#sheetScrim').classList.add('open');
+}
+
+function renderComment(c) {
+  const hue = [...(c.name || '')].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 360;
+  const av = c.av
+    ? `<div class="cmt-av"><img src="${c.av}" alt=""></div>`
+    : `<div class="cmt-av" style="background:hsl(${hue} 55% 42%)">${(c.name || '?')[0].toUpperCase()}</div>`;
+
+  return `
+    <div class="cmt">
+      ${av}
+      <div class="cmt-main">
+        <div class="cmt-name">
+          ${c.name}
+          ${c.pin ? '<span class="pin-flag">PINNED</span>' : ''}
+        </div>
+        <div class="cmt-text">${c.text}</div>
+        <div class="cmt-meta">
+          <span>${c.time}</span><span>Reply</span>
+          ${c.heart ? '<span class="creator-heart">🤍 liked by creator</span>' : ''}
+        </div>
+        ${c.reply ? `
+          <div class="cmt-reply">
+            <div class="cmt-name">${c.reply.name}</div>
+            <div class="cmt-text">${c.reply.text}</div>
+            <div class="cmt-meta"><span>1h</span>${c.reply.heart ? '<span class="creator-heart">🤍</span>' : ''}</div>
+          </div>` : ''}
+      </div>
+      <div class="cmt-like">${ICON.heart.replace('<svg', '<svg style="opacity:.5"')}<span>${c.likes || ''}</span></div>
+    </div>`;
+}
+
+function closeSheet() {
+  $('#sheet').classList.remove('open');
+  $('#sheetScrim').classList.remove('open');
+}
+
+/* ═══════════ View switching ═══════════ */
+let letterStarted = false;
+
+function go(view) {
+  $$('.view').forEach(v => v.classList.toggle('is-active', v.id === 'view-' + view));
+  $$('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.go === view));
+  $('#tabbar').classList.toggle('transparent', view === 'feed');
+  closeSheet();
+
+  if (view === 'search') {
+    $('#searchIdle').hidden = false;
+    $('#searchResults').hidden = true;
+    $('#searchInput').value = '';
+  }
+  if (view === 'post')   startPostGag();
+  if (view === 'inbox')  { $('#inboxBadge').hidden = true; if (!letterStarted) { letterStarted = true; playLetter(); } }
+}
+
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('[data-go]');
+  if (!t) return;
+  go(t.dataset.go);
+});
+
+/* ═══════════ Search gag ═══════════ */
+const SEARCH_NOTES = [
+  "1 result. it's always going to be 1 result.",
+  "we checked everywhere. this is the only thing on here.",
+  "search is working perfectly. there's just genuinely nothing else.",
+  "no matter what you type. i built it that way."
+];
+let noteIdx = 0;
+
+function runSearch(q) {
+  const term = (q || '').trim() || 'anything at all';
+  $('#searchIdle').hidden = true;
+  $('#searchResults').hidden = false;
+  $('#searchLabel').textContent = `Results for "${term}" · 1 found`;
+  $('#searchNote').textContent = SEARCH_NOTES[noteIdx % SEARCH_NOTES.length];
+  noteIdx++;
+  $('#searchInput').blur();
+}
+
+$('#searchGo').addEventListener('click', () => runSearch($('#searchInput').value));
+$('#searchInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); runSearch($('#searchInput').value); }
+});
+$$('.recent').forEach(r => r.addEventListener('click', () => {
+  $('#searchInput').value = r.dataset.q;
+  runSearch(r.dataset.q);
+}));
+
+/* ═══════════ Post gag ═══════════ */
+const REJECTS = [
+  { body: "This account has already posted the best one. Try again in 30 days.", code: 'ERR_MAIN_CHARACTER_AT_CAPACITY' },
+  { body: "Upload failed: nothing you record is going to beat the last nine months.", code: 'ERR_BAR_SET_TOO_HIGH' },
+  { body: "Nice try. This relationship is not cancellable and neither is this feed.", code: 'ERR_NOT_CANCELLABLE' },
+  { body: "Rejected by moderation. Reason: too obsessed with her. (approved anyway)", code: 'ERR_APPROVED_ACTUALLY' },
+  { body: "You've hit your limit of 1 perfect person. Limit cannot be raised.", code: 'ERR_QUOTA_REACHED' }
+];
+let rejectIdx = 0;
+let postTimer = null;
+
+function startPostGag() {
+  clearTimeout(postTimer);
+  $('#postRecording').style.display = 'flex';
+  $('#postReject').classList.remove('show');
+
+  const steps = ['Uploading…', 'Processing…', 'Almost there…', 'Finalising…'];
+  let s = 0;
+  $('#postStatus').textContent = steps[0];
+
+  const tick = () => {
+    s++;
+    if (s < steps.length) {
+      $('#postStatus').textContent = steps[s];
+      postTimer = setTimeout(tick, 900);
+    } else {
+      const r = REJECTS[rejectIdx % REJECTS.length];
+      rejectIdx++;
+      $('#rejectBody').textContent = r.body;
+      $('#rejectCode').textContent = r.code;
+      $('#postRecording').style.display = 'none';
+      $('#postReject').classList.add('show');
+    }
+  };
+  postTimer = setTimeout(tick, 900);
+}
+
+$('#rejectRetry').addEventListener('click', startPostGag);
+
+/* ═══════════ Inbox: the letter, typed out ═══════════ */
+function playLetter() {
+  const body = $('#chatBody');
+  const typing = $('#typing');
+
+  $('#chatDay').textContent = new Date().toLocaleDateString(undefined,
+    { weekday: 'long', day: 'numeric', month: 'long' });
+
+  let i = 0;
+  const next = () => {
+    if (i >= LETTER.length) { finishLetter(); return; }
+    const msg = LETTER[i++];
+
+    typing.classList.add('show');
+    body.appendChild(typing);
+    body.scrollTop = body.scrollHeight;
+
+    setTimeout(() => {
+      typing.classList.remove('show');
+      const b = document.createElement('div');
+      b.className = 'bub' + (msg.final ? ' final' : '') + (msg.t.length > 90 ? ' long' : '');
+      b.innerHTML = msg.t;
+      body.insertBefore(b, typing);
+      body.scrollTop = body.scrollHeight;
+      setTimeout(next, 420);
+    }, REDUCED ? 120 : msg.d);
+  };
+  next();
+}
+
+function finishLetter() {
+  const body = $('#chatBody');
+
+  // voice note, but only if he's actually recorded one
+  const probe = document.createElement('video');
+  probe.preload = 'metadata';
+  probe.src = VOICE_NOTE;
+  probe.addEventListener('loadedmetadata', () => addVoiceNote(probe.duration));
+
+  const seen = document.createElement('div');
+  seen.className = 'seen';
+  seen.textContent = 'Seen ' + new Date().toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  body.appendChild(seen);
+  setTimeout(() => seen.classList.add('show'), 900);
+  body.scrollTop = body.scrollHeight;
+}
+
+function addVoiceNote(dur) {
+  const body = $('#chatBody');
+  const wrap = document.createElement('div');
+  wrap.className = 'vnote ready';
+
+  const bars = Array.from({ length: 28 },
+    () => `<i style="height:${(28 + Math.random() * 68).toFixed(0)}%"></i>`).join('');
+  const mm = (s) => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+
+  wrap.innerHTML = `<button aria-label="Play voice note">${ICON.play}</button>
+                    <div class="vwave">${bars}</div>
+                    <span class="vtime">${mm(dur || 0)}</span>`;
+
+  const audio = document.createElement('video');
+  audio.src = VOICE_NOTE;
+  audio.playsInline = true;
+  audio.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none';
+  wrap.appendChild(audio);
+
+  const btn = $('button', wrap);
+  const bits = $$('.vwave i', wrap);
+  const time = $('.vtime', wrap);
+
+  btn.addEventListener('click', () => {
+    if (audio.paused) { audio.play(); btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'; }
+    else { audio.pause(); btn.innerHTML = ICON.play; }
+  });
+  audio.addEventListener('timeupdate', () => {
+    const p = audio.currentTime / (audio.duration || 1);
+    bits.forEach((b, k) => b.classList.toggle('played', k / bits.length <= p));
+    time.textContent = mm(audio.duration - audio.currentTime);
+  });
+  audio.addEventListener('ended', () => {
+    btn.innerHTML = ICON.play;
+    bits.forEach(b => b.classList.remove('played'));
+    time.textContent = mm(audio.duration);
+  });
+
+  body.insertBefore(wrap, $('.seen', body) || null);
+  body.scrollTop = body.scrollHeight;
+}
+
+$$('.react-btn').forEach(b => b.addEventListener('click', () => {
+  const body = $('#chatBody');
+  const r = document.createElement('div');
+  r.className = 'bub final';
+  r.style.alignSelf = 'flex-end';
+  r.style.borderRadius = '18px 18px 5px 18px';
+  r.textContent = b.dataset.react;
+  r.style.fontSize = '1.3rem';
+  body.insertBefore(r, $('.seen', body) || null);
+  body.scrollTop = body.scrollHeight;
+  toast('he saw that 🤍');
+}));
+
+/* ═══════════ Profile ═══════════ */
+function buildGrid() {
+  $('#photoGrid').innerHTML = GRID.map((g, i) => `
+    <div class="tile${g.pin ? ' pinned' : ''}" data-i="${i}">
+      <img src="${g.src}" alt="${g.cap}" loading="lazy" onload="this.classList.add('loaded')">
+      <span class="plays">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>${g.plays}
+      </span>
+    </div>`).join('');
+}
+
+$$('.prof-tab').forEach(t => t.addEventListener('click', () => {
+  $$('.prof-tab').forEach(x => x.classList.remove('on'));
+  t.classList.add('on');
+  const tab = t.dataset.tab;
+  $('#photoGrid').style.display = tab === 'grid' ? '' : 'none';
+  $('#lockedTab').classList.toggle('show', tab === 'locked');
+  $('#likedTab').classList.toggle('show', tab === 'liked');
+}));
+
+$('#followBtn').addEventListener('click', () => {
+  const b = $('#followBtn');
+  if (b.classList.contains('following')) {
+    toast("no. you're stuck with me 🤍");
+  } else {
+    b.classList.add('following');
+    b.textContent = 'Following';
+  }
+});
+$('#shareProfile').addEventListener('click', () => toast('this one stays off the internet.'));
+
+/* ─── Lightbox ─── */
+let lbIndex = 0;
+
+function openLightbox(i) {
+  lbIndex = i;
+  renderLightbox();
+  $('#lightbox').classList.add('open');
+}
+function renderLightbox() {
+  const g = GRID[lbIndex];
+  const stage = $('#lbStage');
+  $$('img', stage).forEach(el => el.remove());
+  const img = document.createElement('img');
+  img.src = g.src;
+  img.alt = g.cap;
+  stage.appendChild(img);
+  $('#lbCap').innerHTML = g.cap + '<span>' + g.sub + '</span>';
+  $('#lbCount').textContent = (lbIndex + 1) + ' / ' + GRID.length;
+}
+function lbStep(n) {
+  lbIndex = (lbIndex + n + GRID.length) % GRID.length;
+  renderLightbox();
+}
+
+$('#photoGrid').addEventListener('click', (e) => {
+  const tile = e.target.closest('.tile');
+  if (tile) openLightbox(+tile.dataset.i);
+});
+$('#lbClose').addEventListener('click', () => $('#lightbox').classList.remove('open'));
+$('#lbPrev').addEventListener('click', (e) => { e.stopPropagation(); lbStep(-1); });
+$('#lbNext').addEventListener('click', (e) => { e.stopPropagation(); lbStep(1); });
+
+// double-tap the enlarged photo for the heart
+$('#lbStage').addEventListener('click', (e) => {
+  if (e.target.closest('.lb-nav')) return;
+  const now = Date.now();
+  if (now - ($('#lbStage').dataset.t || 0) < 320) {
+    const r = $('#lightbox').getBoundingClientRect();
+    heartBurst(e.clientX - r.left, e.clientY - r.top, $('#lightbox'));
+    $('#lbStage').dataset.t = 0;
+  } else {
+    $('#lbStage').dataset.t = now;
+  }
+});
+
+// swipe the lightbox
+(function swipeLightbox() {
+  let x0 = null;
+  const lb = $('#lightbox');
+  lb.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 55) lbStep(dx < 0 ? 1 : -1);
+    x0 = null;
+  }, { passive: true });
+})();
+
+/* ═══════════ Days counter + Episode 10 countdown ═══════════ */
+const START = new Date(2025, 11, 2);          // 2 December 2025
+const EP10  = new Date(2026, 9, 2);           // 2 October 2026
+
+function startCounters() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const days = Math.round((today - START) / 86400000);
+  $('#statDays').textContent = days > 0 ? days.toLocaleString() : '-';
+
+  const tick = () => {
+    const left = EP10 - Date.now();
+    const label = left <= 0
+      ? 'out now'
+      : Math.floor(left / 86400000) + 'd ' + (Math.floor(left / 3600000) % 24) + 'h';
+    $$('.ep10').forEach(el => el.textContent = label);
+  };
+  tick();
+  setInterval(tick, 60000);
+}
+
+/* ═══════════ Soundtrack ═══════════ */
+const bgm = $('#bgm');
+bgm.volume = 0.42;
+
+$('#splashTap').addEventListener('click', () => {
+  const s = $('#splash');
+  s.classList.add('leaving');
+  setTimeout(() => s.style.display = 'none', 620);
+  bgm.play().catch(() => {});
+});
+
+// the disc doubles as a mute toggle
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.rail-disc')) return;
+  bgm.muted = !bgm.muted;
+  toast(bgm.muted ? 'sound off 🔇' : 'sound on 🔊');
+});
+
+/* ═══════════ Sheet + misc wiring ═══════════ */
+$('#sheetClose').addEventListener('click', closeSheet);
+$('#sheetScrim').addEventListener('click', closeSheet);
+$('#fakeInput').addEventListener('click', () => toast("you don't need to comment. just tell me directly 🤍"));
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if ($('#lightbox').classList.contains('open')) { $('#lightbox').classList.remove('open'); return; }
+    closeSheet();
+  }
+  if ($('#lightbox').classList.contains('open')) {
+    if (e.key === 'ArrowLeft')  lbStep(-1);
+    if (e.key === 'ArrowRight') lbStep(1);
+  }
+});
+
+/* ═══════════ Go ═══════════ */
+buildFeed();
+buildGrid();
+bindFeed();
+watchClips();
+setActive($('.clip'));
+startCounters();   // after buildFeed(), so the Episode 10 chip has something to fill
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+
+</body>
+</html>

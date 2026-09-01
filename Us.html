@@ -45,7 +45,7 @@
     z-index: 1;
   }
 
-  /* floating memories — contained frame around the letter */
+  /* floating memories, contained frame around the letter */
   .memories {
     position: fixed;
     top: 0;
@@ -191,7 +191,7 @@
   }
   .letter.collapsed .letter-toggle:active { transform: translateY(-50%) scale(0.92); }
 
-  /* focus mode — photos come into full clarity */
+  /* focus mode, photos come into full clarity */
   body.focus-mode .memory { opacity: 1 !important; }
   body.focus-mode .letter {
     background: rgba(26, 26, 46, 0.6);
@@ -560,8 +560,8 @@
     'Imagess/image9.png',
   ];
 
-  /* 9 orbital slots that frame the letter — top band, mid sides, bottom band.
-     Values are % inside the .memories container (10%–90% desktop, full width mobile). */
+  /* 9 orbital slots that frame the letter, top band, mid sides, bottom band.
+     Values are % inside the .memories container (10%-90% desktop, full width mobile). */
   const DESKTOP_SLOTS = [
     { top: '2%',  left: '2%',  rotate: -6 },
     { top: '3%',  left: '44%', rotate: 3  },

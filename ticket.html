@@ -25,7 +25,7 @@
     --cream:    #fffaf6;
     --paper:    #ffffff;
 
-    /* High contrast text colors — used for ALL essential text */
+    /* High contrast text colors, used for ALL essential text */
     --plum-mid:  #8a2e4c; /* labels, secondary text */
     --plum-deep: #3b1422; /* primary text, headings, body */
 
@@ -49,7 +49,7 @@
   }
 
   /* ==========================================================
-     SUNSET SKY — Deep Twilight Pink → Warm Dusty Rose
+     SUNSET SKY: Deep Twilight Pink → Warm Dusty Rose
      ========================================================== */
   body {
     font-family: 'Quicksand', sans-serif;
@@ -85,7 +85,7 @@
   input, textarea, select { font: inherit; }
 
   /* ==========================================================
-     CLOUDS — full-sky parallax, drift + bob
+     CLOUDS: full-sky parallax, drift + bob
      ========================================================== */
   .sky {
     position: fixed;
@@ -229,7 +229,7 @@
   }
 
   /* ==========================================================
-     LAYOUT WRAPPER — desktop max-width guard
+     LAYOUT WRAPPER: desktop max-width guard
      ========================================================== */
   .wrap {
     position: relative;
@@ -239,7 +239,7 @@
   }
 
   /* ==========================================================
-     LONG TICKET — single unified container
+     LONG TICKET: single unified container
      ========================================================== */
   .long-ticket {
     background: var(--paper);
@@ -288,7 +288,7 @@
     color: var(--plum-deep);
   }
 
-  /* Fluid place names — scale from phone to laptop */
+  /* Fluid place names, scale from phone to laptop */
   .place {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(1.35rem, 1rem + 2.4vw, 2rem);
@@ -306,7 +306,7 @@
     text-transform: uppercase;
   }
 
-  /* Section headers — bold Quicksand */
+  /* Section headers, bold Quicksand */
   .mono-title {
     font-family: 'Quicksand', sans-serif;
     font-weight: 700;
@@ -427,7 +427,7 @@
     margin-top: 10px;
   }
 
-  /* Stub — attached to top-right of the boarding section */
+  /* Stub, attached to top-right of the boarding section */
   .lt-stub {
     padding: clamp(28px, 3.5vw, 40px) clamp(20px, 2.5vw, 28px);
     background: var(--paper);
@@ -824,7 +824,7 @@
     padding-top: 12px;
   }
 
-  /* Stamp — invisible until .slam class is added by IntersectionObserver */
+  /* Stamp, invisible until .slam class is added by IntersectionObserver */
   .claimed-stamp {
     position: absolute;
     top: 18px;
@@ -934,7 +934,7 @@
   }
 
   /* ==========================================================
-     RESPONSIVE — mobile breakpoint (<= 768px)
+     RESPONSIVE: mobile breakpoint (<= 768px)
      ========================================================== */
   @media (max-width: 768px) {
     /* Stack boarding pass and stub vertically */
@@ -1002,7 +1002,7 @@
 <body>
 <a href="index.html" style="position:fixed;top:16px;left:16px;z-index:99999;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(0,0,0,0.55);color:#fff;font-family:system-ui,-apple-system,sans-serif;font-size:13px;font-weight:500;text-decoration:none;border-radius:20px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 10px rgba(0,0,0,0.25);">&larr; Hub</a>
 
-<!-- Sunset sky — clouds drift behind the ticket -->
+<!-- Sunset sky, clouds drift behind the ticket -->
 <div class="sky" aria-hidden="true">
   <div class="cloud cloud-1"><div class="puff"></div></div>
   <div class="cloud cloud-2 warm"><div class="puff"></div></div>
@@ -1025,7 +1025,7 @@
   <article class="long-ticket" role="region" aria-label="LoveLines Boarding Pass">
 
     <!-- ============================================================
-         Section 1 — Boarding Pass (with attached top-right stub)
+         Section 1: Boarding Pass (with attached top-right stub)
          ============================================================ -->
     <section class="lt-boarding">
 
@@ -1070,7 +1070,7 @@
           </div>
           <div>
             <div class="label">Gate</div>
-            <div class="value">G — F</div>
+            <div class="value">G - F</div>
           </div>
           <div>
             <div class="label">Seat</div>
@@ -1092,7 +1092,7 @@
             <p>
               That day was so short but so memorable to me because I finally got to keep my promise of bringing you to our <strong>NakNak date</strong>. I got you <strong>flowers</strong> for our anniversary and I really cannot wait for us to build our <strong>dragons</strong> together hehe. I have never regretted getting into a relationship with you and I wish to always be with you. I love you sayang, you are the love of my life sayang.
             </p>
-            <div class="pilot-sign">— Yours, always.</div>
+            <div class="pilot-sign">Yours, always.</div>
           </div>
         </div>
       </div>
@@ -1124,7 +1124,7 @@
 
         <div class="days-together">
           <div class="label">Time In Flight</div>
-          <div class="days-counter"><span id="dayCount">—</span><span class="unit">days</span></div>
+          <div class="days-counter"><span id="dayCount">-</span><span class="unit">days</span></div>
           <div class="days-sub">
             <span id="hCount">0</span>h ·
             <span id="mCount">0</span>m ·
@@ -1138,7 +1138,7 @@
     <div class="lt-perf"></div>
 
     <!-- ============================================================
-         Section 2 — Flight Map
+         Section 2: Flight Map
          ============================================================ -->
     <section class="lt-section flight-map">
       <div class="section-header">
@@ -1166,7 +1166,7 @@
     <div class="lt-perf"></div>
 
     <!-- ============================================================
-         Section 3 — Customs Declaration
+         Section 3: Customs Declaration
          ============================================================ -->
     <section class="lt-section customs">
       <div class="section-header">
@@ -1214,7 +1214,7 @@
     <div class="lt-perf"></div>
 
     <!-- ============================================================
-         Section 4 — Baggage Claim
+         Section 4: Baggage Claim
          ============================================================ -->
     <section class="lt-section baggage" id="baggage-section">
       <div class="section-header">
@@ -1253,7 +1253,7 @@
     <div class="lt-perf"></div>
 
     <!-- ============================================================
-         Section 5 — Weather at Your Heart
+         Section 5: Weather at Your Heart
          ============================================================ -->
     <section class="lt-section weather-section">
       <div class="section-header" style="text-align: center;">
@@ -1279,7 +1279,7 @@
 </div>
 
 <script>
-  // Live time-in-flight counter — counting from 02 Dec 2025
+  // Live time-in-flight counter, counting from 02 Dec 2025
   (function() {
     var start = new Date(2025, 11, 2, 0, 0, 0); // 2 December 2025, local time
     var dayEl = document.getElementById('dayCount');

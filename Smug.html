@@ -452,7 +452,7 @@
       <!-- unlocked message -->
       <div class="unlock glass" id="unlock">
         <p class="msg" id="unlockMsg">You did it! The signal is fully restored. 💖</p>
-        <p class="sig">— always yours, and officially emoji-supervised from now on 😌➡️🌹</p>
+        <p class="sig">always yours, and officially emoji-supervised from now on 😌➡️🌹</p>
       </div>
     </section>
 
@@ -477,7 +477,7 @@
         "Reconnecting… there you are. 🌷",
         "Signal is climbing, you're hard to stay disconnected from. 💕",
         "Almost there. Smug face fully uninstalled. 🗑️😌",
-        "Strong signal restored — sincerity at 100%. 💗"
+        "Strong signal restored, sincerity at 100%. 💗"
       ];
       let i = 0;
 
@@ -497,7 +497,7 @@
 
       boost.addEventListener('click', () => {
         if (i >= steps.length - 1) {
-          // already full — replay a little celebration
+          // already full, replay a little celebration
           const r = boost.getBoundingClientRect();
           heartBurst(r.left + r.width / 2, r.top);
           return;
@@ -516,7 +516,7 @@
         }
 
         if (val >= 100) {
-          unlockMsg.textContent = "Signal fully restored — apology accepted? 💖 You + me, reconnected.";
+          unlockMsg.textContent = "Signal fully restored, apology accepted? 💖 You + me, reconnected.";
           boost.textContent = '✨ We\'re good 💗';
           boost.disabled = true;
           unlock.classList.add('open');

@@ -12,7 +12,7 @@
 
   <style>
     /* =====================================================================
-   THEME  —  Pink × Chocolate (Cadbury Almond inspired)
+   THEME:  Pink × Chocolate (Cadbury Almond inspired)
    ===================================================================== */
     :root {
       --choc-deep: #2a160f;
@@ -380,7 +380,7 @@
     }
 
     /* =====================================================================
-   LOVE NOTES — swipe card deck
+   LOVE NOTES: swipe card deck
    ===================================================================== */
     .deck {
       position: relative;
@@ -509,7 +509,7 @@
     }
 
     /* =====================================================================
-   SWEET SURPRISE — chocolate bar reveal
+   SWEET SURPRISE: chocolate bar reveal
    ===================================================================== */
     .surprise-stage {
       position: relative;
@@ -738,7 +738,7 @@
 
       As we celebrate you today, I want to promise you my hand to hold, my shoulder to lean on, and my whole heart,
       today and for all the birthdays to come. Happy Birthday, Jasmine. You mean absolutely everything to me. ✨💖
-      <span class="sig">— Always yours, Khairul </span>
+      <span class="sig">Always yours, Khairul </span>
     </div>
   </section>
 
@@ -815,7 +815,7 @@
     })();
 
     /* =====================================================================
-       CONFETTI  —  pink hearts + chocolate bars
+       CONFETTI:  pink hearts + chocolate bars
        ===================================================================== */
     const heartShape = (typeof confetti !== "undefined" && confetti.shapeFromText)
       ? confetti.shapeFromText({ text: '💖', scalar: 2 }) : null;
@@ -846,7 +846,7 @@
     const $ = id => document.getElementById(id);
 
     /* =====================================================================
-       LOVE NOTES card deck — swipe / tap
+       LOVE NOTES card deck, swipe / tap
        ===================================================================== */
     const track = $('track'), deck = $('deck'), slides = track.children.length;
     let idx = 0; const dotsWrap = $('dots');
@@ -867,7 +867,7 @@
     let auto = setInterval(() => goto(idx + 1), 5000);
 
     /* =====================================================================
-       SWEET SURPRISE — reveal + burst chocolate bar
+       SWEET SURPRISE: reveal + burst chocolate bar
        ===================================================================== */
     function revealChoc() {
       $('chocBar').classList.add('show');
