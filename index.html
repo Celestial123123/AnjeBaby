@@ -348,7 +348,7 @@ body {
 .new-countdown i { color: var(--rose-400); font-size: 0.6rem; }
 .new-countdown[hidden] { display: none; }
 
-/* Final day — nudge it warmer so it reads as "about to go" */
+/* Final day, nudge it warmer so it reads as "about to go" */
 .new-countdown.is-last-day { color: var(--rose-500); border-color: var(--rose-200); }
 
 @keyframes new-pulse {
@@ -460,7 +460,7 @@ body {
 
 .new-card:hover .new-card-arrow { transform: translateX(4px); }
 
-/* ===== "Let It Out" — its own spot on the hub, not a grid card =====
+/* ===== "Let It Out", its own spot on the hub, not a grid card =====
    Deliberately off-palette (dusk blues, not rose) so it reads as a place
    to go rather than another page to read. */
 .vent-spot {
@@ -469,7 +469,7 @@ body {
 }
 
 /* Hairline between "Just Added" and this spot. Only drawn when the strip is
-   actually above it — the script toggles .has-divider. */
+   actually above it, the script toggles .has-divider. */
 .vent-spot.has-divider::before {
   content: '';
   display: block;
@@ -640,7 +640,7 @@ body {
 .card[data-category="messages"]::before      { background: linear-gradient(90deg, var(--rose-400), #fb923c); }
 .card[data-category="apology"]::before       { background: linear-gradient(90deg, #a78bfa, var(--rose-300)); }
 
-/* Card body tinted to match its category — same hues as the top edge, at full
+/* Card body tinted to match its category, same hues as the top edge, at full
    strength over the frosted glass. The colour is the point: it's what tells
    you at a glance which kind of page you're looking at. */
 .card[data-category="anniversary"] {
@@ -716,7 +716,7 @@ body {
   border: 1px solid #a7f3d0;
 }
 
-/* "NEW" pill — must come after .badge so it can override the 30px circle */
+/* "NEW" pill, must come after .badge so it can override the 30px circle */
 .badge-new {
   width: auto;
   height: 20px;
@@ -748,7 +748,7 @@ body {
   color: var(--text);
 }
 
-/* A quiet text link rather than a filled pill — the whole card already reads
+/* A quiet text link rather than a filled pill, the whole card already reads
    as clickable, so the action only needs to name itself. */
 .card-link {
   grid-area: action;
@@ -853,7 +853,7 @@ body {
   .vent-panel { gap: 13px; padding: 14px 16px; }
   .vent-icon { width: 40px; height: 40px; border-radius: 12px; font-size: 0.95rem; }
   .vent-body h2 { font-size: 0.98rem; }
-  .vent-cta { font-size: 0; gap: 0; }   /* caret only — the panel is the link */
+  .vent-cta { font-size: 0; gap: 0; }   /* caret only, the panel is the link */
   .vent-cta i { font-size: 0.72rem; }
 }
 
@@ -907,7 +907,7 @@ body {
       <i class="fas fa-heart"></i>
     </p>
 
-    <!-- Days together — counted from the start date in the script below -->
+    <!-- Days together, counted from the start date in the script below -->
     <div class="together" id="together" hidden>
       <i class="fas fa-heart"></i>
       <span class="together-count" id="togetherCount"></span>
@@ -940,7 +940,7 @@ body {
     </button>
   </div>
 
-  <!-- Just Added — the single newest card, filled in automatically by the script below -->
+  <!-- Just Added, the single newest card, filled in automatically by the script below -->
   <section class="new-strip" id="newStrip" hidden>
     <div class="new-strip-head">
       <span class="new-tag"><i class="fas fa-star"></i> NEW</span>
@@ -952,7 +952,7 @@ body {
     <div class="new-rail" id="newRail"></div>
   </section>
 
-  <!-- Let It Out — a standing place on the hub, always here, never buried in the grid -->
+  <!-- Let It Out, a standing place on the hub, always here, never buried in the grid -->
   <section class="vent-spot" id="ventSpot">
     <a class="vent-panel" href="vent.html">
       <div class="vent-icon"><i class="fas fa-feather-pointed"></i></div>
@@ -1036,7 +1036,7 @@ body {
       <a href="5months.html" class="card-link">Open <i class="fas fa-chevron-right"></i></a>
     </div>
 
-    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 6 Months — Love Pokédex">
+    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 6 Months: Love Pokédex">
       <div class="card-header">
         <div class="card-icon"><i class="fas fa-heart"></i></div>
         <div class="device-badges">
@@ -1044,12 +1044,12 @@ body {
           <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
         </div>
       </div>
-      <div class="card-title">Happy 6 Months — Love Pokédex</div>
+      <div class="card-title">Happy 6 Months: Love Pokédex</div>
       <div class="card-date"><i class="fas fa-calendar-alt"></i> June 2, 2026</div>
       <a href="6months.html" class="card-link">Open <i class="fas fa-chevron-right"></i></a>
     </div>
 
-    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 7 Months — Our Story">
+    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 7 Months: Our Story">
       <div class="card-header">
         <div class="card-icon"><i class="fas fa-heart"></i></div>
         <div class="device-badges">
@@ -1057,7 +1057,7 @@ body {
           <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
         </div>
       </div>
-      <div class="card-title">Happy 7 Months — Our Story</div>
+      <div class="card-title">Happy 7 Months: Our Story</div>
       <div class="card-date"><i class="fas fa-calendar-alt"></i> July 2, 2026</div>
       <a href="7months.html" class="card-link">Open <i class="fas fa-chevron-right"></i></a>
     </div>
@@ -1073,6 +1073,19 @@ body {
       <div class="card-title">Happy 8 Months: US</div>
       <div class="card-date"><i class="fas fa-calendar-alt"></i> August 2, 2026</div>
       <a href="8months.html" class="card-link">Open <i class="fas fa-chevron-right"></i></a>
+    </div>
+
+    <div class="card" data-category="anniversary" data-device="both" data-title="Happy 9 Months: UsTok">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-heart"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Happy 9 Months: UsTok</div>
+      <div class="card-date"><i class="fas fa-calendar-alt"></i> September 2, 2026</div>
+      <a href="9months.html" class="card-link">Open <i class="fas fa-chevron-right"></i></a>
     </div>
 
     <!-- ─── Special Occasions ─── -->
@@ -1316,7 +1329,7 @@ body {
       <a href="brush.html" class="card-link">Open <i class="fas fa-chevron-right"></i></a>
     </div>
 
-    <div class="card" data-category="apology" data-device="both" data-title="A Quiet Note — New Beginning">
+    <div class="card" data-category="apology" data-device="both" data-title="A Quiet Note: New Beginning">
       <div class="card-header">
         <div class="card-icon"><i class="fas fa-seedling"></i></div>
         <div class="device-badges">
@@ -1387,7 +1400,7 @@ body {
 })();
 
 /* ── "Just Added": whichever card has the latest date wins the NEW badge ──
-   Nothing to maintain by hand — add a card with its date and this picks it up.
+   Nothing to maintain by hand, add a card with its date and this picks it up.
    The strip only lives for FRESH_DAYS after that date, then hides itself again;
    adding a newer card brings it straight back. */
 (function() {
@@ -1416,7 +1429,7 @@ body {
 
   if (!newest) return;
 
-  // 1. Badge it in the grid. The pill stays on the newest card for good —
+  // 1. Badge it in the grid. The pill stays on the newest card for good
   //    it only moves when a card with a later date is added.
   const badges = newest.querySelector('.device-badges');
   if (badges) {
@@ -1426,7 +1439,7 @@ body {
     badges.prepend(pill);
   }
 
-  // Past its first week? Then it isn't "just added" any more — leave the strip
+  // Past its first week? Then it isn't "just added" any more, leave the strip
   // hidden until a card with a newer date shows up.
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -1506,7 +1519,7 @@ body {
     // The "Just Added" strip only makes sense on the unfiltered view
     newStrip.style.display = activeFilter === 'all' ? '' : 'none';
 
-    // "Let It Out" isn't a category — it stays put on the unfiltered view and
+    // "Let It Out" isn't a category, it stays put on the unfiltered view and
     // on the device filters (it works on both), and steps aside otherwise.
     if (ventSpot) {
       const showVent = activeFilter === 'all' || activeFilter === 'phone' || activeFilter === 'desktop';
