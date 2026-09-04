@@ -31,6 +31,7 @@
 }
 
 html, body { height: 100%; }
+html { background: var(--grey-bg); }
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -38,8 +39,16 @@ body {
   color: var(--grey-ink);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  transition: background 2.6s cubic-bezier(0.22, 0.9, 0.3, 1);
 }
 body.locked { overflow: hidden; }
+
+/* .world carries a filter, which makes it the containing block for its fixed
+   children. That means .sky is pinned to .world rather than the viewport, so
+   anything past .world's edge (overscroll, or the strip below the content)
+   shows the body instead. Matching body to the foot of the sky gradient keeps
+   that seam invisible. */
+body.alive { background: var(--night-2); }
 
 /* Everything lives in here so one filter can drain the colour out of the
    whole world, then hand it back the moment she spawns. */
@@ -711,6 +720,7 @@ function spawn() {
 
   setTimeout(function () {
     world.classList.add('alive');
+    document.body.classList.add('alive');
     before.classList.add('gone');
   }, 180);
 
@@ -826,6 +836,7 @@ document.getElementById('replay').addEventListener('click', function () {
     ambient = false;
     parts.length = 0;
     world.classList.remove('alive');
+    document.body.classList.remove('alive');
     letter.classList.remove('show');
     before.classList.remove('gone');
     flash.classList.remove('go');
