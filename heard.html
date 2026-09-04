@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>I Heard You, Sayang</title>
+<meta name="theme-color" content="#f5f2ec">
+<link rel="icon" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:        #f5f2ec;   /* warm parchment, the morning after */
+  --clay:      #a8705a;
+  --clay-deep: #6b4a3a;
+  --ink:       #2f2a25;
+  --ink-soft:  #5c554c;
+  --ink-faint: #8f877b;
+  --glass:      rgba(255, 254, 251, 0.78);
+  --glass-edge: rgba(168, 112, 90, 0.2);
+  --shadow:     0 24px 70px rgba(70, 52, 40, 0.10), 0 2px 8px rgba(70, 52, 40, 0.05);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 0%, #fbf8f2 0%, transparent 60%),
+    radial-gradient(ellipse 90% 60% at 20% 100%, #efe7da 0%, transparent 55%),
+    var(--bg);
+  color: var(--ink);
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 5vw, 64px) clamp(16px, 4vw, 32px);
+  padding-top: max(clamp(20px, 5vw, 64px), env(safe-area-inset-top));
+  padding-bottom: max(clamp(20px, 5vw, 64px), env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* One slow, warm glow behind the card. Nothing that blinks or demands attention. */
+.glow {
+  position: fixed;
+  top: 50%; left: 50%;
+  width: min(760px, 130vw);
+  height: min(760px, 130vw);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 112, 90, 0.10), transparent 62%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  animation: settle 11s ease-in-out infinite;
+}
+@keyframes settle {
+  0%, 100% { opacity: 0.75; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.06); }
+}
+
+/* ===== Card ===== */
+.letter {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 680px;
+  background: var(--glass);
+  border: 1px solid var(--glass-edge);
+  border-radius: 26px;
+  box-shadow: var(--shadow);
+  padding: clamp(34px, 7vw, 72px) clamp(24px, 6vw, 60px);
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(14px) saturate(110%);
+  backdrop-filter: blur(14px) saturate(110%);
+  animation: rise 1.1s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+
+.letter::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(168, 112, 90, 0.6), rgba(107, 74, 58, 0.35));
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ===== Header ===== */
+.crest {
+  display: block;
+  text-align: center;
+  font-size: 1.4rem;
+  line-height: 1;
+  margin-bottom: 18px;
+  color: var(--clay);
+  opacity: 0.85;
+  animation: breathe 5s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1);    opacity: 0.7; }
+  50%      { transform: scale(1.08); opacity: 0.95; }
+}
+
+h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 7vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.18;
+  text-align: center;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+}
+h1 .name { color: var(--clay-deep); font-style: italic; }
+
+.subtitle {
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--clay-deep);
+  opacity: 0.8;
+  margin-top: 14px;
+  font-weight: 300;
+}
+
+.rule {
+  width: 60px;
+  height: 1px;
+  margin: clamp(28px, 5vw, 40px) auto;
+  background: rgba(168, 112, 90, 0.3);
+}
+
+/* ===== Body ===== */
+.body p {
+  font-size: clamp(1rem, 2.6vw, 1.06rem);
+  font-weight: 300;
+  line-height: 1.95;
+  color: var(--ink-soft);
+  letter-spacing: 0.15px;
+}
+.body p + p { margin-top: 1.6em; }
+.body em { font-style: italic; color: var(--ink); }
+
+/* ===== Section label ===== */
+.label {
+  display: block;
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--clay-deep);
+  opacity: 0.68;
+  font-weight: 400;
+  margin: clamp(34px, 6vw, 48px) 0 18px;
+}
+
+/* ===== The things I own ===== */
+.owned { list-style: none; }
+.owned li {
+  position: relative;
+  padding-left: 22px;
+  font-size: clamp(0.95rem, 2.5vw, 1.02rem);
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+.owned li + li { margin-top: 1.15em; }
+.owned li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0.82em;
+  width: 9px; height: 1px;
+  background: var(--clay);
+  opacity: 0.6;
+}
+.owned li b { font-weight: 500; color: var(--ink); }
+
+/* ===== The quiet part ===== */
+.heavy {
+  margin: clamp(34px, 6vw, 48px) 0 0;
+  padding: clamp(22px, 4.5vw, 30px) clamp(20px, 4vw, 28px);
+  border-left: 2px solid rgba(168, 112, 90, 0.45);
+  border-radius: 0 14px 14px 0;
+  background: rgba(168, 112, 90, 0.05);
+}
+.heavy p {
+  font-size: clamp(0.97rem, 2.5vw, 1.04rem);
+  font-weight: 300;
+  line-height: 1.92;
+  color: var(--ink-soft);
+}
+.heavy p + p { margin-top: 1.35em; }
+.heavy strong { font-weight: 500; color: var(--ink); }
+
+/* ===== Closing ===== */
+.promise {
+  margin-top: clamp(32px, 5.5vw, 46px);
+  text-align: center;
+}
+.sign {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--clay-deep);
+  opacity: 0.9;
+}
+.whisper {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: var(--clay-deep);
+  opacity: 0.92;
+}
+
+.home-link {
+  display: inline-block;
+  margin-top: 26px;
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.09em;
+  color: var(--clay-deep);
+  opacity: 0.9;
+  text-decoration: none;
+  padding: 9px 20px;
+  border: 1px solid rgba(168, 112, 90, 0.32);
+  border-radius: 999px;
+  transition: opacity 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+.home-link:hover {
+  opacity: 1;
+  border-color: rgba(168, 112, 90, 0.6);
+  transform: translateY(-1px);
+}
+.home-link:focus-visible { outline: 2px solid var(--clay); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="glow" aria-hidden="true"></div>
+
+<main class="letter">
+  <span class="crest" aria-hidden="true">♡</span>
+  <h1>I heard you, <span class="name">sayang</span></h1>
+  <p class="subtitle">Just the truth, with no excuses</p>
+
+  <div class="rule" aria-hidden="true"></div>
+
+  <div class="body">
+    <p>Sayang, I read through all of our messages again this morning, slowly, from the call right down to the last one. I want to say this clearly and gently: I am not writing this to defend myself, and I am not writing it to get a reply out of you. I just need you to know that I heard you properly, and not only the parts that were easy to hear.</p>
+
+    <p>You told me you were lagging. Then I said something about your ult, paused, and laughed. You were already frustrated with your FPS and already self conscious about your laptop, and I made a joke out of it anyway. Then you told me straight away that you were not okay with it. That was the moment I should have stopped. Instead I brushed it off, and I am so sorry.</p>
+  </div>
+
+  <span class="label">Where I went wrong</span>
+  <ul class="owned">
+    <li><b>I brushed you off when you told me it hurt.</b> You did not hold it in or wait until it got worse. You told me right away, while it was still small. All you needed was for me to stop and calm you down, and I waved it away instead. I take responsibility for that, because that is the moment this whole night turned.</li>
+    <li><b>I made your hurt about me.</b> You were the one in pain, and somehow you ended up comforting me because I was sad that you went off. You said it yourself: when you are hurting because of me, I let you sit in it, and when I am the one hurting, everything stops. That is the plain truth, and I am not going to look away from it.</li>
+    <li><b>I told you I did not want your apology.</b> What I meant was that I did not want you carrying the guilt for something I started. That is not how it came out, and I understand why it landed the way it did at 1am.</li>
+    <li><b>I let you apologise for being sensitive.</b> Please never say sorry for that, sayang. You are not too sensitive, you are not too much, and you are not difficult to love. Your feelings were never the problem here. The way I handled them was.</li>
+  </ul>
+
+  <div class="heavy">
+    <p>There is one part I am not going to skip over, because you deserve better than that.</p>
+
+    <p>You told me you keep wishing to die. That you are tired of this world, that you hate yourself, and that maybe you are the problem. You said it in the middle of everything else, at 1am, like it was just one more thing you were already carrying.</p>
+
+    <p>I am not going to treat that as part of an argument, because it is not one, and it does not stop mattering just because we made up afterwards. <strong>You are not the problem, sayang.</strong> Not with your family, not with us, and not with me. It breaks my heart to think about you carrying your family's problems and ours at the same time, and still trying to reassure me through all of it.</p>
+
+    <p>Whenever you are ready to talk about that part properly, I am here. I am not going to try to fix it or talk you out of it. I only want to be there while you say it, for as long as you need and as many times as you need.</p>
+  </div>
+
+  <span class="label">What I will do differently</span>
+  <ul class="owned">
+    <li>Your laptop, your FPS, and your setup are never a joke again. Not a small one, and not even when we are both laughing.</li>
+    <li>The moment you tell me something hurt, I stop and calm you down first. No brushing it off, and no waiting to see if it passes on its own. Mine can wait.</li>
+    <li>Before anything else, I ask if you are okay right now, and then I actually wait for your answer.</li>
+  </ul>
+
+  <div class="body" style="margin-top: clamp(30px, 5vw, 40px);">
+    <p>You asked me what I want, and I never really answered you. So here it is, sayang. I want you to stop having to hold on so tightly. I want to be the one who makes your night lighter instead of heavier. I do not need you to be less sensitive, less emotional, or easier to handle. I need you here, exactly as you are.</p>
+
+    <p>You don't owe me a reply or a fix right now, and you don't have to be okay yet either. Just breathe, rest, and be soft with yourself. I love you so much, sayang, and I will prove this with actions, not just words.</p>
+  </div>
+
+  <div class="promise">
+    <p class="sign">Yours, always. Khairul</p>
+    <p class="whisper">Right here whenever you're ready, with zero pressure. ♡</p>
+    <a href="index.html" class="home-link">&larr; Back to hub</a>
+  </div>
+</main>
+
+</body>
+</html>
