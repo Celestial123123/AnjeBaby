@@ -442,6 +442,31 @@ body.locked { overflow: hidden; }
 .sound.on { display: grid; }
 .sound:active { transform: scale(0.9); }
 
+/* ===== The photo ===== */
+.photo {
+  margin: clamp(34px, 6.5vw, 50px) auto 0;
+  max-width: 330px;
+  text-align: center;
+}
+.photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* stated up front so the letter does not jump while it loads */
+  aspect-ratio: 1080 / 1919;
+  border-radius: 18px;
+  border: 1px solid rgba(242, 200, 121, 0.26);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55), 0 0 46px rgba(242, 200, 121, 0.10);
+  background: rgba(255, 255, 255, 0.03);
+}
+.photo figcaption {
+  margin-top: 13px;
+  font-size: 0.76rem;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: var(--warm-dim);
+}
+
 /* Scroll reveals. The class is only ever added by script, so if the script
    fails or the observer never fires, the letter is simply visible as normal. */
 .reveal {
@@ -502,6 +527,12 @@ body.locked { overflow: hidden; }
       <p>And then there was FiveM. Although calling it a spawn is not quite fair, sayang. You had been playing alot longer before I even started in February. You were already there. I was the one who turned up late.</p>
 
       <p>We spent months in the same negara, on the same server, somehow never once crossing paths. Then one night in November, we finally did. There was nothing at all to prepare me for you.</p>
+
+      <figure class="photo">
+        <img src="Imagess/image23.png" width="1080" height="1919" loading="lazy" decoding="async"
+             alt="The two of us under an umbrella in the rain">
+        <figcaption>still on that same server, sayang 🤍</figcaption>
+      </figure>
 
       <p>The first time I saw you in real life was at KLIA. A McDonald's bag between us, you pointing at planes I genuinely could not see because it was pitch black. By then I already knew, but that was the night it stopped being something on a screen. I just knew I didn't want the night to end.</p>
 
@@ -710,7 +741,7 @@ function setupReveals() {
   if (REDUCED || !('IntersectionObserver' in window)) return;
 
   var targets = letter.querySelectorAll(
-    '.halo-wrap, .body p, .divider, .did li, .counter, .sign, .actions'
+    '.halo-wrap, .body p, .photo, .divider, .did li, .counter, .sign, .actions'
   );
   Array.prototype.forEach.call(targets, function (el, i) {
     el.classList.add('reveal');
