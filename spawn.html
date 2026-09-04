@@ -261,8 +261,13 @@ body.locked { overflow: hidden; }
 
 .her-name {
   font-family: 'Great Vibes', cursive;
-  font-size: clamp(2.5rem, 10vw, 4rem);
-  line-height: 1.1;
+  font-size: clamp(2.1rem, 8.6vw, 3.5rem);
+  font-weight: 400;
+  /* background-clip:text paints the gradient only inside this box, so the box
+     has to be roomy enough to hold the swashes and descenders. Too tight and
+     the flourishes on the N, y and J simply vanish. */
+  line-height: 1.55;
+  padding: 0.2em 0.28em 0.32em;
   background: linear-gradient(100deg, var(--gold) 0%, var(--warm) 30%, var(--rose) 55%, var(--gold) 85%);
   background-size: 220% auto;
   -webkit-background-clip: text;
@@ -270,7 +275,6 @@ body.locked { overflow: hidden; }
   -webkit-text-fill-color: transparent;
   color: transparent;
   animation: shimmer 7s linear infinite;
-  padding: 0 6px 8px;
 }
 @keyframes shimmer { to { background-position: 220% center; } }
 
