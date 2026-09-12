@@ -710,7 +710,7 @@ var UNLOCK = new Date(2026, 8, 13, 13, 30);  // when the letter opens: sat down 
 var CODES  = ['0212', '1202'];               // the day it started, either way round
 var START  = new Date(2025, 11, 2);          // 2 December 2025
 
-var FLIGHT = null;   // her flight to Bintulu, e.g. new Date(2026, 8, 13, 17, 40). Until it is set, the row says LATER.
+var FLIGHT = new Date(2026, 8, 13, 17, 35);  // her flight to Bintulu, 5:35pm from KLIA
 
 function flightStatus() {
   return FLIGHT && Date.now() >= FLIGHT.getTime() ? 'DEPARTED' : 'SCHEDULED';
