@@ -557,6 +557,45 @@ body.locked { overflow: hidden; }
 }
 .rw-cap.on { opacity: .85; }
 
+/* ═══════════ From today ═══════════ */
+.today { margin-top: 40px; animation: rise .8s ease both; }
+.today-photos { display: grid; gap: 10px; }
+.today-photos img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 14px;
+  border: 1px solid var(--edge);
+  background: #0b0c10;
+}
+.voice {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 14px;
+}
+.voice button {
+  width: 44px; height: 44px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 194, 51, .45);
+  background: rgba(255, 194, 51, .1);
+  color: var(--amber);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.voice-body { flex: 1; min-width: 0; }
+.voice-label { font-size: .86rem; color: var(--ink); }
+.voice-bar { margin-top: 8px; height: 3px; border-radius: 3px; background: #22252d; overflow: hidden; }
+.voice-bar span { display: block; height: 100%; width: 0; background: var(--amber); }
+.voice-time { flex: none; font: 500 .7rem 'JetBrains Mono', monospace; color: var(--dim); }
+
 .foot { margin-top: 42px; text-align: center; }
 .foot a {
   display: inline-block;
@@ -623,6 +662,21 @@ body.locked { overflow: hidden; }
     Hundreds of arrivals at KLIA today.<br>The only one I'm waiting for is coming by car.
     <span class="hint">tap the gold row</span>
   </p>
+
+  <!-- photos and a voice note added on the day, straight into today/ on GitHub -->
+  <section class="today" id="today" hidden>
+    <h2 class="sub-title">FROM TODAY<small>13 SEP · KLIA</small></h2>
+    <div class="today-photos" id="todayPhotos"></div>
+    <div class="voice" id="todayVoice" hidden>
+      <button id="voiceBtn" aria-label="Play the voice note">▶</button>
+      <div class="voice-body">
+        <p class="voice-label">A voice note from me</p>
+        <div class="voice-bar"><span id="voiceBar"></span></div>
+      </div>
+      <span class="voice-time" id="voiceTime">0:00</span>
+      <audio id="voiceAudio" preload="metadata"></audio>
+    </div>
+  </section>
 
   <!-- her journey, opened from her row -->
   <section class="section" id="journeySec">
@@ -1224,6 +1278,76 @@ $('#codeIn').addEventListener('keydown', function (e) { if (e.key === 'Enter') t
 $('#openNow').addEventListener('click', openLetter);
 
 /* ─── Start ─── */
+/* ─── Added on the day ───
+   Anything uploaded to the today/ folder on GitHub shows up here by itself:
+   pictures as photos, an audio file as a voice note. Nothing needs editing,
+   and the section stays hidden until there is a file in the folder. It only
+   reads the public folder listing, so no key lives in this page. */
+var TODAY_DIR = 'today';
+var TODAY_API = 'https://api.github.com/repos/Celestial123123/AnjeBaby/contents/' + TODAY_DIR + '?ref=main';
+
+function loadToday() {
+  if (!window.fetch) return;
+  fetch(TODAY_API, { headers: { Accept: 'application/vnd.github+json' } })
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .then(function (list) {
+      if (!Array.isArray(list)) return;
+      var photos = [], voice = null;
+      list.forEach(function (f) {
+        if (f.type !== 'file') return;
+        var n = f.name.toLowerCase();
+        var src = TODAY_DIR + '/' + encodeURIComponent(f.name);
+        if (/\.(jpe?g|png|webp|gif)$/.test(n)) photos.push(src);
+        else if (!voice && /\.(mp3|m4a|aac|wav|ogg|opus)$/.test(n)) voice = src;
+      });
+      photos.sort();
+      showToday(photos, voice);
+    })
+    .catch(function () {});
+}
+
+function hideTodayIfEmpty() {
+  if (!$('#todayPhotos').children.length && $('#todayVoice').hidden) $('#today').hidden = true;
+}
+
+function showToday(photos, voice) {
+  if (!photos.length && !voice) return;
+  var box = $('#todayPhotos');
+  photos.forEach(function (src) {
+    var img = new Image();
+    img.alt = 'From today';
+    img.decoding = 'async';
+    // Pages takes a minute or two to publish a new upload; until then, skip it
+    img.onerror = function () { img.remove(); hideTodayIfEmpty(); };
+    img.src = src;
+    box.appendChild(img);
+  });
+  if (voice) setupVoice(voice);
+  $('#today').hidden = false;
+}
+
+function setupVoice(src) {
+  var wrap = $('#todayVoice'), a = $('#voiceAudio'), btn = $('#voiceBtn');
+  function mm(s) { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ':' + two(s % 60); }
+  a.src = src;
+  a.addEventListener('loadedmetadata', function () { $('#voiceTime').textContent = mm(a.duration); });
+  a.addEventListener('error', function () { wrap.hidden = true; hideTodayIfEmpty(); });
+  a.addEventListener('timeupdate', function () {
+    $('#voiceBar').style.width = (a.duration ? a.currentTime / a.duration * 100 : 0) + '%';
+    $('#voiceTime').textContent = mm(a.duration - a.currentTime);
+  });
+  a.addEventListener('ended', function () {
+    btn.textContent = '▶';
+    $('#voiceBar').style.width = '0%';
+    $('#voiceTime').textContent = mm(a.duration);
+  });
+  btn.addEventListener('click', function () {
+    if (a.paused) { a.play().catch(function () {}); btn.textContent = '❚❚'; }
+    else { a.pause(); btn.textContent = '▶'; }
+  });
+  wrap.hidden = false;
+}
+
 var started = false;
 
 function start() {
@@ -1235,6 +1359,7 @@ function start() {
   $('#app').classList.add('on');
   $('#mute').hidden = false;
   buildArrivals();
+  loadToday();
 }
 
 $('#gateBtn').addEventListener('click', start);
