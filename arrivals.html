@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Arrivals · KLIA</title>
+<meta name="theme-color" content="#08090b">
+<link rel="icon" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+
+:root {
+  --bg:       #08090b;
+  --panel:    #0f1115;
+  --edge:     #1c1f26;
+  --tile-top: #1e2128;
+  --tile-bot: #16181e;
+  --ink:      #f2f0e8;
+  --dim:      #80838c;
+  --amber:    #ffc233;
+  --green:    #3ddc84;
+  --red:      #ff6159;
+  --gold:     #f2c879;
+
+  /* one flap: width, height and the gap after it, all relative to the board font */
+  --cw:  .86em;
+  --ch:  1.34em;
+  --gap: 2px;
+}
+
+html { background: var(--bg); }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 120% 60% at 50% 0%, #15171d 0%, transparent 60%),
+    var(--bg);
+  min-height: 100svh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+body.locked { overflow: hidden; }
+
+/* ═══════════ Gate ═══════════
+   One tap in. It also gives the browser permission to play the flap sound. */
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 24px;
+  text-align: center;
+  transition: opacity .6s ease;
+}
+.gate.gone { opacity: 0; pointer-events: none; }
+.gate-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  letter-spacing: .32em;
+  color: var(--dim);
+}
+.gate-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 8vw, 2.8rem);
+  letter-spacing: .08em;
+  color: var(--amber);
+  line-height: 1;
+}
+.gate-title small {
+  display: block;
+  margin-top: 10px;
+  font-size: .4em;
+  font-weight: 500;
+  letter-spacing: .34em;
+  color: var(--ink);
+  opacity: .7;
+}
+.gate-btn {
+  margin-top: 12px;
+  padding: 14px 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 194, 51, .42);
+  background: rgba(255, 194, 51, .08);
+  color: var(--amber);
+  font: 600 .86rem 'Inter', sans-serif;
+  letter-spacing: .05em;
+  cursor: pointer;
+  animation: gatePulse 2.6s ease-in-out infinite;
+}
+.gate-btn:active { transform: scale(.96); }
+@keyframes gatePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 194, 51, 0); }
+  50%      { box-shadow: 0 0 28px 2px rgba(255, 194, 51, .18); }
+}
+
+/* ═══════════ Page ═══════════ */
+.app {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 26px) clamp(12px, 3vw, 24px) calc(env(safe-area-inset-bottom) + 56px);
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+.app.on { opacity: 1; }
+
+.topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 0 4px;
+}
+.tb-title, .sub-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--amber);
+  letter-spacing: .06em;
+  line-height: 1;
+}
+.tb-title { font-size: clamp(1.35rem, 5vw, 1.95rem); }
+.sub-title { font-size: clamp(1rem, 3.8vw, 1.3rem); margin: 0 4px 12px; }
+.tb-title small, .sub-title small {
+  display: block;
+  margin-top: 7px;
+  font-size: .4em;
+  font-weight: 500;
+  letter-spacing: .3em;
+  color: var(--dim);
+}
+.sub-title small { font-size: .5em; }
+
+.tb-clock { text-align: right; font-family: 'JetBrains Mono', monospace; }
+.tb-clock .t { font-size: clamp(1.35rem, 5vw, 1.95rem); font-weight: 700; line-height: 1; }
+.tb-clock .colon { animation: colon 1s steps(1) infinite; }
+@keyframes colon { 50% { opacity: .15; } }
+.tb-clock .d { margin-top: 7px; font-size: .64rem; letter-spacing: .2em; color: var(--dim); }
+
+/* ═══════════ The board ═══════════ */
+.board {
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 14px;
+  padding: clamp(10px, 2.4vw, 20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .03);
+  font-size: clamp(13px, 2.35vw, 19px);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 8px;
+  position: relative;
+}
+.row + .row { margin-top: 3px; }
+
+.f  { display: inline-flex; flex: none; }
+.f + .f, .br + .f { margin-left: calc(var(--cw) * .9); }
+.f.st { margin-left: auto; padding-left: calc(var(--cw) * .9); }
+.br { display: none; }
+
+.cell {
+  display: inline-block;
+  width: var(--cw);
+  height: var(--ch);
+  line-height: var(--ch);
+  margin-right: var(--gap);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--tile-top) 0 50%, var(--tile-bot) 50% 100%);
+  border-radius: 3px;
+  position: relative;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .4);
+}
+/* the hinge line across the middle of every flap */
+.cell::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: rgba(0, 0, 0, .7);
+}
+/* Two identical keyframes under different names: switching between them
+   restarts the flap without forcing a layout per character. */
+.cell.fa { animation: flapA .1s ease-in; }
+.cell.fb { animation: flapB .1s ease-in; }
+@keyframes flapA { 50% { transform: scaleY(.25); } }
+@keyframes flapB { 50% { transform: scaleY(.25); } }
+
+.st[data-c="green"] .cell { color: var(--green); }
+.st[data-c="red"]   .cell { color: var(--red); }
+.st[data-c="amber"] .cell { color: var(--amber); }
+.st.blink .cell { animation: blink 1.2s steps(1) infinite; }
+@keyframes blink { 60% { color: transparent; } }
+
+/* column headings */
+.row.labels { padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--edge); border-radius: 0; }
+.row.labels .f.st { padding-left: 0; }
+.lab {
+  font: 600 .55em/1 'Inter', sans-serif;
+  letter-spacing: .2em;
+  color: var(--dim);
+}
+
+/* her row */
+.row.her {
+  cursor: pointer;
+  background: rgba(242, 200, 121, .09);
+  animation: herGlow 2.4s ease-in-out infinite;
+}
+.row.her .f:not(.st) .cell { color: var(--gold); }
+@keyframes herGlow {
+  0%, 100% { box-shadow: inset 0 0 0 1px rgba(242, 200, 121, .42), 0 0 0 0 rgba(242, 200, 121, 0); }
+  50%      { box-shadow: inset 0 0 0 1px rgba(242, 200, 121, .85), 0 0 26px 0 rgba(242, 200, 121, .18); }
+}
+
+.row.tap { cursor: pointer; transition: background .2s ease; }
+.row.tap:hover { background: rgba(255, 255, 255, .04); }
+.row.tap.read::before {
+  content: '';
+  position: absolute;
+  left: 2px; top: 50%;
+  width: 3px; height: 40%;
+  transform: translateY(-50%);
+  border-radius: 3px;
+  background: var(--amber);
+  opacity: .7;
+}
+.row[role="button"]:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+/* ═══════════ Words between the boards ═══════════ */
+.caption {
+  margin: 20px 6px 0;
+  text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.08rem, 3.5vw, 1.28rem);
+  line-height: 1.55;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.caption.on { opacity: .92; transform: none; }
+.hint {
+  display: block;
+  margin-top: 10px;
+  font: 500 .64rem 'Inter', sans-serif;
+  font-style: normal;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: .8;
+}
+
+.section { margin-top: 46px; display: none; }
+.section.on { display: block; animation: rise .8s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.pax {
+  margin: 0 6px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  letter-spacing: .14em;
+  line-height: 1.9;
+  color: var(--dim);
+}
+.pax b { color: var(--gold); font-weight: 700; }
+
+/* ═══════════ Note sheet ═══════════ */
+.note-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, .55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+}
+.note-scrim.open { opacity: 1; pointer-events: auto; }
+.note {
+  width: 100%;
+  max-width: 520px;
+  background: #12141a;
+  border: 1px solid #232733;
+  border-bottom: none;
+  border-radius: 18px 18px 0 0;
+  padding: 24px 22px calc(26px + env(safe-area-inset-bottom));
+  transform: translateY(100%);
+  transition: transform .32s cubic-bezier(.2, .85, .3, 1);
+}
+.note-scrim.open .note { transform: none; }
+.note-k { font: 700 .72rem 'JetBrains Mono', monospace; letter-spacing: .2em; color: var(--amber); }
+.note-t {
+  margin-top: 12px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.22rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+.note-x {
+  margin-top: 20px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid #2a2e38;
+  background: transparent;
+  color: var(--dim);
+  font: 500 .8rem 'Inter', sans-serif;
+  cursor: pointer;
+}
+@media (min-width: 640px) {
+  .note-scrim { align-items: center; }
+  .note { border-radius: 18px; border-bottom: 1px solid #232733; }
+}
+
+/* ═══════════ Sealed letter ═══════════ */
+.sealed {
+  margin-top: 26px;
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+}
+.sealed .k { font: 700 .7rem 'JetBrains Mono', monospace; letter-spacing: .24em; color: var(--dim); }
+.sealed .big {
+  margin-top: 12px;
+  font: 700 clamp(1.6rem, 7vw, 2.2rem) 'JetBrains Mono', monospace;
+  color: var(--amber);
+  letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+}
+.sealed .sub { margin-top: 8px; font-size: .82rem; color: var(--dim); line-height: 1.5; }
+.code { margin-top: 18px; display: flex; gap: 8px; justify-content: center; }
+.code input {
+  width: 9.5em;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #2a2e38;
+  background: #0a0b0e;
+  color: var(--ink);
+  font: 700 1rem 'JetBrains Mono', monospace;
+  letter-spacing: .3em;
+  text-align: center;
+}
+.code input::placeholder { color: #3d4049; letter-spacing: .3em; }
+.code input:focus { outline: none; border-color: rgba(255, 194, 51, .6); }
+.code button, .open-now {
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 194, 51, .45);
+  background: rgba(255, 194, 51, .1);
+  color: var(--amber);
+  font: 600 .86rem 'Inter', sans-serif;
+  cursor: pointer;
+}
+.open-now { margin-top: 18px; padding: 13px 28px; border-radius: 999px; }
+.code.shake { animation: shake .4s; }
+@keyframes shake {
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+.code-msg { margin-top: 10px; font-size: .78rem; color: var(--dim); min-height: 1.2em; }
+
+/* ═══════════ The letter ═══════════ */
+.letter {
+  display: none;
+  margin-top: 26px;
+  background: linear-gradient(180deg, #14161c, #101217);
+  border: 1px solid #232733;
+  border-radius: 16px;
+  padding: clamp(28px, 6vw, 54px) clamp(22px, 5vw, 48px);
+  position: relative;
+  overflow: hidden;
+}
+.letter.on { display: block; animation: rise 1s ease both; }
+.letter::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--amber), var(--gold));
+}
+.letter .meta { font: 500 .64rem 'JetBrains Mono', monospace; letter-spacing: .22em; color: var(--dim); }
+.letter h2 {
+  margin-top: 12px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.75rem, 6vw, 2.35rem);
+  line-height: 1.2;
+}
+.letter h2 em { color: var(--gold); }
+.letter .body { margin-top: 26px; }
+.letter p.lp {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(1.08rem, 3vw, 1.22rem);
+  line-height: 1.9;
+  color: #dcd8cf;
+}
+.letter p.lp + p.lp { margin-top: 1.3em; }
+.letter .sign {
+  margin-top: 30px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 1.35rem;
+  color: var(--gold);
+}
+.letter .ps {
+  margin-top: 16px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.02rem, 2.8vw, 1.12rem);
+  line-height: 1.7;
+  color: #b9b4a8;
+}
+.stat {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed #2a2e38;
+  font: 500 .68rem 'JetBrains Mono', monospace;
+  letter-spacing: .18em;
+  color: var(--dim);
+}
+.stat b { color: var(--amber); font-weight: 700; }
+
+.foot { margin-top: 42px; text-align: center; }
+.foot a {
+  display: inline-block;
+  padding: 9px 20px;
+  border-radius: 999px;
+  border: 1px solid #2a2e38;
+  color: var(--dim);
+  font-size: .76rem;
+  text-decoration: none;
+  letter-spacing: .06em;
+}
+
+/* ═══════════ Corner chips ═══════════ */
+.mute, .preview {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 10px);
+  z-index: 40;
+  font: 700 .58rem 'JetBrains Mono', monospace;
+  letter-spacing: .16em;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+.mute { right: 10px; border: 1px solid #2a2e38; background: rgba(8, 9, 11, .8); color: var(--dim); cursor: pointer; }
+.preview { left: 10px; background: rgba(255, 97, 89, .14); border: 1px solid rgba(255, 97, 89, .4); color: var(--red); }
+
+/* ═══════════ Phones ═══════════
+   Each row splits onto two lines so the flaps stay big enough to read. */
+@media (max-width: 639px) {
+  .board { font-size: clamp(12px, 4.2vw, 19px); }
+  .br { display: block; flex-basis: 100%; height: 5px; }
+  .br + .f { margin-left: 0; }
+  .row.labels { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body class="locked">
+
+<div class="gate" id="gate">
+  <p class="gate-kicker">KLIA</p>
+  <h1 class="gate-title">KETIBAAN<small>ARRIVALS</small></h1>
+  <button class="gate-btn" id="gateBtn">Check arrivals</button>
+</div>
+
+<button class="mute" id="mute" hidden>SOUND ON</button>
+<span class="preview" id="preview" hidden>PREVIEW · LOCK OFF</span>
+
+<main class="app" id="app">
+
+  <header class="topbar">
+    <div class="tb-title">ARRIVALS<small>KETIBAAN · KLIA</small></div>
+    <div class="tb-clock">
+      <div class="t"><span id="hh">--</span><span class="colon">:</span><span id="mm">--</span></div>
+      <div class="d" id="clockD"></div>
+    </div>
+  </header>
+
+  <section class="board" id="arrivals" aria-label="Arrivals board"></section>
+
+  <p class="caption" id="caption">
+    Hundreds of arrivals at KLIA today.<br>The only one I'm waiting for is coming by car.
+    <span class="hint">tap the gold row</span>
+  </p>
+
+  <!-- her journey, opened from her row -->
+  <section class="section" id="journeySec">
+    <p class="pax">PASSENGER <b>NUR LIYANA JASMINE</b><br>FROM <b>PORT DICKSON</b> · BY <b>ROAD</b><br><span id="paxDep"></span></p>
+    <h2 class="sub-title">OUR JOURNEY<small>PERJALANAN KITA</small></h2>
+    <div class="board" id="journey" aria-label="Our journey"></div>
+    <p class="caption on"><span class="hint">tap any row</span></p>
+  </section>
+
+  <!-- the letter, sealed until lunch -->
+  <section class="section" id="letterSec">
+    <div class="sealed" id="seal">
+      <p class="k">✉ YOUR LETTER · SEALED</p>
+      <p class="big" id="sealBig">--:--</p>
+      <p class="sub" id="sealSub"></p>
+      <div class="code" id="codeWrap">
+        <input id="codeIn" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="CODE" aria-label="Code">
+        <button id="codeBtn">Open</button>
+      </div>
+      <p class="code-msg" id="codeMsg">Or ask Khairul for the code.</p>
+      <button class="open-now" id="openNow" hidden>Open your letter</button>
+    </div>
+
+    <article class="letter" id="letter">
+      <p class="meta">LETTER · KLIA · 13 SEP 2026</p>
+      <h2>Welcome back to KLIA, <em>sayang.</em></h2>
+      <div class="body">
+        <p class="lp">The first time I saw you in real life was here. A McDonald's bag between us, you explaining planes to me. I didn't want that night to end. Today we are back at the same place, and honestly I still feel exactly the same.</p>
+
+        <p class="lp">I'm really glad I get to see you before you fly back to Bintulu sayangg. I know it has been a long and tiring week for you sayang and I hope I can cheer you up even a bit. Whatever you're carrying right now, you don't have to carry it by yourself. Even from Bintulu, I'm always one call away, sayang.</p>
+
+        <p class="lp">Wanna know something? Every time I come to KLIA now, I think of you. Other people see an airport. But all I see is the place where I get to spend time with the person I love the most. I dont care about other people here because all I have eyes for is you sayangg.</p>
+
+        <p class="lp">So today, let's just enjoy it. Let's eat alot of 4Fingers, maybe spot a few planes, and not think about your flight until we really have to.</p>
+
+        <p class="lp">I love you so so much, Nur Liyana Jasmine.</p>
+      </div>
+      <p class="sign">Yours, always. Khairul</p>
+      <p class="ps">P.S. I'll be watching your plane lift off before I go, sayang.</p>
+      <p class="stat">DAYS SINCE 02 DEC 2025 · <b id="days">0</b></p>
+    </article>
+  </section>
+
+  <footer class="foot"><a href="index.html">&larr; Back to hub</a></footer>
+</main>
+
+<div class="note-scrim" id="noteScrim">
+  <div class="note" role="dialog" aria-modal="true" aria-labelledby="noteK">
+    <p class="note-k" id="noteK"></p>
+    <p class="note-t" id="noteT"></p>
+    <button class="note-x" id="noteX">Close</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ─── Tomorrow's plan. Change these if the times move. ─── */
+var DEPART = new Date(2026, 8, 13, 11, 0);   // 13 Sep 2026, she leaves Port Dickson
+var MEET   = new Date(2026, 8, 13, 13, 0);   // when she reaches KLIA
+var UNLOCK = new Date(2026, 8, 13, 13, 30);  // when the letter opens: sat down at 4Fingers
+var CODES  = ['0212', '1202'];               // the day it started, either way round
+var START  = new Date(2025, 11, 2);          // 2 December 2025
+
+var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var PREVIEW = location.protocol === 'file:' || new URLSearchParams(location.search).has('preview');
+
+function $(s) { return document.querySelector(s); }
+
+/* Field widths, counted in flaps. */
+var W = { time: 5, from: 12, flight: 7, st: 9, when: 6, what: 12 };
+
+var COLOUR = {
+  'LANDED': 'green', 'ARRIVED': 'green', 'CONFIRMED': 'green',
+  'DELAYED': 'red', 'LATE': 'red',
+  'ARRIVING': 'amber', 'EN ROUTE': 'amber', 'BOARDING': 'amber'
+};
+
+function pad(s, n) { return (String(s).toUpperCase() + ' '.repeat(n)).slice(0, n); }
+function two(n) { return String(n).padStart(2, '0'); }
+function hhmm(d) { return two(d.getHours()) + ':' + two(d.getMinutes()); }
+function addMin(d, m) { return new Date(d.getTime() + m * 60000); }
+function sameDay(a, b) { return a.toDateString() === b.toDateString(); }
+function days() {
+  var t = new Date();
+  t.setHours(0, 0, 0, 0);
+  return Math.max(0, Math.round((t - START) / 86400000));
+}
+
+/* ─── The boards' contents ─── */
+/* Her row follows the actual day: on time before she leaves, en route while
+   her parents drive her up, arrived once she is here. */
+function herStatus() {
+  var now = Date.now();
+  if (now < DEPART.getTime()) return 'ON TIME';
+  if (now < MEET.getTime())   return 'EN ROUTE';
+  return 'ARRIVED';
+}
+var herRow = null, herShown = null;
+
+var ARRIVALS = [
+  { off: -40, from: 'TOKYO NARITA', fl: 'MH 089',  st: 'LANDED' },
+  { off: -25, from: 'DUBAI',        fl: 'EK 342',  st: 'LANDED' },
+  { off: -10, from: 'BANGKOK',      fl: 'AK 881',  st: 'LANDED' },
+  { off:   0, from: 'PORT DICKSON', fl: 'BY ROAD', st: null, her: true },
+  { off:  15, from: 'SINGAPORE',    fl: 'SQ 118',  st: 'ON TIME' },
+  { off:  25, from: 'SEOUL',        fl: 'KE 671',  st: 'DELAYED' },
+  { off:  40, from: 'PERTH',        fl: 'MH 124',  st: 'ON TIME' }
+];
+
+var JOURNEY = [
+  { when: 'FEB 25', what: 'I JOIN FIVEM', st: 'LATE',
+    note: "You had already been playing way longer than me. You were already there. I was the one who turned up late." },
+  { when: 'NOV 25', what: 'WE MEET', st: 'LANDED',
+    note: "Months in the same negara, on the same server, somehow never once crossing paths. Then one night in November, we finally did." },
+  { when: 'IRL', what: 'KLIA · MCD', st: 'LANDED',
+    note: "The first time I saw you in real life. A McDonald's bag between us, and you explaining planes to me. I didn't want the night to end." },
+  { when: '02 DEC', what: 'US', st: 'CONFIRMED',
+    note: function () { return "The day it became us. " + days() + " days ago now, and I would do every single one of them again."; } },
+  { when: sameDay(new Date(), MEET) ? 'TODAY' : '13 SEP', what: '4FINGERS', st: 'BOARDING',
+    note: "Today. Back at KLIA where it started, with chicken this time, before you fly back to Bintulu." }
+];
+
+/* ─── Building rows ─── */
+function field(cls, n) {
+  var f = document.createElement('span');
+  f.className = 'f ' + cls;
+  f.setAttribute('aria-hidden', 'true');
+  for (var i = 0; i < n; i++) {
+    var c = document.createElement('span');
+    c.className = 'cell';
+    c.textContent = ' ';
+    f.appendChild(c);
+  }
+  return f;
+}
+function lineBreak() {
+  var b = document.createElement('span');
+  b.className = 'br';
+  return b;
+}
+
+function makeRow(parts, opts) {
+  var row = document.createElement('div');
+  row.className = 'row' + (opts.cls ? ' ' + opts.cls : '');
+  if (opts.label) row.setAttribute('aria-label', opts.label);
+  if (opts.tap) { row.setAttribute('role', 'button'); row.tabIndex = 0; }
+  row._targets = [];
+  parts.forEach(function (p) {
+    if (p === 'br') { row.appendChild(lineBreak()); return; }
+    var f = field(p.cls, p.n);
+    if (p.colour) f.setAttribute('data-c', p.colour);
+    row.appendChild(f);
+    row._targets.push({ f: f, text: pad(p.text, p.n) });
+  });
+  return row;
+}
+
+function labelRow(parts) {
+  var row = document.createElement('div');
+  row.className = 'row labels';
+  row.setAttribute('aria-hidden', 'true');
+  parts.forEach(function (p) {
+    if (p === 'br') { row.appendChild(lineBreak()); return; }
+    var f = document.createElement('span');
+    f.className = 'f ' + p.cls;
+    f.style.width = 'calc(' + p.n + ' * (var(--cw) + var(--gap)))';
+    var s = document.createElement('span');
+    s.className = 'lab';
+    s.textContent = p.text;
+    f.appendChild(s);
+    row.appendChild(f);
+  });
+  return row;
+}
+
+function onActivate(el, fn) {
+  el.addEventListener('click', fn);
+  el.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); }
+  });
+}
+
+/* ─── The flap engine ───
+   One timer drives every flap on the page, rather than hundreds of timers. */
+var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:·';
+var TICK = 40;
+var queue = [];
+var timer = null;
+
+function flipRow(row, delay, done) {
+  var total = 0;
+  row._targets.forEach(function (t) {
+    Array.prototype.forEach.call(t.f.children, function (cell, i) {
+      var target = t.text[i] === ' ' ? ' ' : t.text[i];
+      if (REDUCED) { cell.textContent = target; return; }
+      total++;
+      queue.push({
+        cell: cell,
+        target: target,
+        wait: Math.round((delay + i * 14) / TICK),
+        steps: 3 + Math.floor(Math.random() * 7),
+        row: row,
+        done: done
+      });
+    });
+  });
+  if (REDUCED) { if (done) done(); return; }
+  row._pending = total;
+  if (!timer) timer = setInterval(tick, TICK);
+}
+
+function tick() {
+  var moved = 0;
+  for (var i = queue.length - 1; i >= 0; i--) {
+    var q = queue[i];
+    if (q.wait > 0) { q.wait--; continue; }
+    if (q.steps > 0) {
+      q.cell.textContent = CHARS.charAt(Math.floor(Math.random() * CHARS.length));
+      q.steps--;
+    } else {
+      q.cell.textContent = q.target;
+      queue.splice(i, 1);
+      q.row._pending--;
+      if (q.row._pending === 0 && q.done) q.done();
+    }
+    var hadA = q.cell.classList.contains('fa');
+    q.cell.classList.toggle('fa', !hadA);
+    q.cell.classList.toggle('fb', hadA);
+    moved++;
+  }
+  if (moved) clack(moved);
+  if (!queue.length) { clearInterval(timer); timer = null; }
+}
+
+/* ─── The clatter ───
+   A short burst of filtered noise per tick, which is roughly what a real
+   split flap board sounds like when a whole bank of flaps goes at once. */
+var actx = null, noise = null, muted = false;
+
+function initAudio() {
+  try {
+    actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.resume) actx.resume();
+    var len = Math.floor(actx.sampleRate * 0.02);
+    noise = actx.createBuffer(1, len, actx.sampleRate);
+    var d = noise.getChannelData(0);
+    for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4);
+  } catch (e) { actx = null; }
+}
+
+function clack(n) {
+  if (!actx || !noise || muted) return;
+  var src = actx.createBufferSource();
+  src.buffer = noise;
+  src.playbackRate.value = 0.8 + Math.random() * 0.6;
+  var bp = actx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 1400 + Math.random() * 1800;
+  bp.Q.value = 0.9;
+  var g = actx.createGain();
+  g.gain.value = Math.min(0.22, 0.05 + n * 0.004);
+  src.connect(bp);
+  bp.connect(g);
+  g.connect(actx.destination);
+  src.start();
+}
+
+/* ─── Clock ─── */
+function drawClock() {
+  var now = new Date();
+  $('#hh').textContent = two(now.getHours());
+  $('#mm').textContent = two(now.getMinutes());
+  $('#clockD').textContent = now.toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short' }).toUpperCase();
+}
+
+/* ─── Arrivals ─── */
+function buildArrivals() {
+  var board = $('#arrivals');
+  board.appendChild(labelRow([
+    { cls: 'tm', n: W.time,   text: 'TIME' },
+    { cls: 'fr', n: W.from,   text: 'FROM' },
+    'br',
+    { cls: 'fl', n: W.flight, text: 'FLIGHT' },
+    { cls: 'st', n: W.st,     text: 'STATUS' }
+  ]));
+
+  ARRIVALS.forEach(function (a, i) {
+    var t = hhmm(addMin(MEET, a.off));
+    var st = a.her ? herStatus() : a.st;
+    var row = makeRow([
+      { cls: 'tm', n: W.time,   text: t },
+      { cls: 'fr', n: W.from,   text: a.from },
+      'br',
+      { cls: 'fl', n: W.flight, text: a.fl },
+      { cls: 'st', n: W.st,     text: st, colour: COLOUR[st] || '' }
+    ], {
+      cls: a.her ? 'her' : '',
+      tap: !!a.her,
+      label: t + ', ' + a.from + ', ' + a.fl + ', ' + st + (a.her ? '. Tap to open.' : '')
+    });
+    board.appendChild(row);
+
+    var done = null;
+    if (a.her) {
+      herRow = row;
+      herShown = st;
+      onActivate(row, openJourney);
+      if (st === 'EN ROUTE') done = function () { row.querySelector('.st').classList.add('blink'); };
+    }
+    flipRow(row, 300 + i * 230, done);
+  });
+
+  setTimeout(function () { $('#caption').classList.add('on'); },
+    REDUCED ? 0 : 300 + ARRIVALS.length * 230 + 900);
+}
+
+/* If the page is left open, her row flips over by itself when she sets off
+   and again when she gets here, the way a real board would. */
+function refreshHer() {
+  if (!herRow) return;
+  var st = herStatus();
+  if (st === herShown) return;
+  herShown = st;
+  var stf = herRow.querySelector('.st');
+  stf.classList.remove('blink');
+  stf.setAttribute('data-c', COLOUR[st] || '');
+  herRow._targets.forEach(function (t) { if (t.f === stf) t.text = pad(st, W.st); });
+  flipRow(herRow, 0, st === 'EN ROUTE' ? function () { stf.classList.add('blink'); } : null);
+}
+setInterval(refreshHer, 15000);
+
+/* ─── Her journey ─── */
+var journeyBuilt = false;
+
+function openJourney() {
+  var sec = $('#journeySec');
+  $('#paxDep').innerHTML = (Date.now() < DEPART.getTime() ? 'DEPARTS ' : 'DEPARTED ') +
+    '<b>' + hhmm(DEPART) + '</b> · ETA <b>' + hhmm(MEET) + '</b>';
+  sec.classList.add('on');
+  sec.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
+  if (journeyBuilt) return;
+  journeyBuilt = true;
+
+  var board = $('#journey');
+  board.appendChild(labelRow([
+    { cls: 'wh', n: W.when, text: 'WHEN' },
+    { cls: 'wt', n: W.what, text: 'WHAT' },
+    'br',
+    { cls: 'st', n: W.st,   text: 'STATUS' }
+  ]));
+
+  JOURNEY.forEach(function (j, i) {
+    var row = makeRow([
+      { cls: 'wh', n: W.when, text: j.when },
+      { cls: 'wt', n: W.what, text: j.what },
+      'br',
+      { cls: 'st', n: W.st,   text: j.st, colour: COLOUR[j.st] || '' }
+    ], { cls: 'tap', tap: true, label: j.when + ', ' + j.what + ', ' + j.st + '. Tap to read.' });
+    board.appendChild(row);
+    onActivate(row, function () { row.classList.add('read'); openNote(j); });
+
+    var done = j.st === 'BOARDING'
+      ? function () { row.querySelector('.st').classList.add('blink'); }
+      : null;
+    flipRow(row, 350 + i * 260, done);
+  });
+
+  setTimeout(function () { $('#letterSec').classList.add('on'); },
+    REDUCED ? 0 : 350 + JOURNEY.length * 260 + 900);
+}
+
+/* ─── Notes ─── */
+function openNote(j) {
+  $('#noteK').textContent = j.when + ' · ' + j.what;
+  $('#noteT').textContent = typeof j.note === 'function' ? j.note() : j.note;
+  $('#noteScrim').classList.add('open');
+}
+function closeNote() { $('#noteScrim').classList.remove('open'); }
+$('#noteX').addEventListener('click', closeNote);
+$('#noteScrim').addEventListener('click', function (e) { if (e.target === this) closeNote(); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeNote(); });
+
+/* ─── The seal ─── */
+var opened = false;
+
+function renderSeal() {
+  if (opened) return;
+
+  if (PREVIEW || Date.now() >= UNLOCK.getTime()) {
+    $('#sealBig').textContent = 'READY';
+    $('#sealSub').textContent = PREVIEW ? 'Preview on your side, the lock is off.' : "It's time, sayang.";
+    $('#codeWrap').hidden = true;
+    $('#codeMsg').hidden = true;
+    $('#openNow').hidden = false;
+    return;
+  }
+
+  var ms = UNLOCK.getTime() - Date.now();
+  var h = Math.floor(ms / 3600000);
+  var m = Math.floor(ms / 60000) % 60;
+  var s = Math.floor(ms / 1000) % 60;
+  $('#sealBig').textContent = h >= 24
+    ? Math.floor(h / 24) + 'D ' + (h % 24) + 'H'
+    : (h > 0 ? h + ':' : '') + two(m) + ':' + two(s);
+
+  var at = UNLOCK.toLocaleTimeString('en-MY', { hour: 'numeric', minute: '2-digit' });
+  var on = UNLOCK.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  $('#sealSub').textContent = 'Opens at ' + at + ' on ' + on + ', when we sit down to eat.';
+}
+
+function tryCode() {
+  var v = $('#codeIn').value.replace(/\D/g, '');
+  if (CODES.indexOf(v) !== -1) { openLetter(); return; }
+  var w = $('#codeWrap');
+  w.classList.remove('shake');
+  void w.offsetWidth;
+  w.classList.add('shake');
+  $('#codeMsg').textContent = v ? 'Not quite, sayang. Ask me.' : 'Type the code first.';
+}
+
+function openLetter() {
+  opened = true;
+  $('#seal').hidden = true;
+  $('#days').textContent = days();
+  var L = $('#letter');
+  L.classList.add('on');
+  L.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
+  for (var i = 0; i < 6; i++) setTimeout(function () { clack(20); }, i * 45);
+}
+
+$('#codeBtn').addEventListener('click', tryCode);
+$('#codeIn').addEventListener('keydown', function (e) { if (e.key === 'Enter') tryCode(); });
+$('#openNow').addEventListener('click', openLetter);
+
+/* ─── Start ─── */
+var started = false;
+
+function start() {
+  if (started) return;
+  started = true;
+  initAudio();
+  $('#gate').classList.add('gone');
+  document.body.classList.remove('locked');
+  $('#app').classList.add('on');
+  $('#mute').hidden = false;
+  buildArrivals();
+}
+
+$('#gateBtn').addEventListener('click', start);
+
+$('#mute').addEventListener('click', function () {
+  muted = !muted;
+  this.textContent = muted ? 'SOUND OFF' : 'SOUND ON';
+});
+
+if (PREVIEW) $('#preview').hidden = false;
+
+drawClock();
+setInterval(drawClock, 1000);
+renderSeal();
+setInterval(renderSeal, 1000);
+</script>
+
+</body>
+</html>
