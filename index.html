@@ -1154,6 +1154,21 @@ body {
       <a href="heart.html" class="card-link">Open <i class="fas fa-chevron-right"></i></a>
     </div>
 
+    <!-- Appears by itself at 9am on 13 Sep. Until then the first script below
+         removes it, before anything else on the hub can see it. -->
+    <div class="card" data-category="special" data-device="both" data-title="Arrivals: KLIA, Send Off, Bintulu, 4Fingers" data-show-from="2026-09-13T09:00">
+      <div class="card-header">
+        <div class="card-icon"><i class="fas fa-plane-arrival"></i></div>
+        <div class="device-badges">
+          <span class="badge badge-phone"><i class="fas fa-mobile-alt"></i></span>
+          <span class="badge badge-desktop"><i class="fas fa-desktop"></i></span>
+        </div>
+      </div>
+      <div class="card-title">Arrivals: KLIA</div>
+      <div class="card-date"><i class="fas fa-calendar-alt"></i> September 13, 2026</div>
+      <a href="arrivals.html" class="card-link">Open <i class="fas fa-chevron-right"></i></a>
+    </div>
+
     <!-- ─── Personal Messages ─── -->
     <div class="section-label" data-category="messages">Personal Messages</div>
 
@@ -1404,6 +1419,31 @@ body {
 </div>
 
 <script>
+/* ── Cards that are not due yet ──
+   A card with data-show-from stays off the hub until that time on the phone's
+   own clock. It is removed before everything below runs, so the Just Added
+   strip, the NEW badge and the filters never see it. If the hub is open (or
+   comes back from the background) once the time has passed, it reloads so the
+   card appears. Add ?preview to the address to see it early. */
+(function () {
+  var preview = new URLSearchParams(location.search).has('preview');
+  var next = Infinity;
+
+  document.querySelectorAll('[data-show-from]').forEach(function (card) {
+    var m = card.getAttribute('data-show-from').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+    if (!m) return;
+    var at = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]).getTime();
+    if (preview || Date.now() >= at) return;
+    card.remove();
+    next = Math.min(next, at);
+  });
+
+  if (next === Infinity) return;
+  function due() { if (Date.now() >= next) location.reload(); }
+  if (next - Date.now() < 2 * 86400000) setTimeout(due, next - Date.now() + 1500);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) due(); });
+})();
+
 /* ── Days together, counted from the day it started ── */
 (function() {
   const START = new Date(2025, 11, 2);   // 2 December 2025 (month is 0-based)
