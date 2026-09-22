@@ -577,7 +577,8 @@ body.locked { overflow: hidden; }
 /* ═══════════ From today ═══════════ */
 .today { margin-top: 40px; animation: rise .8s ease both; }
 .today-photos { display: grid; gap: 10px; }
-.today-photos img {
+.today-photos img,
+.today-photos video {
   display: block;
   width: 100%;
   height: auto;
@@ -1310,16 +1311,18 @@ function loadToday() {
     .then(function (r) { return r.ok ? r.json() : []; })
     .then(function (list) {
       if (!Array.isArray(list)) return;
-      var photos = [], voice = null;
+      var items = [], voice = null;
       list.forEach(function (f) {
         if (f.type !== 'file') return;
         var n = f.name.toLowerCase();
         var src = TODAY_DIR + '/' + encodeURIComponent(f.name);
-        if (/\.(jpe?g|png|webp|gif)$/.test(n)) photos.push(src);
+        if (/\.(jpe?g|png|webp|gif)$/.test(n)) items.push({ src: src, name: n, kind: 'photo' });
+        else if (/\.(mp4|webm|m4v|mov)$/.test(n)) items.push({ src: src, name: n, kind: 'video' });
         else if (!voice && /\.(mp3|m4a|aac|wav|ogg|opus)$/.test(n)) voice = src;
       });
-      photos.sort();
-      showToday(photos, voice);
+      // the file names carry the time each was taken, so this puts the day in order
+      items.sort(function (a, b) { return a.name < b.name ? -1 : a.name > b.name ? 1 : 0; });
+      showToday(items, voice);
     })
     .catch(function () {});
 }
@@ -1328,18 +1331,29 @@ function hideTodayIfEmpty() {
   if (!$('#todayPhotos').children.length && $('#todayVoice').hidden) $('#today').hidden = true;
 }
 
-function showToday(photos, voice) {
-  if (!photos.length && !voice) return;
+function showToday(items, voice) {
+  if (!items.length && !voice) return;
   var box = $('#todayPhotos');
-  photos.forEach(function (src) {
-    var img = new Image();
-    img.alt = 'From today';
-    img.decoding = 'async';
+
+  items.forEach(function (it) {
+    var el;
+    if (it.kind === 'video') {
+      el = document.createElement('video');
+      el.controls = true;
+      el.playsInline = true;
+      el.preload = 'metadata';   // just enough to show a frame, the rest waits for play
+    } else {
+      el = document.createElement('img');
+      el.alt = 'From today';
+      el.loading = 'lazy';       // only what she scrolls to actually downloads
+      el.decoding = 'async';
+    }
     // Pages takes a minute or two to publish a new upload; until then, skip it
-    img.onerror = function () { img.remove(); hideTodayIfEmpty(); };
-    img.src = src;
-    box.appendChild(img);
+    el.onerror = function () { el.remove(); hideTodayIfEmpty(); };
+    el.src = it.src;
+    box.appendChild(el);
   });
+
   if (voice) setupVoice(voice);
   $('#today').hidden = false;
 }
