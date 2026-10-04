@@ -278,6 +278,8 @@ h1 span { color: var(--accent); }
 .thumb { position: relative; background: #000; overflow: hidden; }
 .thumb img {
   display: block;
+  position: relative;
+  z-index: 1;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
@@ -286,20 +288,57 @@ h1 span { color: var(--accent); }
 }
 .item:hover .thumb img { filter: none; transform: scale(1.035); }
 
-/* a red wash across the bottom of every thumbnail */
+/* ── A phone shaped thumbnail in a widescreen slot ──
+   Cropping a 9:16 clip to 16:9 throws away two thirds of the frame, so the
+   whole thing is shown instead and a blown up blurred copy of itself fills
+   the space either side. The grid stays even and nothing is lost. The class
+   is added by script once the image reports its real shape, so it works for
+   anything portrait without being declared per entry. */
+.thumb.portrait img { object-fit: contain; }
+.item:hover .thumb.portrait img { transform: none; }
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(22px) saturate(1.3) brightness(0.55);
+  transform: scale(1.25);          /* hides the soft edge the blur leaves */
+  pointer-events: none;
+}
+
+/* a wash across the bottom of every thumbnail */
 .thumb::after {
   content: '';
   position: absolute;
   inset: auto 0 0 0;
+  z-index: 2;
   height: 54%;
   background: linear-gradient(to top, rgba(8,8,10,0.9), transparent);
   pointer-events: none;
 }
 
+/* where it opens, mirroring the duration on the other corner */
+.site {
+  position: absolute;
+  left: 0; bottom: 0;
+  z-index: 3;
+  padding: 3px 8px;
+  background: var(--black);
+  border-right: 1px solid var(--edge);
+  border-top: 1px solid var(--edge);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+}
+
 .len {
   position: absolute;
   right: 0; bottom: 0;
-  z-index: 1;
+  z-index: 3;
   padding: 3px 8px;
   background: var(--black);
   border-left: 1px solid var(--edge);
@@ -313,7 +352,7 @@ h1 span { color: var(--accent); }
 .flag {
   position: absolute;
   left: 0; top: 0;
-  z-index: 1;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -358,7 +397,7 @@ h1 span { color: var(--accent); }
 .fresh {
   position: absolute;
   right: 0; top: 0;
-  z-index: 1;
+  z-index: 3;
   padding: 4px 9px;
   background: var(--accent-fill);
   clip-path: polygon(9px 0, 100% 0, 100% 100%, 0 100%);
@@ -470,10 +509,14 @@ h1 span { color: var(--accent); }
 /* ═══════════════════════════════════════════════════════════════
    The list.
 
-   To add one: copy a line, change the id, title, seconds and the
-   timestamp. The id is the bit after youtu.be/ or ?v= in the link.
-   Nothing else needs touching, the thumbnail and the date come from
-   the id and the timestamp on their own.
+   To add a YouTube one: copy a line, change the id, title, seconds
+   and the timestamp. The id is the bit after youtu.be/ or ?v= in the
+   link. The thumbnail comes from the id on its own.
+
+   Anywhere else, TikTok and so on, add two more fields: url, the full
+   link to open, and thumb, a picture saved in thumbs/. Save it rather
+   than hotlinking, because those addresses are signed and expire.
+   A portrait picture is handled on its own, nothing to declare.
    ═══════════════════════════════════════════════════════════════ */
 var MY_LIVES = [
   { id: 'NyGOx_R7gGs', title: 'Solo Ranked', secs: 8379, at: '2026-10-03T23:29:41-07:00' },
@@ -493,7 +536,9 @@ var MY_CLIPS = [
 var HER_LIVES = [];
 
 var HER_CLIPS = [
-  { id: '3SUyF0u0T0I', title: 'Rockstars...', secs: 118, at: '2021-03-08T01:32:22-08:00' }
+  { id: '7655199251974098183', title: 'Still Learning', secs: 32, at: '2026-06-25T13:22:58+08:00',
+    url: 'https://www.tiktok.com/@ehxkenal/video/7655199251974098183',
+    thumb: 'thumbs/tiktok-7655199251974098183.jpg' }
 ];
 
 var $ = function (s) { return document.querySelector(s); };
@@ -552,10 +597,24 @@ function seenWording(stamp) {
   return 'Seen ' + when(stamp);
 }
 
+/* Named from the address rather than a field on the entry, so adding a clip
+   from somewhere new needs nothing here until it deserves a nicer name. */
+function siteOf(v) {
+  if (!v.url) return 'YouTube';
+  var host = (v.url.match(/^https?:\/\/([^/]+)/i) || [])[1] || '';
+  host = host.toLowerCase().replace(/^www\./, '');
+  // anchored to the domain, so a lookalike host cannot borrow the name
+  if (/(^|\.)tiktok\.com$/.test(host)) return 'TikTok';
+  if (/(^|\.)(youtube\.com|youtu\.be)$/.test(host)) return 'YouTube';
+  if (/(^|\.)instagram\.com$/.test(host)) return 'Instagram';
+  if (/(^|\.)twitch\.tv$/.test(host)) return 'Twitch';
+  return host.split('.')[0];
+}
+
 function card(v, isLive, isNewest) {
   var a = document.createElement('a');
   a.className = 'item';
-  a.href = 'https://youtu.be/' + v.id;      // the app picks this up on its own
+  a.href = v.url || ('https://youtu.be/' + v.id);   // the app picks this up on its own
   a.target = '_blank';
   a.rel = 'noopener';
 
@@ -566,12 +625,31 @@ function card(v, isLive, isNewest) {
   img.loading = 'lazy';
   img.decoding = 'async';
   img.alt = v.title;
-  // the big one is cleanly 16:9; older uploads sometimes only have the small one
-  img.src = 'https://i.ytimg.com/vi/' + v.id + '/maxresdefault.jpg';
-  img.onerror = function () {
-    img.onerror = null;
-    img.src = 'https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg';
-  };
+  /* A picture that is taller than it is wide gets the blurred backdrop, so
+     the whole frame can be shown without breaking the row. Cached images are
+     already loaded by the time this runs, hence the complete check. */
+  function shape() {
+    if (!img.naturalWidth || img.naturalHeight <= img.naturalWidth) return;
+    thumb.classList.add('portrait');
+    var bd = document.createElement('div');
+    bd.className = 'backdrop';
+    bd.style.backgroundImage = 'url("' + img.src + '")';
+    thumb.insertBefore(bd, img);
+  }
+  img.addEventListener('load', shape);
+
+  if (v.thumb) {
+    img.src = v.thumb;
+  } else {
+    // the big one is cleanly 16:9; older uploads sometimes only have the small one
+    img.onerror = function () {
+      img.onerror = null;
+      img.src = 'https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg';
+    };
+    img.src = 'https://i.ytimg.com/vi/' + v.id + '/maxresdefault.jpg';
+  }
+  if (img.complete) shape();
+
   thumb.appendChild(img);
 
   if (isLive) {
@@ -587,6 +665,11 @@ function card(v, isLive, isNewest) {
     fresh.textContent = 'New';
     thumb.appendChild(fresh);
   }
+
+  var site = document.createElement('span');
+  site.className = 'site';
+  site.textContent = siteOf(v);
+  thumb.appendChild(site);
 
   var len = document.createElement('span');
   len.className = 'len';
