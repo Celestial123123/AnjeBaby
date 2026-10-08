@@ -61,13 +61,19 @@ body {
   50%      { transform: scale(1.022) rotate(-0.7deg); }
 }
 
-/* every petal starts closed and opens when its turn comes */
+/* Every petal starts closed and opens when its turn comes.
+
+   Its place on the flower lives in --place, and the opening is a scale on the
+   end of it. They have to be the same transform: a CSS transform replaces an
+   SVG transform attribute outright rather than combining with it, so putting
+   the placement in the attribute and the opening in CSS would throw every
+   petal back to the corner of the canvas. */
 .petal {
-  transform: scale(0);
-  transform-origin: 150px 150px;
+  transform: var(--place) scale(0);
+  transform-origin: 0 0;
   transition: transform 1.2s var(--ease);
 }
-.petal.open { transform: scale(1); }
+.petal.open { transform: var(--place) scale(1); }
 
 .count {
   margin-top: 10px;
@@ -323,11 +329,12 @@ function grow() {
     for (var i = 0; i < ring.n; i++) {
       var p = document.createElementNS(SVGNS, 'path');
       p.setAttribute('d', SHAPES[ring.shape]);
-      p.setAttribute('fill', ring.fill);
-      p.setAttribute('opacity', ring.dim);
-      p.setAttribute('transform',
-        'translate(150 150) rotate(' + (ring.turn + (360 / ring.n) * i) + ') scale(' + ring.scale + ')');
       p.setAttribute('class', 'petal');
+      p.style.fill = ring.fill;
+      p.style.opacity = ring.dim;
+      // the scale here is the petal's size; the opening multiplies it in CSS
+      p.style.setProperty('--place',
+        'translate(150px, 150px) rotate(' + (ring.turn + (360 / ring.n) * i) + 'deg) scale(' + ring.scale + ')');
       order.push({ el: p, ring: r });
     }
   });
