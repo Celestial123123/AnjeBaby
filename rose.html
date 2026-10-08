@@ -277,13 +277,12 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 var DIR = 'letters';
-/* A one line file saying how many letters exist, written alongside them.
+/* Nothing is asked of GitHub, and nothing has to be kept in step by hand.
 
-   This used to ask the GitHub API to list the folder, which is capped at sixty
-   requests an hour per address. Once that ran out the page said there was
-   nothing here, which on this page reads as nobody wrote to her rather than as
-   an error. Nothing is asked of GitHub now. */
-var MANIFEST = DIR + '/index.json';
+   The page simply reads 01.txt, then 02.txt, and so on, stopping at the first
+   one that is not there or at the day she has reached. So a letter uploaded
+   from a phone appears on its own, with no list to update and no quota to run
+   out. The ones it reads are kept, so opening the drawer costs nothing. */
 
 /* The first letter lands on this day. Everything else counts forward from it. */
 var START = new Date(2026, 9, 9);     // 9 October 2026
@@ -440,23 +439,23 @@ function pad(n) { return (n < 10 ? '0' : '') + n; }
 
 function read(n) {
   return fetch(DIR + '/' + pad(n) + '.txt', { cache: 'no-cache' })
-    .then(function (r) { return r.ok ? r.text() : ''; })
-    .catch(function () { return ''; });
+    .then(function (r) { return r.ok ? r.text() : null; })
+    .catch(function () { return null; });
 }
 
-/* If the manifest is ever missing, count upwards until a letter is not there.
-   Slower, but it means a lost index file cannot empty the page. */
-function countByHand(limit) {
-  var found = 0;
+/* Read forward until there is no next one, or until the day she has reached.
+   Whatever comes back is kept, so nothing is fetched twice. */
+function gather(limit) {
+  var found = [];
   function step(n) {
     if (n > limit) return found;
-    return read(n).then(function (t) {
-      if (!t) return found;
-      found = n;
+    return read(n).then(function (text) {
+      if (text === null) return found;
+      found.push(text);
       return step(n + 1);
     });
   }
-  return step(1);
+  return Promise.resolve(step(1));
 }
 
 function nothingYet() {
@@ -468,94 +467,79 @@ function nothingYet() {
 (function () {
   if (!window.fetch) { nothingYet(); return; }
 
-  fetch(MANIFEST, { cache: 'no-cache' })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (m) {
-      var written = m && m.count > 0 ? m.count : null;
-      return written !== null ? written : countByHand(60);
-    })
-    .catch(function () { return countByHand(60); })
-    .then(function (written) {
-      if (!written) { nothingYet(); return; }
+  var upTo = FORCED !== null ? FORCED : (PREVIEW ? 60 : dayNumber());
+  if (upTo < 1) { nothingYet(); return; }
 
-      var upTo = FORCED !== null ? FORCED : (PREVIEW ? written : dayNumber());
-      var many = Math.max(0, Math.min(written, upTo));
+  gather(upTo).then(function (texts) {
+    var many = texts.length;
+    if (!many) { nothingYet(); return; }
 
-      if (!many) { nothingYet(); return; }
+    /* These two are SVG groups, not HTML elements, so the hidden property
+       does not exist on them and assigning it does nothing. The attribute
+       has to be set and removed by hand. */
+    $('#bud').setAttribute('hidden', '');
+    $('#flower').removeAttribute('hidden');
+    $('#bloom').setAttribute('aria-label',
+      'A flower, open by ' + many + ' of its 29 petals');
+    open(many);
+    $('#count').textContent = (many === 1
+      ? 'One petal so far'
+      : many + ' petals so far') +
+      (FORCED !== null ? '  ·  day ' + FORCED : PREVIEW ? '  ·  preview' : '');
 
-      /* These two are SVG groups, not HTML elements, so the hidden property
-         does not exist on them and assigning it does nothing. The attribute
-         has to be set and removed by hand. */
-      $('#bud').setAttribute('hidden', '');
-      $('#flower').removeAttribute('hidden');
-      $('#bloom').setAttribute('aria-label',
-        'A flower, open by ' + many + ' of its 29 petals');
-      open(many);
-      $('#count').textContent = (many === 1
-        ? 'One petal so far'
-        : many + ' petals so far') +
-        (FORCED !== null ? '  ·  day ' + FORCED : PREVIEW ? '  ·  preview' : '');
+    // tonight's
+    $('#when').textContent = label(dueOn(many));
+    var now = texts[many - 1].trim();
+    if (now) {
+      $('#note').textContent = now;
+    } else {
+      $('#note').className = 'quiet';
+      $('#note').textContent = 'This one came through empty. Ask him.';
+    }
 
-      // tonight's
-      $('#when').textContent = label(dueOn(many));
-      read(many).then(function (text) {
-        if (text.trim()) {
-          $('#note').textContent = text.trim();
-        } else {
-          $('#note').className = 'quiet';
-          $('#note').textContent = 'This one came through empty. Ask him.';
-        }
-      });
+    if (many < 2) return;
 
-      if (many < 2) return;
+    $('#before').hidden = false;
+    $('#drawerLabel').textContent = many === 2
+      ? 'The one before'
+      : 'The ' + (many - 1) + ' before';
 
-      $('#before').hidden = false;
-      $('#drawerLabel').textContent = many === 2
-        ? 'The one before'
-        : 'The ' + (many - 1) + ' before';
+    var past = $('#past');
+    for (var n = many - 1; n >= 1; n--) {
+      (function (num) {
+        var wrap = document.createElement('div');
+        wrap.className = 'old';
 
-      var past = $('#past');
-      for (var n = many - 1; n >= 1; n--) {
-        (function (num) {
-          var wrap = document.createElement('div');
-          wrap.className = 'old';
+        var head = document.createElement('button');
+        head.className = 'old-head';
+        head.type = 'button';
+        head.setAttribute('aria-expanded', 'false');
+        head.textContent = label(dueOn(num));
 
-          var head = document.createElement('button');
-          head.className = 'old-head';
-          head.type = 'button';
-          head.setAttribute('aria-expanded', 'false');
-          head.textContent = label(dueOn(num));
+        var body = document.createElement('div');
+        body.className = 'old-body';
+        body.hidden = true;
+        body.textContent = texts[num - 1].trim() || 'Empty.';
 
-          var body = document.createElement('div');
-          body.className = 'old-body';
-          body.hidden = true;
+        head.addEventListener('click', function () {
+          var show = body.hidden;
+          body.hidden = !show;
+          head.setAttribute('aria-expanded', show ? 'true' : 'false');
+        });
 
-          // only fetched when she actually opens it
-          var got = false;
-          head.addEventListener('click', function () {
-            var show = body.hidden;
-            body.hidden = !show;
-            head.setAttribute('aria-expanded', show ? 'true' : 'false');
-            if (show && !got) {
-              got = true;
-              body.textContent = 'reading...';
-              read(num).then(function (t) { body.textContent = t.trim() || 'Empty.'; });
-            }
-          });
+        wrap.appendChild(head);
+        wrap.appendChild(body);
+        past.appendChild(wrap);
+      })(n);
+    }
 
-          wrap.appendChild(head);
-          wrap.appendChild(body);
-          past.appendChild(wrap);
-        })(n);
-      }
-
-      var drawer = $('#drawer');
-      drawer.addEventListener('click', function () {
-        var show = past.hidden;
-        past.hidden = !show;
-        drawer.setAttribute('aria-expanded', show ? 'true' : 'false');
-      });
+    var drawer = $('#drawer');
+    drawer.addEventListener('click', function () {
+      var show = past.hidden;
+      past.hidden = !show;
+      drawer.setAttribute('aria-expanded', show ? 'true' : 'false');
     });
+  });
 })();
 </script>
 
