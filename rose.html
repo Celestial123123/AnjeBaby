@@ -297,6 +297,14 @@ var START = new Date(2026, 9, 9);     // 9 October 2026
 var PREVIEW = location.protocol === 'file:' ||
               new URLSearchParams(location.search).has('preview');
 
+/* ?day=7 renders exactly what she would see on day seven: seven petals, the
+   seventh letter, six in the drawer. ?day=0 is the closed bud. It beats
+   ?preview when both are on the address. */
+var FORCED = (function () {
+  var n = parseInt(new URLSearchParams(location.search).get('day'), 10);
+  return (!isNaN(n) && n >= 0) ? n : null;
+})();
+
 var $ = function (s) { return document.querySelector(s); };
 var SVGNS = 'http://www.w3.org/2000/svg';
 var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -421,8 +429,13 @@ function pretty(d) {
   }
 }
 
+/* when a day is being forced, everything reads as if that were today */
+function rightNow() {
+  return FORCED === null ? new Date() : dueOn(FORCED);
+}
+
 function label(d) {
-  var days = Math.round((startOfDay(new Date()) - startOfDay(d)) / 86400000);
+  var days = Math.round((startOfDay(rightNow()) - startOfDay(d)) / 86400000);
   if (days === 0) return 'Tonight';
   if (days === 1) return 'Yesterday';
   return pretty(d);
@@ -451,7 +464,7 @@ function nothingYet() {
     .then(function (list) {
       if (!Array.isArray(list)) throw 0;
 
-      var upTo = PREVIEW ? 9999 : dayNumber();
+      var upTo = FORCED !== null ? FORCED : (PREVIEW ? 9999 : dayNumber());
       var days = [];
 
       list.forEach(function (f) {
@@ -476,7 +489,8 @@ function nothingYet() {
       open(days.length);
       $('#count').textContent = (days.length === 1
         ? 'One petal so far'
-        : days.length + ' petals so far') + (PREVIEW ? '  ·  preview' : '');
+        : days.length + ' petals so far') +
+        (FORCED !== null ? '  ·  day ' + FORCED : PREVIEW ? '  ·  preview' : '');
 
       // tonight's, or the most recent one before it
       var now = days[0];
