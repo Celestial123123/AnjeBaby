@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Queen of the night</title>
-<meta name="description" content="One message every day, and a flower that opens as they go on.">
+<title>Every night</title>
+<meta name="description" content="One letter every day.">
 <meta name="theme-color" content="#101418">
 <link rel="icon" href="icons/favicon.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
@@ -218,7 +218,7 @@ body {
 <main class="wrap">
 
   <svg class="bloom" id="bloom" viewBox="0 0 300 300" role="img"
-       aria-label="A queen of the night, still a closed bud">
+       aria-label="A flower, still a closed bud">
 
     <!-- the flat leaf it grows from, and the long tube the flower sits on -->
     <path d="M150 168 C150 206, 136 236, 112 262 C104 270, 96 276, 88 280"
@@ -485,7 +485,7 @@ function nothingYet() {
       $('#bud').setAttribute('hidden', '');
       $('#flower').removeAttribute('hidden');
       $('#bloom').setAttribute('aria-label',
-        'A queen of the night, open by ' + days.length + ' of its 29 petals');
+        'A flower, open by ' + days.length + ' of its 29 petals');
       open(days.length);
       $('#count').textContent = (days.length === 1
         ? 'One petal so far'
