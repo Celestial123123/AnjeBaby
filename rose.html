@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Queen of the night</title>
+<meta name="description" content="One message every day, and a flower that opens as they go on.">
+<meta name="theme-color" content="#101418">
+<link rel="icon" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+
+:root {
+  --bg:       #101418;
+  --bg-lift:  #171c22;
+  --ink:      #f4f1ea;
+  --ink-soft: #c3bdb2;
+  --ink-low:  #827c73;
+  --petal:    #f6f1e4;        /* the white of the flower */
+  --sepal:    #c08a66;        /* the bronze straps behind it */
+  --gold:     #e4c88c;        /* the stamens, and the accent on this page */
+  --gold-dim: rgba(228, 200, 140, 0.26);
+  --line:     rgba(244, 241, 234, 0.1);
+  --ease:     cubic-bezier(0.22, 0.85, 0.3, 1);
+}
+
+html { background: var(--bg); }
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background:
+    radial-gradient(ellipse at 50% 2%, #1d2630 0%, transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  min-height: 100svh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: clamp(30px, 6vh, 52px) clamp(20px, 6vw, 30px) clamp(50px, 10vh, 90px);
+}
+
+/* ═══════════════ The flower ═══════════════ */
+.bloom { display: block; width: min(80vw, 320px); margin: 0 auto; }
+
+/* the bud breathes very slightly, so an empty page is still alive */
+#bud { transform-origin: 150px 178px; animation: wait 7s ease-in-out infinite; }
+@keyframes wait {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%      { transform: scale(1.022) rotate(-0.7deg); }
+}
+
+/* every petal starts closed and opens when its turn comes */
+.petal {
+  transform: scale(0);
+  transform-origin: 150px 150px;
+  transition: transform 1.2s var(--ease);
+}
+.petal.open { transform: scale(1); }
+
+.count {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-low);
+}
+.name {
+  margin-top: 4px;
+  text-align: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  color: var(--ink-low);
+}
+
+/* ═══════════════ Today ═══════════════ */
+.today {
+  margin-top: clamp(24px, 5vw, 36px);
+  padding: clamp(24px, 6vw, 38px);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--bg-lift);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.when {
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.note {
+  margin-top: 14px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.05rem, 3.4vw, 1.22rem);
+  font-weight: 400;
+  line-height: 1.85;
+  color: var(--ink);
+  white-space: pre-wrap;        /* his line breaks are kept exactly */
+  overflow-wrap: anywhere;
+}
+
+.quiet {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--ink-low);
+}
+
+/* ═══════════════ The ones before ═══════════════ */
+.before { margin-top: clamp(24px, 5vw, 34px); }
+
+.drawer {
+  width: 100%;
+  padding: 13px 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: color 0.25s, border-color 0.25s;
+}
+.drawer:hover { color: var(--ink); border-color: var(--gold-dim); }
+.drawer:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.drawer .caret { display: inline-block; margin-left: 7px; transition: transform 0.3s var(--ease); }
+.drawer[aria-expanded="true"] .caret { transform: rotate(180deg); }
+
+.past { margin-top: 14px; }
+
+.old { border-bottom: 1px solid var(--line); }
+.old-head {
+  width: 100%;
+  padding: 14px 4px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.old-head:hover { color: var(--ink); }
+.old-head::before {
+  content: '';
+  flex: none;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.6;
+}
+.old-body {
+  padding: 0 4px 18px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--ink-soft);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ═══════════════ Footer ═══════════════ */
+.foot { margin-top: clamp(34px, 7vw, 52px); text-align: center; }
+.back {
+  display: inline-block;
+  padding: 10px 22px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-low);
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: color 0.3s, border-color 0.3s;
+}
+.back:hover { color: var(--ink); border-color: var(--gold-dim); }
+.back:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* the petals still open, just slowly and without the stagger */
+  .petal { transition-duration: 2.6s !important; transition-delay: 0s !important; }
+  #bud { animation-duration: 18s; }
+  .drawer .caret { transition-duration: 0.01ms; }
+}
+</style>
+</head>
+<body>
+
+<main class="wrap">
+
+  <svg class="bloom" id="bloom" viewBox="0 0 300 300" role="img"
+       aria-label="A queen of the night, still a closed bud">
+
+    <!-- the flat leaf it grows from, and the long tube the flower sits on -->
+    <path d="M150 168 C150 206, 136 236, 112 262 C104 270, 96 276, 88 280"
+          stroke="#465e4a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M118 236 C96 224, 70 230, 52 248 C74 264, 102 260, 118 242 Z" fill="#3f5a44"/>
+    <path d="M52 248 C74 264, 102 260, 118 242" stroke="#577a5c" stroke-width="1.6" fill="none"/>
+
+    <!-- Before the first message: the long closed bud this flower spends
+         almost all of its life as. It is swapped for the bloom the moment
+         there is something to read. -->
+    <g id="bud">
+      <path d="M150 176 C133 162, 130 120, 150 86 C170 120, 167 162, 150 176 Z" fill="#c2c9a8"/>
+      <path d="M150 86 C160 120, 162 162, 150 176 Z" fill="#d6dcbd" opacity="0.75"/>
+      <path d="M139 170 C132 150, 133 122, 143 100" stroke="#b07f63" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M161 170 C168 150, 167 122, 157 100" stroke="#b07f63" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M150 176 C140 184, 128 186, 120 182" stroke="#a8764f" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M152 180 C162 188, 172 188, 178 184" stroke="#a8764f" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+
+    <g id="flower" hidden>
+      <g id="petals"></g>
+      <!-- the crown of stamens, there from the very first day it opens -->
+      <g id="centre"></g>
+    </g>
+  </svg>
+
+  <p class="count" id="count"></p>
+  <p class="name">Epiphyllum oxypetalum</p>
+
+  <section class="today">
+    <p class="when" id="when"></p>
+    <p class="note" id="note"></p>
+  </section>
+
+  <section class="before" id="before" hidden>
+    <button class="drawer" id="drawer" type="button" aria-expanded="false" aria-controls="past">
+      <span id="drawerLabel">The ones before</span><span class="caret" aria-hidden="true">&#9662;</span>
+    </button>
+    <div class="past" id="past" hidden></div>
+  </section>
+
+  <footer class="foot">
+    <a class="back" href="index.html">&larr; Back to hub</a>
+  </footer>
+
+</main>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════════════
+   The letters are a numbered list in the letters/ folder:
+
+     01.txt, 02.txt, 03.txt ...
+
+   One is released each day, in order, starting from START below.
+   Day one is 01.txt. Nothing is tied to a date, so any single
+   letter can be rewritten for something that happened that day
+   without disturbing the rest of the run.
+
+   If the list runs out, the last one simply stays up until more
+   are added.
+
+   The flower gains a petal for every letter that has opened.
+   ═══════════════════════════════════════════════════════════════ */
+
+var DIR = 'letters';
+var API = 'https://api.github.com/repos/Celestial123123/AnjeBaby/contents/' + DIR + '?ref=main';
+
+/* The first letter lands on this day. Everything else counts forward from it. */
+var START = new Date(2026, 9, 9);     // 9 October 2026
+
+/* Put ?preview on the address and every letter is released at once, so the
+   whole run can be read through before any of it is hers. Opening the file
+   straight off the disk does the same. She never sees this. */
+var PREVIEW = location.protocol === 'file:' ||
+              new URLSearchParams(location.search).has('preview');
+
+var $ = function (s) { return document.querySelector(s); };
+var SVGNS = 'http://www.w3.org/2000/svg';
+var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ─── The flower ───
+   A queen of the night is not a rose: the white part is a crown of narrow
+   pointed tepals, and behind it sit long thin bronze sepals that bend back
+   past them. So the outer ring is a different shape and colour, not just a
+   bigger version of the inner ones.
+
+   They are drawn outermost first so the white lies on top, but they open from
+   the middle outwards, which is the way the flower actually does it. */
+var RINGS = [
+  { n: 7,  scale: 0.62, turn: 0,  fill: 'var(--petal)', shape: 'tepal', dim: 0.92 },
+  { n: 10, scale: 0.88, turn: 18, fill: 'var(--petal)', shape: 'tepal', dim: 1 },
+  { n: 12, scale: 1.08, turn: 15, fill: 'var(--sepal)', shape: 'sepal', dim: 1 }
+];
+
+var SHAPES = {
+  tepal: 'M0 0 C-13 -18, -10 -48, 0 -66 C10 -48, 13 -18, 0 0 Z',
+  sepal: 'M0 0 C-4.5 -24, -4 -62, 0 -88 C4 -62, 4.5 -24, 0 0 Z'
+};
+
+function grow() {
+  var box = $('#petals');
+  var order = [];
+
+  // build inner to outer so the opening order is right
+  RINGS.forEach(function (ring, r) {
+    for (var i = 0; i < ring.n; i++) {
+      var p = document.createElementNS(SVGNS, 'path');
+      p.setAttribute('d', SHAPES[ring.shape]);
+      p.setAttribute('fill', ring.fill);
+      p.setAttribute('opacity', ring.dim);
+      p.setAttribute('transform',
+        'translate(150 150) rotate(' + (ring.turn + (360 / ring.n) * i) + ') scale(' + ring.scale + ')');
+      p.setAttribute('class', 'petal');
+      order.push({ el: p, ring: r });
+    }
+  });
+
+  // but paint outer first, so the white crown sits on top of the bronze
+  order.slice().sort(function (a, b) { return b.ring - a.ring; })
+       .forEach(function (o) { box.appendChild(o.el); });
+
+  return order.map(function (o) { return o.el; });
+}
+
+/* the fine stamens in the middle, which this flower has a great many of */
+function centre() {
+  var g = $('#centre');
+  for (var i = 0; i < 22; i++) {
+    var a = (360 / 22) * i + 8;
+    var len = 15 + (i % 3) * 5;
+
+    var s = document.createElementNS(SVGNS, 'line');
+    s.setAttribute('x1', 150); s.setAttribute('y1', 150);
+    s.setAttribute('x2', 150); s.setAttribute('y2', 150 - len);
+    s.setAttribute('stroke', 'var(--gold)');
+    s.setAttribute('stroke-width', '1.1');
+    s.setAttribute('stroke-linecap', 'round');
+    s.setAttribute('opacity', '0.85');
+    s.setAttribute('transform', 'rotate(' + a + ' 150 150)');
+    g.appendChild(s);
+
+    var tip = document.createElementNS(SVGNS, 'circle');
+    tip.setAttribute('cx', 150); tip.setAttribute('cy', 150 - len);
+    tip.setAttribute('r', '1.5');
+    tip.setAttribute('fill', 'var(--gold)');
+    tip.setAttribute('transform', 'rotate(' + a + ' 150 150)');
+    g.appendChild(tip);
+  }
+
+  var heart = document.createElementNS(SVGNS, 'circle');
+  heart.setAttribute('cx', 150); heart.setAttribute('cy', 150);
+  heart.setAttribute('r', '5');
+  heart.setAttribute('fill', 'var(--petal)');
+  g.appendChild(heart);
+}
+
+var PETALS = grow();
+centre();
+
+function open(count) {
+  var many = Math.min(count, PETALS.length);
+  PETALS.forEach(function (el, i) {
+    if (i >= many) return;
+    // a short stagger so it unfurls rather than snapping open all at once
+    el.style.transitionDelay = REDUCED ? '0s' : (0.3 + i * 0.04) + 's';
+    el.classList.add('open');
+  });
+}
+
+/* ─── Dates ───
+   Everything is compared on her own clock, at the start of the day, so a
+   message dated today is hers from midnight. */
+function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
+
+function numberOf(name) {
+  var m = name.match(/^(\d{1,3})\.txt$/i);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+/* the day a given letter is due, counting from the first one */
+function dueOn(n) {
+  var d = new Date(START.getFullYear(), START.getMonth(), START.getDate());
+  d.setDate(d.getDate() + (n - 1));
+  return d;
+}
+
+/* which letter today is, where the first day is letter one */
+function dayNumber() {
+  return Math.floor((startOfDay(new Date()) - startOfDay(START)) / 86400000) + 1;
+}
+
+function pretty(d) {
+  try {
+    return d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
+  } catch (e) {
+    return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+  }
+}
+
+function label(d) {
+  var days = Math.round((startOfDay(new Date()) - startOfDay(d)) / 86400000);
+  if (days === 0) return 'Tonight';
+  if (days === 1) return 'Yesterday';
+  return pretty(d);
+}
+
+/* ─── Reading one ───
+   The file sits next to this page, so it is fetched directly rather than
+   through the API. That keeps the rate limit for the listing alone. */
+function read(name) {
+  return fetch(DIR + '/' + encodeURIComponent(name), { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.text() : ''; })
+    .catch(function () { return ''; });
+}
+
+function nothingYet() {
+  $('#when').textContent = '';
+  $('#note').className = 'quiet';
+  $('#note').textContent = 'Nothing here yet, sayang. There will be.';
+}
+
+(function () {
+  if (!window.fetch) { nothingYet(); return; }
+
+  fetch(API, { headers: { Accept: 'application/vnd.github+json' } })
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .then(function (list) {
+      if (!Array.isArray(list)) throw 0;
+
+      var upTo = PREVIEW ? 9999 : dayNumber();
+      var days = [];
+
+      list.forEach(function (f) {
+        if (f.type !== 'file') return;
+        var n = numberOf(f.name);
+        if (!n) return;
+        if (n > upTo) return;                   // not her turn for this one yet
+        days.push({ name: f.name, n: n, date: dueOn(n) });
+      });
+
+      days.sort(function (a, b) { return b.n - a.n; });
+
+      if (!days.length) { nothingYet(); return; }
+
+      /* These two are SVG groups, not HTML elements, so the hidden property
+         does not exist on them and assigning it does nothing. The attribute
+         has to be set and removed by hand. */
+      $('#bud').setAttribute('hidden', '');
+      $('#flower').removeAttribute('hidden');
+      $('#bloom').setAttribute('aria-label',
+        'A queen of the night, open by ' + days.length + ' of its 29 petals');
+      open(days.length);
+      $('#count').textContent = (days.length === 1
+        ? 'One petal so far'
+        : days.length + ' petals so far') + (PREVIEW ? '  ·  preview' : '');
+
+      // tonight's, or the most recent one before it
+      var now = days[0];
+      $('#when').textContent = label(now.date);
+      read(now.name).then(function (text) {
+        if (text.trim()) {
+          $('#note').textContent = text.trim();
+        } else {
+          $('#note').className = 'quiet';
+          $('#note').textContent = 'This one came through empty. Ask him.';
+        }
+      });
+
+      var rest = days.slice(1);
+      if (!rest.length) return;
+
+      $('#before').hidden = false;
+      $('#drawerLabel').textContent = rest.length === 1
+        ? 'The one before'
+        : 'The ' + rest.length + ' before';
+
+      var past = $('#past');
+      rest.forEach(function (day) {
+        var wrap = document.createElement('div');
+        wrap.className = 'old';
+
+        var head = document.createElement('button');
+        head.className = 'old-head';
+        head.type = 'button';
+        head.setAttribute('aria-expanded', 'false');
+        head.textContent = label(day.date);
+
+        var body = document.createElement('div');
+        body.className = 'old-body';
+        body.hidden = true;
+
+        // only fetched when she actually opens it
+        var got = false;
+        head.addEventListener('click', function () {
+          var show = body.hidden;
+          body.hidden = !show;
+          head.setAttribute('aria-expanded', show ? 'true' : 'false');
+          if (show && !got) {
+            got = true;
+            body.textContent = 'reading...';
+            read(day.name).then(function (t) { body.textContent = t.trim() || 'Empty.'; });
+          }
+        });
+
+        wrap.appendChild(head);
+        wrap.appendChild(body);
+        past.appendChild(wrap);
+      });
+
+      var drawer = $('#drawer');
+      drawer.addEventListener('click', function () {
+        var show = past.hidden;
+        past.hidden = !show;
+        drawer.setAttribute('aria-expanded', show ? 'true' : 'false');
+      });
+    })
+    .catch(function () { nothingYet(); });
+})();
+</script>
+
+</body>
+</html>
