@@ -84,14 +84,6 @@ body {
   text-transform: uppercase;
   color: var(--ink-low);
 }
-.name {
-  margin-top: 4px;
-  text-align: center;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-style: italic;
-  font-size: 0.82rem;
-  color: var(--ink-low);
-}
 
 /* ═══════════════ Today ═══════════════ */
 .today {
@@ -246,7 +238,6 @@ body {
   </svg>
 
   <p class="count" id="count"></p>
-  <p class="name">Epiphyllum oxypetalum</p>
 
   <section class="today">
     <p class="when" id="when"></p>
@@ -286,7 +277,13 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 var DIR = 'letters';
-var API = 'https://api.github.com/repos/Celestial123123/AnjeBaby/contents/' + DIR + '?ref=main';
+/* A one line file saying how many letters exist, written alongside them.
+
+   This used to ask the GitHub API to list the folder, which is capped at sixty
+   requests an hour per address. Once that ran out the page said there was
+   nothing here, which on this page reads as nobody wrote to her rather than as
+   an error. Nothing is asked of GitHub now. */
+var MANIFEST = DIR + '/index.json';
 
 /* The first letter lands on this day. Everything else counts forward from it. */
 var START = new Date(2026, 9, 9);     // 9 October 2026
@@ -404,11 +401,6 @@ function open(count) {
    message dated today is hers from midnight. */
 function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
 
-function numberOf(name) {
-  var m = name.match(/^(\d{1,3})\.txt$/i);
-  return m ? parseInt(m[1], 10) : null;
-}
-
 /* the day a given letter is due, counting from the first one */
 function dueOn(n) {
   var d = new Date(START.getFullYear(), START.getMonth(), START.getDate());
@@ -444,10 +436,27 @@ function label(d) {
 /* ─── Reading one ───
    The file sits next to this page, so it is fetched directly rather than
    through the API. That keeps the rate limit for the listing alone. */
-function read(name) {
-  return fetch(DIR + '/' + encodeURIComponent(name), { cache: 'no-cache' })
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+function read(n) {
+  return fetch(DIR + '/' + pad(n) + '.txt', { cache: 'no-cache' })
     .then(function (r) { return r.ok ? r.text() : ''; })
     .catch(function () { return ''; });
+}
+
+/* If the manifest is ever missing, count upwards until a letter is not there.
+   Slower, but it means a lost index file cannot empty the page. */
+function countByHand(limit) {
+  var found = 0;
+  function step(n) {
+    if (n > limit) return found;
+    return read(n).then(function (t) {
+      if (!t) return found;
+      found = n;
+      return step(n + 1);
+    });
+  }
+  return step(1);
 }
 
 function nothingYet() {
@@ -459,25 +468,20 @@ function nothingYet() {
 (function () {
   if (!window.fetch) { nothingYet(); return; }
 
-  fetch(API, { headers: { Accept: 'application/vnd.github+json' } })
-    .then(function (r) { return r.ok ? r.json() : []; })
-    .then(function (list) {
-      if (!Array.isArray(list)) throw 0;
+  fetch(MANIFEST, { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (m) {
+      var written = m && m.count > 0 ? m.count : null;
+      return written !== null ? written : countByHand(60);
+    })
+    .catch(function () { return countByHand(60); })
+    .then(function (written) {
+      if (!written) { nothingYet(); return; }
 
-      var upTo = FORCED !== null ? FORCED : (PREVIEW ? 9999 : dayNumber());
-      var days = [];
+      var upTo = FORCED !== null ? FORCED : (PREVIEW ? written : dayNumber());
+      var many = Math.max(0, Math.min(written, upTo));
 
-      list.forEach(function (f) {
-        if (f.type !== 'file') return;
-        var n = numberOf(f.name);
-        if (!n) return;
-        if (n > upTo) return;                   // not her turn for this one yet
-        days.push({ name: f.name, n: n, date: dueOn(n) });
-      });
-
-      days.sort(function (a, b) { return b.n - a.n; });
-
-      if (!days.length) { nothingYet(); return; }
+      if (!many) { nothingYet(); return; }
 
       /* These two are SVG groups, not HTML elements, so the hidden property
          does not exist on them and assigning it does nothing. The attribute
@@ -485,17 +489,16 @@ function nothingYet() {
       $('#bud').setAttribute('hidden', '');
       $('#flower').removeAttribute('hidden');
       $('#bloom').setAttribute('aria-label',
-        'A flower, open by ' + days.length + ' of its 29 petals');
-      open(days.length);
-      $('#count').textContent = (days.length === 1
+        'A flower, open by ' + many + ' of its 29 petals');
+      open(many);
+      $('#count').textContent = (many === 1
         ? 'One petal so far'
-        : days.length + ' petals so far') +
+        : many + ' petals so far') +
         (FORCED !== null ? '  ·  day ' + FORCED : PREVIEW ? '  ·  preview' : '');
 
-      // tonight's, or the most recent one before it
-      var now = days[0];
-      $('#when').textContent = label(now.date);
-      read(now.name).then(function (text) {
+      // tonight's
+      $('#when').textContent = label(dueOn(many));
+      read(many).then(function (text) {
         if (text.trim()) {
           $('#note').textContent = text.trim();
         } else {
@@ -504,46 +507,47 @@ function nothingYet() {
         }
       });
 
-      var rest = days.slice(1);
-      if (!rest.length) return;
+      if (many < 2) return;
 
       $('#before').hidden = false;
-      $('#drawerLabel').textContent = rest.length === 1
+      $('#drawerLabel').textContent = many === 2
         ? 'The one before'
-        : 'The ' + rest.length + ' before';
+        : 'The ' + (many - 1) + ' before';
 
       var past = $('#past');
-      rest.forEach(function (day) {
-        var wrap = document.createElement('div');
-        wrap.className = 'old';
+      for (var n = many - 1; n >= 1; n--) {
+        (function (num) {
+          var wrap = document.createElement('div');
+          wrap.className = 'old';
 
-        var head = document.createElement('button');
-        head.className = 'old-head';
-        head.type = 'button';
-        head.setAttribute('aria-expanded', 'false');
-        head.textContent = label(day.date);
+          var head = document.createElement('button');
+          head.className = 'old-head';
+          head.type = 'button';
+          head.setAttribute('aria-expanded', 'false');
+          head.textContent = label(dueOn(num));
 
-        var body = document.createElement('div');
-        body.className = 'old-body';
-        body.hidden = true;
+          var body = document.createElement('div');
+          body.className = 'old-body';
+          body.hidden = true;
 
-        // only fetched when she actually opens it
-        var got = false;
-        head.addEventListener('click', function () {
-          var show = body.hidden;
-          body.hidden = !show;
-          head.setAttribute('aria-expanded', show ? 'true' : 'false');
-          if (show && !got) {
-            got = true;
-            body.textContent = 'reading...';
-            read(day.name).then(function (t) { body.textContent = t.trim() || 'Empty.'; });
-          }
-        });
+          // only fetched when she actually opens it
+          var got = false;
+          head.addEventListener('click', function () {
+            var show = body.hidden;
+            body.hidden = !show;
+            head.setAttribute('aria-expanded', show ? 'true' : 'false');
+            if (show && !got) {
+              got = true;
+              body.textContent = 'reading...';
+              read(num).then(function (t) { body.textContent = t.trim() || 'Empty.'; });
+            }
+          });
 
-        wrap.appendChild(head);
-        wrap.appendChild(body);
-        past.appendChild(wrap);
-      });
+          wrap.appendChild(head);
+          wrap.appendChild(body);
+          past.appendChild(wrap);
+        })(n);
+      }
 
       var drawer = $('#drawer');
       drawer.addEventListener('click', function () {
@@ -551,8 +555,7 @@ function nothingYet() {
         past.hidden = !show;
         drawer.setAttribute('aria-expanded', show ? 'true' : 'false');
       });
-    })
-    .catch(function () { nothingYet(); });
+    });
 })();
 </script>
 
