@@ -105,7 +105,7 @@ body {
 /* ===== Profile Header ===== */
 .profile {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   animation: fadeUp 0.8s ease-out;
 }
 
@@ -463,6 +463,60 @@ body {
 /* ===== "Let It Out", its own spot on the hub, not a grid card =====
    Deliberately off-palette (dusk blues, not rose) so it reads as a place
    to go rather than another page to read. */
+/* ═══════════════ Pinned ═══════════════
+   The two she opens most, sat under her name as two round shortcuts so that
+   neither has to be found by scrolling. Deliberately small: these are a way
+   through, not something to look at. */
+.pinned {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 0 0 22px;
+  animation: fadeUp 0.8s ease-out 0.15s both;
+}
+
+.pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 76px;
+  text-decoration: none;
+  color: var(--text-soft);
+}
+
+.pin-icon {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  background: linear-gradient(135deg, #ffe4ec, #fed7aa);
+  color: #ea580c;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.pin:hover .pin-icon { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+.pin:active .pin-icon { transform: translateY(-1px); }
+
+.pin-title {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* The vault is cool where the letters are warm, so the two read as different
+   places without either of them shouting. Same blue and lavender as the Let
+   It Out panel further down, so it is already a colour this page uses. */
+.pin.dark .pin-icon {
+  background: linear-gradient(135deg, #dbe6f8, #e6dcf6);
+  color: #5b7fc7;
+}
+
 .vent-spot {
   margin-bottom: 36px;
   animation: fadeUp 0.8s ease-out 0.3s both;
@@ -914,6 +968,18 @@ body {
       <span class="together-label">days together</span>
     </div>
   </header>
+
+  <!-- The two she opens most, kept above everything else -->
+  <nav class="pinned">
+    <a class="pin" href="rose.html">
+      <span class="pin-icon"><i class="fas fa-spa"></i></span>
+      <span class="pin-title">Every Night</span>
+    </a>
+    <a class="pin dark" href="watch.html">
+      <span class="pin-icon"><i class="fas fa-film"></i></span>
+      <span class="pin-title">The Vault</span>
+    </a>
+  </nav>
 
   <!-- Filter Tabs -->
   <div class="filters" id="filters">
