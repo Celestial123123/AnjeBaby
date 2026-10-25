@@ -11,7 +11,32 @@
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\" -Recurse -File | Where-Object { $_.Length -gt 25MB } | Sort-Object Length -Descending | Select-Object @{N='SizeMB';E={[math]::Round\\($_.Length/1MB,1\\)}}, FullName)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\2months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\3months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\4months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\ValentinesImages\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\Music\" -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Length -gt 25MB } | Sort-Object Length -Descending | Select-Object @{N='SizeMB';E={[math]::Round\\($_.Length/1MB,1\\)}}, FullName)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\2months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\3months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\4months\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\ValentinesImages\",\"C:\\\\Users\\\\khair\\\\OneDrive\\\\Documents\\\\Jasmine\\\\Music\" -Recurse -File -ErrorAction SilentlyContinue | Sort-Object Length -Descending | Select-Object -First 15 @{N='SizeMB';E={[math]::Round\\($_.Length/1MB,1\\)}}, FullName)",
-      "PowerShell(git *)"
+      "PowerShell(git *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(git push *)",
+      "Bash(git stash *)",
+      "Bash(awk '{print $5, $9}')",
+      "Bash(node -e ' *)",
+      "Bash(git commit -m '@ *)",
+      "Bash(git commit *)",
+      "Bash(git rebase *)",
+      "Bash(node *)",
+      "Bash(perl -v)",
+      "Bash(cp index.html __TRACKED_VAR__/index.bak.html)",
+      "Bash(perl -0pi -e 's/      <div class=\"card-header\">\\\\n        \\(<div class=\"card-icon\">.*?<\\\\/div>\\)\\\\n      <\\\\/div>\\\\n/      $1\\\\n/g' index.html)",
+      "Bash(perl -0pi -e 's/[ ]{6}<div class=\"card-header\">\\\\r?\\\\n[ ]{8}\\(<div class=\"card-icon\">.*?<\\\\/div>\\)\\\\r?\\\\n[ ]{6}<\\\\/div>\\\\r?\\\\n/      $1\\\\r\\\\n/g' index.html)",
+      "Bash(grep -o '0\\\\.[0-9]*$')",
+      "Read(//tmp/**)",
+      "Bash(perl -0pi -e ' *)",
+      "Bash(sed -n '/data-title=\"Happy 6 Months/,/^    <\\\\/div>/p' index.html)",
+      "Bash(sed -n '/data-title=\"Heart Animation\"/,/^    <\\\\/div>/p' index.html)",
+      "Bash(perl -pi -e 's/\\(linear-gradient\\\\\\(145deg, rgba\\\\\\([0-9, .]+\\\\\\) 0%, rgba\\\\\\([0-9, .]+\\\\\\) 48%, rgba\\\\\\([0-9, .]+\\\\\\) 100%\\\\\\)\\), var\\\\\\(--glass\\\\\\);/$1;/' index.html)",
+      "Bash(gh repo *)",
+      "Bash(git log *)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"https://api.github.com/repos/Celestial123123/AnjeBaby\" -UseBasicParsing -TimeoutSec 15; $j = $r.Content | ConvertFrom-Json; \"visibility: \" + $j.visibility; \"private: \" + $j.private } catch { \"Could not query GitHub API: \" + $_.Exception.Message })"
     ]
   }
 }
