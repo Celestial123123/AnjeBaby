@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Eleven months</title>
-<meta name="description" content="Eleven cards, and the last letter takes you back to the first.">
-<meta name="theme-color" content="#0b241a">
+<meta name="description" content="Eleven saves on one memory card.">
+<meta name="theme-color" content="#06101c">
 <link rel="icon" href="icons/favicon.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,944 +13,1143 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 [hidden] { display: none !important; }
 
 :root {
-  --felt:      #0e2b20;
-  --felt-deep: #061711;
-  --card:      #f7f2e6;
-  --card-edge: #ded3b9;
-  --ink:       #15171a;
-  --ink-soft:  #585c60;
-  --gold:      #e3bd6d;
-  --gold-hot:  #fdeec2;
-  --gold-deep: #8d7338;
-  --red:       #b02a30;
-  --ease:      cubic-bezier(0.22, 1, 0.36, 1);
-  --punch:     cubic-bezier(0.34, 1.56, 0.64, 1);
+  --deep:   #04090f;
+  --blue:   #0b1b2e;
+  --blue-2: #16314f;
+  --line:   #2f5d8e;
+  --ice:    #cfe4f7;
+  --ice-dim:#8fb3d4;
+  --white:  #f2f8ff;
+  --glow:   #5ea8ff;
+  --ease:   cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html, body { height: 100%; }
-html { background: var(--felt-deep); }
 
 body {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  color: var(--card);
-  background: radial-gradient(130% 92% at 50% -12%, #1c5239 0%, var(--felt) 42%, var(--felt-deep) 100%);
+  font-family: 'Jost', system-ui, sans-serif;
+  background: var(--deep);
+  color: var(--ice);
   overflow: hidden;
   position: fixed;
   inset: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* felt weave */
-body::before {
+/* the scanline haze every CRT shot of this screen has */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 90;
+  background: repeating-linear-gradient(180deg, rgba(0,0,0,0.16) 0 1px, transparent 1px 3px);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.screen {
+  position: absolute; inset: 0;
+  padding: calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+}
+
+/* ════════ gate ════════ */
+
+.shut {
+  display: grid; place-content: center; gap: 18px; text-align: center;
+}
+
+.shut h2 {
+  font-weight: 400; font-size: 13px; letter-spacing: 0.34em; color: var(--ice-dim);
+}
+
+.shut p { font-size: 14px; line-height: 1.7; color: var(--ice-dim); max-width: 26ch; }
+
+/* ════════ 1. boot ════════ */
+
+#boot { background: #000; display: grid; place-items: center; z-index: 60; }
+
+.sce {
+  position: absolute;
+  top: 26%;
+  font-size: 10px; letter-spacing: 0.4em; color: #7e8a96;
+  text-align: center; width: 100%;
+  animation: sceIn 2.6s ease both;
+}
+
+@keyframes sceIn {
+  0%   { opacity: 0; }
+  22%  { opacity: 1; }
+  74%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* the field of towers, and the floor they stand on */
+.field {
+  position: absolute;
+  left: 0; right: 0; bottom: 42%;
+  height: 34vh;
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: clamp(5px, 1.6vw, 11px);
+  opacity: 0;
+  animation: fieldIn 1.4s ease 2.2s forwards;
+  perspective: 700px;
+}
+
+@keyframes fieldIn { to { opacity: 1; } }
+
+.field b {
+  display: block;
+  width: clamp(7px, 2vw, 14px);
+  height: 0;
+  background: linear-gradient(180deg, #9fd0ff, #2b6ea8 60%, #123353);
+  box-shadow: 0 0 14px rgba(94,168,255,0.5);
+  animation: grow 2.6s var(--ease) forwards;
+}
+
+@keyframes grow { to { height: var(--h); } }
+
+.floor {
+  position: absolute;
+  left: 0; right: 0; bottom: 38%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(94,168,255,0.6), transparent);
+  opacity: 0;
+  animation: fieldIn 1s ease 2.4s forwards;
+}
+
+.ps2 {
+  position: absolute;
+  bottom: 27%;
+  width: 100%; text-align: center;
+  font-size: clamp(17px, 5vw, 26px);
+  letter-spacing: 0.3em;
+  color: var(--white);
+  text-shadow: 0 0 24px rgba(94,168,255,0.7);
+  opacity: 0;
+  animation: fieldIn 1.6s ease 3.6s forwards;
+}
+
+.skip {
+  position: absolute; bottom: 7%; width: 100%; text-align: center;
+  font-size: 10px; letter-spacing: 0.3em; color: #44525f;
+}
+
+/* ════════ shared chrome ════════ */
+
+.pane {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(130% 80% at 50% 0%, #15385c 0%, var(--blue) 46%, var(--deep) 100%);
+}
+
+.pane::before {
   content: '';
   position: absolute; inset: 0;
-  background:
-    repeating-linear-gradient(45deg,  rgba(255,255,255,0.014) 0 2px, transparent 2px 4px),
-    repeating-linear-gradient(-45deg, rgba(0,0,0,0.055) 0 2px, transparent 2px 4px);
-  pointer-events: none; z-index: 1;
+  background: radial-gradient(60% 50% at 50% 110%, rgba(94,168,255,0.14), transparent 70%);
+  animation: pulse 7s ease-in-out infinite;
 }
 
-/* the lamp above the table, swinging a little */
-.lamp {
-  position: absolute;
-  left: 50%; top: -42vh;
-  width: 150vw; height: 100vh;
-  margin-left: -75vw;
-  background: radial-gradient(42% 48% at 50% 50%, rgba(227,189,109,0.20), rgba(227,189,109,0.06) 45%, transparent 72%);
-  pointer-events: none; z-index: 1;
-  animation: swing 9s ease-in-out infinite;
-}
+@keyframes pulse { 0%,100% { opacity: 0.7; } 50% { opacity: 1; } }
 
-@keyframes swing {
-  0%, 100% { transform: translateX(-2.5vw) scale(1); opacity: 0.85; }
-  50%      { transform: translateX(2.5vw)  scale(1.06); opacity: 1; }
-}
-
-/* gold dust */
-.dust { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
-
-.dust i {
-  position: absolute;
-  bottom: -6vh;
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: var(--gold);
-  opacity: 0;
-  animation: lift linear infinite;
-}
-
-@keyframes lift {
-  0%   { opacity: 0;    transform: translateY(0) translateX(0) scale(0.6); }
-  12%  { opacity: 0.55; }
-  88%  { opacity: 0.45; }
-  100% { opacity: 0;    transform: translateY(-112vh) translateX(var(--drift, 20px)) scale(1.25); }
-}
-
-.stage {
-  position: absolute; inset: 0;
-  display: grid; place-items: center;
-  padding: calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
-  perspective: 1500px;
-  z-index: 5;
-}
-
-/* ══════════ gate ══════════ */
-
-.shut { text-align: center; display: grid; gap: 20px; justify-items: center; }
-.shut p { font-size: 15px; line-height: 1.7; color: rgba(247,242,230,0.72); max-width: 26ch; }
-
-/* ══════════ opening ══════════ */
-
-.open { text-align: center; display: grid; gap: 24px; justify-items: center; }
-
-.eyebrow {
-  font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase;
-  color: var(--gold);
-  animation: rise 0.8s var(--ease) both;
-}
-
-.title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 600;
-  font-size: clamp(36px, 11.5vw, 68px);
-  line-height: 1.02;
-  background: linear-gradient(100deg, var(--gold-deep) 0%, var(--gold-hot) 36%, var(--gold) 54%, var(--gold-deep) 100%);
-  background-size: 250% 100%;
-  -webkit-background-clip: text; background-clip: text;
-  color: transparent;
-  animation: sheen 5s linear infinite;
-}
-
-@keyframes sheen { 0% { background-position: 180% 0; } 100% { background-position: -80% 0; } }
-
-/* letters move with `top`, not transform: a transform would make each one
-   paint alone and the gradient clipped to the title would never reach it */
-.title .ch { position: relative; animation: drop 0.9s var(--punch) both; }
-
-@keyframes drop { from { opacity: 0; top: -40px; } to { opacity: 1; top: 0; } }
-
-.lede {
-  font-size: 15px; line-height: 1.7;
-  color: rgba(247,242,230,0.74); max-width: 30ch;
-  animation: rise 0.9s var(--ease) 0.95s both;
-}
-
-@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-
-/* the deck riffles while it waits */
-.deck { position: relative; width: 112px; height: 156px; cursor: pointer; animation: rise 0.9s var(--ease) 1.2s both; }
-
-.deck b {
-  position: absolute; inset: 0;
-  border-radius: 13px;
-  border: 1px solid rgba(227,189,109,0.42);
-  background:
-    repeating-linear-gradient(45deg, rgba(227,189,109,0.13) 0 5px, transparent 5px 10px),
-    linear-gradient(165deg, #17492f, #0a2217);
-  box-shadow: 0 18px 36px rgba(0,0,0,0.5);
-}
-
-.deck b:nth-child(1) { animation: riffle 2.6s ease-in-out infinite; }
-.deck b:nth-child(2) { animation: riffle 2.6s ease-in-out 0.18s infinite; }
-.deck b:nth-child(3) { animation: riffle 2.6s ease-in-out 0.36s infinite; }
-
-@keyframes riffle {
-  0%, 100% { transform: translate(0,0) rotate(0deg); }
-  22%      { transform: translate(-16px,-12px) rotate(-9deg); }
-  48%      { transform: translate(14px,-6px) rotate(7deg); }
-  72%      { transform: translate(-3px,2px) rotate(-2deg); }
-}
-
-.deal {
-  font-family: inherit; font-size: 12px; font-weight: 600;
-  letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--felt-deep);
-  background: linear-gradient(140deg, var(--gold-hot), var(--gold));
-  border: 0; border-radius: 999px; padding: 15px 32px; cursor: pointer;
-  box-shadow: 0 10px 26px rgba(227,189,109,0.3);
-  animation: rise 0.9s var(--ease) 1.4s both, pulse 2.2s ease-in-out 2.4s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 10px 26px rgba(227,189,109,0.26); transform: scale(1); }
-  50%      { box-shadow: 0 14px 48px rgba(227,189,109,0.62); transform: scale(1.04); }
-}
-
-/* ══════════ table ══════════ */
-
-.table { position: absolute; inset: 0; }
-
-/* the big ghost number behind everything */
-.ghost {
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: min(58vh, 62vw);
-  line-height: 1;
-  color: rgba(227,189,109,0.07);
-  pointer-events: none;
-  transition: opacity 0.4s linear;
-}
-
-.pile {
-  position: absolute; left: 50%; top: 50%;
-  width: min(330px, 86vw);
-  transform: translate(-50%, -50%);
-  transform-style: preserve-3d;
-}
-
-.card {
-  position: absolute; left: 0; right: 0; top: 50%;
-  margin-top: -126px;
-  min-height: 252px;
-  transform-style: preserve-3d;
-  transform: rotate(var(--tilt, 0deg));
-}
-
-.card.landing { animation: toss 0.8s var(--punch) both; }
-
-@keyframes toss {
-  from { opacity: 0; transform: translate(64vw, 62vh) rotate(42deg) scale(0.68); }
-  to   { opacity: 1; transform: translate(0,0) rotate(var(--tilt, 0deg)) scale(1); }
-}
-
-/* the live card leans with her finger or the pointer */
-.card.rest {
-  transition: transform 0.35s var(--ease);
-  transform: rotate(var(--tilt, 0deg)) rotateX(var(--py, 0deg)) rotateY(var(--px, 0deg));
-}
-
-.card.under {
-  transition: transform 0.6s var(--ease), opacity 0.6s var(--ease), filter 0.6s var(--ease);
-  transform: translateY(calc(var(--depth) * -9px)) scale(calc(1 - var(--depth) * 0.035)) rotate(var(--tilt, 0deg));
-  filter: brightness(calc(1 - var(--depth) * 0.1));
-  opacity: calc(1 - var(--depth) * 0.2);
-  z-index: 0;
-}
-
-/* the flip */
-.flip {
+.bar {
   position: relative;
-  width: 100%; min-height: 252px;
-  transform-style: preserve-3d;
-  transform: rotateY(180deg);
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  padding-right: 44px;            /* keeps the heading clear of the music button */
+  border-bottom: 1px solid rgba(47,93,142,0.65);
 }
 
-.card.turn .flip { animation: turn 0.85s var(--ease) 0.34s forwards; }
+.bar h1 {
+  font-weight: 400;
+  font-size: clamp(11px, 3.1vw, 13px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white);
+}
 
-@keyframes turn { to { transform: rotateY(0deg); } }
+.bar span { font-size: 10.5px; letter-spacing: 0.14em; color: var(--ice-dim); white-space: nowrap; }
 
-.face {
+.legend {
+  position: absolute;
+  left: 16px; right: 16px;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  display: flex; gap: 20px; justify-content: center;
+  font-size: 10.5px; letter-spacing: 0.18em; color: var(--ice-dim);
+}
+
+.legend b { color: var(--glow); font-weight: 400; }
+
+/* ════════ 2. browser: the console, and the disc she has to put in ════════ */
+
+.room {
   position: absolute; inset: 0;
-  border-radius: 18px;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.7) inset, 0 28px 54px rgba(0,0,0,0.5);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: clamp(26px, 7vh, 54px);
+}
+
+.tip {
+  font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ice-dim);
+  animation: blink 2.8s ease-in-out infinite;
+  text-align: center;
+}
+
+@keyframes blink { 0%,100% { opacity: 0.4; } 50% { opacity: 0.95; } }
+
+/* the console */
+.ps {
+  position: relative;
+  width: clamp(230px, 68vw, 330px);
+  height: clamp(74px, 22vw, 104px);
+  border-radius: 7px;
+  background: linear-gradient(176deg, #2a3340 0%, #141b24 52%, #0b1017 100%);
+  border: 1px solid #3d4b5b;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    0 26px 44px rgba(0,0,0,0.6);
+  transition: box-shadow 0.35s var(--ease), transform 0.35s var(--ease);
+}
+
+/* the lid the disc goes under */
+.ps .lid {
+  position: absolute;
+  left: 9%; right: 9%; top: 16%;
+  height: 46%;
+  border-radius: 4px;
+  background: linear-gradient(176deg, #222b37, #10161e);
+  border: 1px solid #39465a;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
   overflow: hidden;
 }
 
-.face.back {
-  transform: rotateY(180deg);
-  border: 1px solid rgba(227,189,109,0.42);
+.ps .lid::after {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: rgba(94,168,255,0.14);
+}
+
+.ps .mark {
+  position: absolute;
+  left: 0; right: 0; bottom: 9%;
+  text-align: center;
+  font-size: clamp(7px, 2.1vw, 9px);
+  letter-spacing: 0.34em;
+  color: #6d7f93;
+}
+
+/* the power light */
+.ps .led {
+  position: absolute;
+  left: 5.5%; top: 50%;
+  width: 7px; height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: #4b2026;
+  box-shadow: 0 0 6px rgba(255,80,80,0.5);
+  transition: background 0.4s linear, box-shadow 0.4s linear;
+}
+
+.ps.live .led { background: #7fd0ff; box-shadow: 0 0 14px rgba(94,168,255,0.95); }
+
+/* the two card slots on the front */
+.ps .ports { position: absolute; right: 6%; top: 50%; margin-top: -7px; display: flex; gap: 5px; }
+.ps .ports i { width: 15px; height: 14px; border-radius: 2px; background: #0a0f15; border: 1px solid #39465a; }
+
+.ps.over { transform: scale(1.03); box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 26px 50px rgba(0,0,0,0.6), 0 0 0 1px var(--glow), 0 0 34px rgba(94,168,255,0.45); }
+
+/* the memory card, which only appears once the disc is in */
+.ejected {
+  position: absolute;
+  right: 7%; bottom: -38px;
+  width: 40px; height: 56px;
+  border-radius: 4px 4px 6px 6px;
+  background: linear-gradient(160deg, #3a4a5c, #1b2836 60%, #121b25);
+  border: 1px solid #55697e;
+  box-shadow: 0 10px 18px rgba(0,0,0,0.55);
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ejected::before {
+  content: '';
+  position: absolute; left: 6px; right: 6px; top: 7px; height: 13px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #70849a, #46576a);
+}
+
+.ejected.out { animation: eject 0.75s var(--ease) forwards; }
+
+@keyframes eject {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(26px); }
+}
+
+/* the disc */
+.disc {
+  width: clamp(96px, 29vw, 132px);
+  height: clamp(96px, 29vw, 132px);
+  border-radius: 50%;
   background:
-    repeating-linear-gradient(45deg, rgba(227,189,109,0.13) 0 5px, transparent 5px 10px),
-    linear-gradient(165deg, #17492f, #0a2217);
+    radial-gradient(circle at 50% 50%, #0a1119 0 15%, transparent 15.5%),
+    radial-gradient(circle at 50% 50%, transparent 0 22%, rgba(255,255,255,0.08) 22% 24%, transparent 24%),
+    conic-gradient(from 0deg, #2b4a6b, #6f9fd0, #2b4a6b, #74a7da, #2b4a6b, #6f9fd0, #2b4a6b);
+  border: 1px solid #4a6a8e;
+  box-shadow: 0 16px 30px rgba(0,0,0,0.6);
+  cursor: grab;
+  touch-action: none;
+  animation: spinDisc 14s linear infinite;
 }
 
-.face.front {
-  background: linear-gradient(168deg, #fffdf7 0%, var(--card) 48%, #ebe3cf 100%);
-  color: var(--ink);
-  border: 1px solid var(--card-edge);
-  padding: 26px 24px 24px;
+.disc.held { cursor: grabbing; animation: none; z-index: 40; }
+
+.disc.gone { animation: swallow 0.8s var(--ease) forwards; }
+
+@keyframes swallow {
+  to { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.26) rotate(220deg); }
 }
 
-/* milestone cards wear gold */
-.card.major .face.front { border-color: rgba(227,189,109,0.9); box-shadow: 0 0 0 1px rgba(227,189,109,0.5) inset, 0 28px 60px rgba(0,0,0,0.55); }
+.discWrap { display: grid; justify-items: center; gap: 12px; }
+.discWrap p { font-size: 10.5px; letter-spacing: 0.18em; color: var(--ice-dim); }
 
-.face.front::after {
+@keyframes spinDisc { to { rotate: 360deg; } }
+
+/* ════════ 2b. the load, after the disc goes in ════════ */
+
+#load { background: #000; z-index: 58; padding: 0; overflow: hidden; }
+
+/* the tube coming on: a hairline that opens out into the picture */
+.tube {
+  position: absolute; inset: 0;
+  background: #000;
+  animation: tubeOn 0.7s ease-out both;
+  transform-origin: 50% 50%;
+}
+
+@keyframes tubeOn {
+  0%   { transform: scaleY(0.004) scaleX(1.3); background: #cfe4f7; }
+  36%  { transform: scaleY(0.02)  scaleX(1);   background: #9fd0ff; }
+  60%  { transform: scaleY(1) scaleX(1);       background: #16314f; }
+  100% { transform: scaleY(1) scaleX(1);       background: #000; }
+}
+
+/* everything in the load sits on this */
+.reel { position: absolute; inset: 0; display: grid; place-content: center; gap: 22px; text-align: center; padding: 26px; }
+
+.licence {
+  font-size: clamp(8px, 2.4vw, 10px);
+  letter-spacing: 0.34em;
+  color: #7f8e9d;
+  line-height: 2.1;
+}
+
+.stat {
+  font-size: clamp(9.5px, 2.8vw, 11.5px);
+  letter-spacing: 0.26em;
+  color: var(--ice);
+  min-height: 1.4em;
+}
+
+.stat b { color: var(--glow); font-weight: 400; }
+
+/* the block progress bar */
+.meter {
+  width: min(260px, 66vw);
+  height: 9px;
+  margin: 0 auto;
+  border: 1px solid rgba(94,168,255,0.5);
+  padding: 1px;
+  display: flex; gap: 1px;
+}
+
+.meter i { flex: 1; background: rgba(94,168,255,0.1); transition: background 0.14s linear; }
+.meter i.lit { background: var(--glow); box-shadow: 0 0 7px rgba(94,168,255,0.8); }
+
+/* the little disc that spins in the corner while it reads */
+.reading {
+  position: absolute;
+  right: 22px; bottom: calc(22px + env(safe-area-inset-bottom));
+  display: flex; align-items: center; gap: 9px;
+  font-size: 9.5px; letter-spacing: 0.22em; color: var(--ice-dim);
+}
+
+.reading u {
+  width: 15px; height: 15px; border-radius: 50%;
+  border: 2px solid rgba(94,168,255,0.25);
+  border-top-color: var(--glow);
+  animation: spinFast 0.8s linear infinite;
+}
+
+@keyframes spinFast { to { transform: rotate(360deg); } }
+
+/* the title card at the end of the load */
+.titlecard { display: grid; gap: 16px; justify-items: center; }
+
+.titlecard h2 {
+  font-weight: 300;
+  font-size: clamp(27px, 9vw, 54px);
+  letter-spacing: 0.26em;
+  color: #eaf4ff;
+  text-shadow: 0 0 10px rgba(159,208,255,0.75), 0 0 44px rgba(94,168,255,0.65);
+  animation: titleIn 1.5s var(--ease) both;
+}
+
+@keyframes titleIn {
+  0%   { opacity: 0; letter-spacing: 0.9em; filter: blur(14px); }
+  100% { opacity: 1; letter-spacing: 0.26em; filter: blur(0); }
+}
+
+.titlecard small {
+  font-size: 9.5px; letter-spacing: 0.3em; color: var(--ice-dim);
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+/* a slow band of brightness rolling down, the way a CRT does */
+.roll {
+  position: absolute; left: 0; right: 0; height: 32%;
+  background: linear-gradient(180deg, transparent, rgba(159,208,255,0.055), transparent);
+  pointer-events: none;
+  animation: rolling 5.5s linear infinite;
+}
+
+@keyframes rolling { from { top: -34%; } to { top: 104%; } }
+
+/* the odd flicker, because it never was a clean picture */
+.flick {
+  position: absolute; inset: 0;
+  background: rgba(159,208,255,0.05);
+  opacity: 0;
+  pointer-events: none;
+  animation: flick 4.3s steps(1, end) infinite;
+}
+
+@keyframes flick {
+  0%, 92%, 100% { opacity: 0; }
+  93%  { opacity: 0.5; }
+  94%  { opacity: 0; }
+  96%  { opacity: 0.32; }
+  97%  { opacity: 0; }
+}
+
+/* ════════ 3. the card ════════ */
+
+.grid {
+  position: absolute;
+  left: 16px; right: 16px;
+  top: calc(58px + env(safe-area-inset-top));
+  bottom: calc(46px + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  grid-auto-rows: min-content;
+  gap: 10px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+}
+
+.save {
+  border: 1px solid rgba(47,93,142,0.6);
+  background: linear-gradient(170deg, rgba(22,49,79,0.85), rgba(9,21,36,0.9));
+  border-radius: 4px;
+  padding: 12px 10px 11px;
+  cursor: pointer;
+  display: grid; gap: 9px; justify-items: center;
+  transition: border-color 0.25s linear, background 0.25s linear, transform 0.25s var(--ease);
+  opacity: 0;
+  animation: fadeUp 0.5s var(--ease) both;
+}
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.save:hover, .save.on {
+  border-color: var(--glow);
+  background: linear-gradient(170deg, rgba(36,80,128,0.95), rgba(13,31,52,0.95));
+  transform: translateY(-2px);
+}
+
+.save.on { box-shadow: 0 0 0 1px rgba(94,168,255,0.5), 0 0 22px rgba(94,168,255,0.28); }
+
+/* every save has a little icon that turns, the way they all did */
+.icon {
+  width: 42px; height: 42px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: turn 7s linear infinite;
+}
+
+.icon i {
+  position: absolute; inset: 0;
+  border: 1px solid rgba(94,168,255,0.8);
+  background: linear-gradient(160deg, rgba(94,168,255,0.42), rgba(94,168,255,0.06));
+  border-radius: 3px;
+}
+
+.icon i:nth-child(1) { transform: rotateY(0deg)  translateZ(21px); }
+.icon i:nth-child(2) { transform: rotateY(90deg) translateZ(21px); }
+.icon i:nth-child(3) { transform: rotateY(180deg) translateZ(21px); }
+.icon i:nth-child(4) { transform: rotateY(270deg) translateZ(21px); }
+
+@keyframes turn { to { transform: rotateY(360deg); } }
+
+.save b { font-weight: 500; font-size: 11.5px; letter-spacing: 0.12em; color: var(--white); text-align: center; }
+.save span { font-size: 9.5px; letter-spacing: 0.1em; color: var(--ice-dim); }
+
+/* a save's picture, behind the same glass as everything else */
+.shot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 14px 0 2px;
+  border: 1px solid rgba(94,168,255,0.45);
+  border-radius: 3px;
+  overflow: hidden;
+  background: #061018;
+  animation: shotIn 0.6s var(--ease) both;
+}
+
+@keyframes shotIn { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: none; } }
+
+.shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* scanlines and a cold cast, so a phone photo still looks like it came off the card */
+.shot::after {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(104deg, transparent 32%, rgba(255,255,255,0.8) 50%, transparent 68%);
-  transform: translateX(-120%);
+  background:
+    repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, rgba(94,168,255,0.12), rgba(6,16,28,0.34));
   pointer-events: none;
 }
 
-.card.turn .face.front::after { animation: wipe 1s var(--ease) 1.05s; }
-
-@keyframes wipe { to { transform: translateX(120%); } }
-
-.rank { position: absolute; top: 14px; left: 17px; font-family: 'Playfair Display', Georgia, serif; font-size: 13px; color: var(--gold-deep); }
-.pip  { position: absolute; top: 12px; right: 16px; font-size: 15px; color: var(--red); }
-.pip.black { color: #222; }
-
-.word {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(34px, 10vw, 50px);
-  line-height: 1.05;
-  margin: 26px 0 0;
-  word-break: break-word;
+/* the grid tile, when a save has a picture instead of the turning block */
+.save .thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px solid rgba(94,168,255,0.4);
+  border-radius: 2px;
+  overflow: hidden;
+  background: #071219;
+  position: relative;
 }
 
-.word .edge { color: var(--gold-deep); }
-.word .slot { opacity: 0; }
-.word .slot.shown { opacity: 1; animation: pop 0.5s var(--punch); }
+.save .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.85) brightness(0.92); }
 
-@keyframes pop {
-  0%   { transform: scale(2.1); color: var(--gold-hot); text-shadow: 0 0 22px rgba(227,189,109,0.9); }
-  100% { transform: scale(1);   color: var(--gold-deep); text-shadow: none; }
+.save .thumb::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(180deg, rgba(0,0,0,0.3) 0 1px, transparent 1px 3px);
 }
 
-.note { font-size: 14.5px; line-height: 1.68; color: var(--ink-soft); margin: 12px 0 0; }
+/* ════════ 4. the open save ════════ */
 
-.when {
-  position: absolute; left: 24px; bottom: 20px;
+.detail {
+  position: absolute; inset: 0; z-index: 50;
+  display: grid; place-items: center; padding: 18px;
+  background: rgba(3, 8, 14, 0.72);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: dimIn 0.3s ease both;
+}
+
+@keyframes dimIn { from { opacity: 0; } to { opacity: 1; } }
+
+.detail .sheet {
+  width: min(520px, 100%);
+  border: 1px solid rgba(94,168,255,0.5);
+  border-radius: 5px;
+  background: linear-gradient(170deg, rgba(20,45,74,0.98), rgba(7,17,29,0.99));
+  box-shadow: 0 30px 70px rgba(0,0,0,0.65), 0 0 0 1px rgba(0,0,0,0.5);
+  padding: 20px 20px 16px;
+  animation: sheetIn 0.4s var(--ease) both;
+}
+
+@keyframes sheetIn { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: none; } }
+
+.sheet .head { display: flex; gap: 16px; align-items: center; border-bottom: 1px solid rgba(47,93,142,0.55); padding-bottom: 14px; }
+
+.sheet .head .icon { width: 54px; height: 54px; flex: 0 0 auto; }
+.sheet .head .icon i:nth-child(1) { transform: rotateY(0deg)  translateZ(27px); }
+.sheet .head .icon i:nth-child(2) { transform: rotateY(90deg) translateZ(27px); }
+.sheet .head .icon i:nth-child(3) { transform: rotateY(180deg) translateZ(27px); }
+.sheet .head .icon i:nth-child(4) { transform: rotateY(270deg) translateZ(27px); }
+
+.sheet h3 { font-weight: 500; font-size: 15px; letter-spacing: 0.16em; color: var(--white); }
+.sheet .meta { margin-top: 5px; font-size: 10px; letter-spacing: 0.14em; color: var(--ice-dim); }
+
+.sheet .body { padding: 16px 0 6px; font-size: 14px; line-height: 1.8; color: var(--ice); }
+
+.sheet .opts { display: flex; gap: 8px; padding-top: 12px; border-top: 1px solid rgba(47,93,142,0.55); }
+
+.opt {
+  font-family: inherit;
+  flex: 1;
+  background: rgba(94,168,255,0.08);
+  border: 1px solid rgba(47,93,142,0.75);
+  color: var(--ice);
   font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--gold-deep);
+  padding: 10px 6px; border-radius: 3px; cursor: pointer;
+  transition: background 0.2s linear, border-color 0.2s linear, color 0.2s linear;
 }
 
-/* the date stamp that thumps onto the milestone cards */
-.stamp {
-  position: absolute; right: 16px; bottom: 16px;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 11px; letter-spacing: 0.08em;
-  color: var(--red);
-  border: 1.5px solid var(--red);
-  border-radius: 6px;
-  padding: 5px 9px;
-  opacity: 0;
-  transform: rotate(-13deg) scale(2.4);
-}
+.opt:hover { background: rgba(94,168,255,0.2); border-color: var(--glow); color: var(--white); }
 
-.card.turn .stamp { animation: thump 0.5s var(--punch) 1.25s forwards; }
-
-@keyframes thump {
-  from { opacity: 0; transform: rotate(-13deg) scale(2.4); }
-  to   { opacity: 0.82; transform: rotate(-13deg) scale(1); }
-}
-
-/* ══════════ effects ══════════ */
-
-.carry {
-  position: fixed; z-index: 60;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 700;
-  color: var(--gold-hot);
-  text-shadow: 0 0 26px rgba(227,189,109,0.9), 0 0 70px rgba(227,189,109,0.45);
-  pointer-events: none;
-}
-
-.spark {
-  position: fixed; z-index: 61;
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--gold-hot);
-  box-shadow: 0 0 10px rgba(253,238,194,0.95);
-  pointer-events: none;
-}
-
-.wave {
-  position: fixed; z-index: 4;
-  left: 50%; top: 50%;
-  width: 24px; height: 24px;
-  margin: -12px 0 0 -12px;
-  border-radius: 50%;
-  border: 1px solid rgba(227,189,109,0.6);
-  pointer-events: none;
-  animation: waveOut 1.1s var(--ease) forwards;
-}
-
-@keyframes waveOut {
-  from { transform: scale(1);  opacity: 0.8; }
-  to   { transform: scale(26); opacity: 0; }
-}
-
-.flash {
-  position: fixed; inset: 0; z-index: 58;
-  background: radial-gradient(45% 45% at 50% 50%, rgba(253,238,194,0.32), transparent 70%);
-  pointer-events: none;
-  animation: flashOut 0.55s ease-out forwards;
-}
-
-@keyframes flashOut { from { opacity: 1; } to { opacity: 0; } }
-
-/* ══════════ chrome ══════════ */
-
-.hud {
-  position: absolute; left: 0; right: 0;
-  top: calc(18px + env(safe-area-inset-top));
-  display: flex; justify-content: center; gap: 7px; z-index: 40;
-}
-
-.hud i {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: rgba(247,242,230,0.2);
-  transition: background 0.4s var(--ease), transform 0.4s var(--punch), box-shadow 0.4s var(--ease);
-}
-
-.hud i.on { background: var(--gold); transform: scale(1.6); box-shadow: 0 0 12px rgba(227,189,109,0.8); }
-
-.chips {
-  position: absolute;
-  left: calc(18px + env(safe-area-inset-left));
-  bottom: calc(24px + env(safe-area-inset-bottom));
-  width: 48px; height: 130px; z-index: 40; pointer-events: none;
-}
-
-.chip {
-  position: absolute; left: 0;
-  width: 48px; height: 13px; border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.32);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.45);
-  animation: chipIn 0.6s var(--punch) both;
-}
-
-@keyframes chipIn {
-  0%   { opacity: 0; transform: translate(-40px, -60px) rotate(-30deg) scale(0.7); }
-  70%  { opacity: 1; transform: translate(0, 6px) rotate(0deg) scale(1.04); }
-  100% { opacity: 1; transform: none; }
-}
-
-.hint {
-  position: absolute; left: 0; right: 0;
-  bottom: calc(26px + env(safe-area-inset-bottom));
+.deny {
+  margin-top: 10px;
+  font-size: 11px; letter-spacing: 0.1em; line-height: 1.6;
+  color: #ff9aa2;
   text-align: center;
-  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
-  color: rgba(247,242,230,0.42); z-index: 40;
-  animation: blink 2.6s ease-in-out infinite;
+  min-height: 16px;
 }
 
-@keyframes blink { 0%,100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+.deny.shake { animation: shake 0.42s ease; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  45% { transform: translateX(5px); }
+  70% { transform: translateX(-3px); }
+}
+
+/* ════════ 5. the end ════════ */
+
+.fin { position: absolute; inset: 0; display: grid; place-content: center; gap: 20px; text-align: center; z-index: 55; padding: 24px; }
+
+.fin h2 {
+  font-weight: 300;
+  font-size: clamp(26px, 8vw, 44px);
+  letter-spacing: 0.24em;
+  color: var(--white);
+  text-shadow: 0 0 30px rgba(94,168,255,0.6);
+}
+
+.fin p { font-size: 14px; line-height: 1.85; color: var(--ice-dim); max-width: 32ch; margin: 0 auto; }
+
+.fin .bars { display: flex; gap: 5px; justify-content: center; align-items: flex-end; height: 56px; }
+
+.fin .bars b {
+  width: 7px;
+  height: 42%;                      /* a resting height, for when nothing animates */
+  background: linear-gradient(180deg, #9fd0ff, #27608f);
+  box-shadow: 0 0 12px rgba(94,168,255,0.5);
+  animation: dance 2.4s ease-in-out infinite;
+}
+
+@keyframes dance { 0%,100% { height: 18%; } 50% { height: 100%; } }
+
+.back {
+  display: inline-block;
+  font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ice-dim); text-decoration: none;
+  border-bottom: 1px solid rgba(143,179,212,0.4); padding-bottom: 3px;
+}
+
+.back:hover { color: var(--glow); border-color: var(--glow); }
 
 .sound {
   position: absolute;
-  right: calc(18px + env(safe-area-inset-right));
-  bottom: calc(26px + env(safe-area-inset-bottom));
+  right: calc(16px + env(safe-area-inset-right));
+  top: calc(14px + env(safe-area-inset-top));
   z-index: 70;
-  width: 42px; height: 42px; border-radius: 50%;
-  border: 1px solid rgba(227,189,109,0.4);
-  background: rgba(6,23,17,0.6);
-  color: var(--gold);
-  font-size: 15px; cursor: pointer;
-  display: grid; place-items: center;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid rgba(47,93,142,0.8);
+  background: rgba(6,16,28,0.7); color: var(--ice-dim);
+  font-size: 13px; cursor: pointer; display: grid; place-items: center;
 }
 
-.sound.on { background: rgba(227,189,109,0.18); box-shadow: 0 0 18px rgba(227,189,109,0.4); }
-
-/* ══════════ finish ══════════ */
-
-.ring { position: absolute; inset: 0; }
-
-.ring .mini {
-  --mw: clamp(50px, 14vw, 74px);
-  --mh: clamp(70px, 19.5vw, 102px);
-  position: absolute; left: 50%; top: 50%;
-  width: var(--mw); height: var(--mh);
-  margin: calc(var(--mh) / -2) 0 0 calc(var(--mw) / -2);
-  border-radius: 9px;
-  border: 1px solid rgba(227,189,109,0.45);
-  background: linear-gradient(168deg, #fffdf7, #e9e1cc);
-  color: var(--ink);
-  display: grid; place-items: center;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 11.5px; text-align: center; padding: 4px;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.45);
-  transform: rotate(var(--a)) translateY(calc(var(--r) * -1)) rotate(calc(var(--a) * -1)) scale(0.2);
-  opacity: 0;
-  transition: transform 1s var(--punch), opacity 0.5s linear;
-}
-
-.ring .mini.out {
-  opacity: 1;
-  transform: rotate(var(--a)) translateY(calc(var(--r) * -1)) rotate(calc(var(--a) * -1)) scale(1);
-}
-
-.ring .wheel {
-  position: absolute; inset: 0;
-  animation: spin 70s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.ring .core {
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  width: min(216px, 53vw);
-  padding: 18px 16px; border-radius: 16px;
-  background: radial-gradient(70% 70% at 50% 50%, rgba(6,23,17,0.97) 55%, rgba(6,23,17,0.8) 100%);
-  box-shadow: 0 0 40px 26px rgba(6,23,17,0.92);
-  z-index: 10; opacity: 0;
-  transition: opacity 0.9s var(--ease) 0.4s;
-}
-
-.ring .core.out { opacity: 1; }
-
-.ring .core b {
-  display: block;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 600;
-  font-size: clamp(25px, 7.6vw, 36px);
-  color: var(--gold-hot); line-height: 1.1;
-}
-
-.ring .core small {
-  display: block; margin-top: 11px;
-  font-size: 12.5px; line-height: 1.7;
-  color: rgba(247,242,230,0.78);
-}
-
-.sweep {
-  position: absolute; left: 50%; top: 50%;
-  width: 76vmin; height: 76vmin;
-  margin: -38vmin 0 0 -38vmin;
-  border-radius: 50%;
-  border: 1px dashed rgba(227,189,109,0.3);
-  opacity: 0;
-  animation: ringIn 1.4s var(--ease) 0.3s forwards;
-}
-
-@keyframes ringIn { to { opacity: 1; } }
-
-.outro {
-  position: absolute; left: 0; right: 0;
-  bottom: calc(24px + env(safe-area-inset-bottom));
-  text-align: center; z-index: 50; opacity: 0;
-  animation: rise 1s var(--ease) 2s forwards;
-}
-
-.outro p {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-style: italic; font-size: 14.5px;
-  color: rgba(247,242,230,0.62);
-}
-
-.back {
-  display: inline-block; margin-top: 12px;
-  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-  color: rgba(247,242,230,0.5); text-decoration: none;
-  border-bottom: 1px solid rgba(247,242,230,0.22); padding-bottom: 3px;
-}
-
-.back:hover, .back:focus-visible { color: var(--gold); border-color: var(--gold); }
-
-.bit {
-  position: fixed; top: -8vh; z-index: 55;
-  font-size: 15px; pointer-events: none;
-  animation: fall linear forwards;
-}
-
-@keyframes fall {
-  to { transform: translateY(120vh) rotate(var(--spin)); opacity: 0; }
-}
+.sound.on { color: var(--glow); border-color: var(--glow); box-shadow: 0 0 14px rgba(94,168,255,0.4); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001s !important;
+    animation-delay: 0.001s !important;      /* the boot runs on delays, so these go too */
     animation-iteration-count: 1 !important;
     transition-duration: 0.001s !important;
   }
-  .bit, .dust, .wave, .flash, .spark { display: none; }
-  .flip { transform: none; }
+  .field b { height: var(--h); }
 }
 </style>
 </head>
 <body>
 
-<div class="lamp"></div>
-<div class="dust" id="dust"></div>
+<!-- ══ gate ══ -->
+<section class="screen pane shut" id="shut" hidden>
+  <h2>MEMORY CARD (PS2)</h2>
+  <p>This data is not available yet sayangg. Come back on the second.</p>
+</section>
 
-<div class="stage" id="stage">
+<!-- ══ boot ══ -->
+<section class="screen" id="boot" hidden>
+  <p class="sce">SONY COMPUTER ENTERTAINMENT</p>
+  <div class="field" id="field"></div>
+  <div class="floor"></div>
+  <p class="ps2">PlayStation&nbsp;2</p>
+  <p class="skip">TAP TO SKIP</p>
+</section>
 
-  <section class="shut" id="shut" hidden>
-    <div class="deck"><b></b><b></b><b></b></div>
-    <p>Not yet sayangg. Come back on the second.</p>
-  </section>
-
-  <section class="open" id="open" hidden>
-    <p class="eyebrow">Two November, two thousand twenty six</p>
-    <h1 class="title" id="title">Eleven months</h1>
-    <p class="lede">Our game, one card at a time. Every word starts on the letter the one before it ended on.</p>
-    <div class="deck" id="deck"><b></b><b></b><b></b></div>
-    <button class="deal" id="dealBtn">Deal me in</button>
-  </section>
-
-  <section class="table" id="table" hidden>
-    <div class="ghost" id="ghost"></div>
-    <div class="hud" id="hud"></div>
-    <div class="pile" id="pile"></div>
-    <div class="chips" id="chips"></div>
-    <p class="hint" id="hint">Tap for the next one</p>
-  </section>
-
-  <section class="ring" id="ring" hidden>
-    <div class="sweep"></div>
-    <div class="wheel" id="wheel"></div>
-    <div class="core" id="core">
-      <b>It loops</b>
-      <small>MIRP ends on P. Petals starts with P. So it just runs again, forever, and I didn't plan that sayangg. It worked out that way on its own.</small>
+<!-- ══ browser ══ -->
+<section class="screen pane" id="browser" hidden>
+  <div class="bar">
+    <h1>Browser</h1>
+    <span>SYSTEM CONFIGURATION</span>
+  </div>
+  <div class="room">
+    <div class="ps" id="console">
+      <div class="lid"></div>
+      <div class="led"></div>
+      <div class="ports"><i></i><i></i></div>
+      <p class="mark">PlayStation 2</p>
+      <div class="ejected" id="ejected"></div>
     </div>
-    <div class="outro">
-      <p>An ace counts as one or eleven. Ours is eleven.</p>
-      <a class="back" href="index.html">Back</a>
+    <div class="discWrap">
+      <div class="disc" id="disc"></div>
+      <p id="discLabel">GENJI</p>
     </div>
-  </section>
+    <p class="tip" id="tip">Drag the disc into the console</p>
+  </div>
+  <div class="legend"><span id="legendText">NO DISC INSERTED</span></div>
+  <!-- nothing past this screen opens until the disc is in -->
 
-</div>
+</section>
+
+<!-- ══ the load ══ -->
+<section class="screen" id="load" hidden>
+  <div class="tube"></div>
+  <div class="roll"></div>
+  <div class="flick"></div>
+  <div class="reel">
+    <p class="licence" id="loadTop"></p>
+    <p class="stat" id="loadStat"></p>
+    <div class="meter" id="meter" hidden></div>
+    <div class="titlecard" id="titlecard" hidden>
+      <h2>ELEVEN MONTHS</h2>
+      <small>Press any key to continue</small>
+    </div>
+  </div>
+  <p class="reading" id="reading" hidden><u></u> READING</p>
+  <!-- the whole load can be skipped with a tap -->
+
+</section>
+
+<!-- ══ the card ══ -->
+<section class="screen pane" id="card" hidden>
+  <div class="bar">
+    <h1>Memory Card (PS2) &middot; Slot 1</h1>
+    <span id="freeSpace">11 SAVES &middot; 8MB</span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="legend">
+    <span><b>&#10005;</b> ENTER</span>
+    <span><b>&#9675;</b> BACK</span>
+  </div>
+</section>
+
+<!-- ══ one save ══ -->
+<section class="screen detail" id="detail" hidden>
+  <div class="sheet">
+    <div class="head">
+      <div class="icon"><i></i><i></i><i></i><i></i></div>
+      <div>
+        <h3 id="dTitle"></h3>
+        <p class="meta" id="dMeta"></p>
+      </div>
+    </div>
+    <div id="dShot"></div>
+    <p class="body" id="dBody"></p>
+    <div class="opts">
+      <button class="opt" id="dCopy">Copy</button>
+      <button class="opt" id="dDelete">Delete</button>
+      <button class="opt" id="dBack">Back</button>
+    </div>
+    <p class="deny" id="dDeny"></p>
+  </div>
+</section>
+
+<!-- ══ the end ══ -->
+<section class="screen pane fin" id="fin" hidden>
+  <div class="bars"><b style="animation-delay:0s"></b><b style="animation-delay:.18s"></b><b style="animation-delay:.36s"></b><b style="animation-delay:.54s"></b><b style="animation-delay:.72s"></b></div>
+  <h2>11 MONTHS</h2>
+  <p id="finLine">All data read. Nothing corrupted, nothing missing, nothing deleted.</p>
+  <p><a class="back" href="index.html">Back</a></p>
+</section>
 
 <button class="sound" id="sound" hidden aria-label="Music">&#9834;</button>
 <audio id="track" src="music/Loved.mp3" loop preload="none"></audio>
 
 <script>
 /* ─── When it opens ───
-   Midnight on 2 November 2026, on her clock. ?preview on the address, or
-   opening the file off the disk, shows it early. */
+   Midnight on 2 November 2026, on her clock. ?preview, or opening the file
+   off the disk, shows it early. */
 var OPENS = new Date(2026, 10, 2, 0, 0, 0);
 var EARLY = location.protocol === 'file:' ||
             location.protocol === 'data:' ||
             new URLSearchParams(location.search).has('preview');
+var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-var REDUCED = window.matchMedia &&
-              window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/* ─── The chain ───
-   Each word starts on the letter the one before it ended on, and the last
-   one ends on the letter the first starts with, so it closes a circle. */
-var WORDS = [
-  { word: 'Petals',   when: 'Every night since 9 October',
-    note: 'One letter a day, one petal a day. Twenty five of them by today. Four more and it opens all the way.' },
-  { word: 'Spelling', when: 'Lately, most nights',
-    note: 'Our game. Last letter of the last word. This whole page is just us playing it again.' },
-  { word: 'Gepuk',    when: 'Any good day',
-    note: 'I can always tell what kind of day you had from what you ate.' },
-  { word: 'KLIA',     when: 'Our first date', stamp: '25.12.2025',
-    note: 'Of all the places in the country we picked an airport, and I would pick it again.' },
-  { word: 'Ace',      when: 'This month',
-    note: 'Blackjack until stupid hours. You have better luck than me and we both know it.' },
-  { word: 'Engaged',  when: 'You said yes', stamp: '31.01.2026',
-    note: 'Two months in and I already knew, and I still know.' },
-  { word: 'Dealer',   when: 'The same nights',
-    note: 'Whoever is dealing, I am not really there for the cards sayangg.' },
-  { word: 'Ring',     when: 'Ten months', stamp: '02.10.2026',
-    note: 'I married you in Minecraft and I meant every word of it.' },
-  { word: 'Gift',     when: 'A night you were upset',
-    note: 'You thought the gifts were not enough. They were always more than enough. You are the gift babyy.' },
-  { word: 'Team',     when: 'Every queue',
-    note: 'Duo, always. Whoever we are up against, I would rather lose with you than win with anyone else.' },
-  { word: 'MIRP',     when: 'Where all of it started',
-    note: 'We met in a game. If I had been stubborn and stayed away, none of this would exist.' }
+/* ─── The card's contents ───
+   One save per month. Blocks are made up, the rest is not.
+   `img` is optional: a save without one keeps the turning block instead,
+   and a path that does not load falls back to the block too. */
+var SAVES = [
+  { no: '01', name: 'KLIA', img: 'images/A380.png',          date: '25/12/2025', blocks: 1,
+    text: 'Our first date. Of all the places in the country we picked an airport, and I would pick it again sayangg.' },
+  { no: '02', name: 'SHE SAID YES',  date: '31/01/2026', blocks: 1,
+    text: 'Engaged. Two months in and I already knew, and I still know.' },
+  { no: '03', name: 'GOOD MORNINGS', date: 'FEB 2026', blocks: 2,
+    text: 'Every day starts the same way and I never get bored of it. Good morning sayangg, every single morning.' },
+  { no: '04', name: 'THE CALL',      date: 'MAR 2026', blocks: 3,
+    text: 'We fall asleep on call. Neither of us hangs up first. That is the whole save file.' },
+  { no: '05', name: 'YOUR VOICE',    date: 'APR 2026', blocks: 1,
+    text: 'The best part of my day. It does not matter what you are saying. If I had a bad day, the moment you start talking it is gone.' },
+  { no: '06', name: 'SARAWAK',       date: 'MAY 2026', blocks: 2,
+    text: 'You are there, I am here, and somehow it still works. Not easy, but it works. We are going to close that gap.' },
+  { no: '07', name: 'STILL LEARNING', img: 'thumbs/tiktok-7655199251974098183.jpg',date: '25/06/2026', blocks: 1,
+    text: 'Your TikTok. I watch all of them, even the ones you think are bad. Especially those.' },
+  { no: '08', name: 'HAIRBAND',      date: 'JUL 2026', blocks: 1,
+    text: 'The one you gave me. I still play with it when I am thinking about you, which is most of the day sayangg.' },
+  { no: '09', name: 'HUMMING',       date: 'AUG 2026', blocks: 2,
+    text: 'You asked me to hum you to sleep. I would do that every night for the rest of my life if you let me.' },
+  { no: '10', name: 'MARRIED IN MC', img: 'Imagess/image13.png', date: '02/10/2026', blocks: 4,
+    text: 'Ten months. I married you in Minecraft and I meant every single word of those vows.' },
+  { no: '11', name: '11 MONTHS',     date: '02/11/2026', blocks: 11, locked: true,
+    text: 'Today. Eleven months with you sayangg, and this is the one I am not letting go of.' },
+  { no: '12', name: 'TEST',     date: '02/11/2026', blocks: 11, locked: true,
+    text: 'TESTING.' }
 ];
 
-var CHIPS = ['#b02a30', '#1f6f4a', '#2b4e8c', '#e3bd6d', '#6b3fa0'];
-var SUITS = ['&hearts;', '&diams;', '&spades;', '&clubs;'];
-
 function $(s) { return document.querySelector(s); }
-function beat(ms) { return REDUCED ? Math.min(ms, 60) : ms; }
+function beat(ms) { return REDUCED ? Math.min(ms, 50) : ms; }
 
-/* ─── Ambient dust ─── */
-function dust() {
-  if (REDUCED) return;
-  var box = $('#dust');
-  for (var i = 0; i < 22; i++) {
-    var d = document.createElement('i');
-    d.style.left = Math.random() * 100 + 'vw';
-    d.style.setProperty('--drift', (Math.random() * 90 - 45) + 'px');
-    d.style.animationDuration = (11 + Math.random() * 13) + 's';
-    d.style.animationDelay = (-Math.random() * 20) + 's';
-    d.style.opacity = 0;
-    box.appendChild(d);
+var opened = {};
+var current = null;
+
+function show(id) {
+  ['shut', 'boot', 'browser', 'load', 'card', 'detail', 'fin'].forEach(function (n) {
+    var el = document.getElementById(n);
+    /* the open save sits on top of the card rather than replacing it */
+    var keep = (n === id) || (id === 'detail' && n === 'card');
+    if (keep) el.removeAttribute('hidden'); else el.setAttribute('hidden', '');
+  });
+}
+
+/* ─── boot ─── */
+
+function towers() {
+  var f = $('#field');
+  var many = Math.min(26, Math.max(13, Math.floor(window.innerWidth / 26)));
+  for (var i = 0; i < many; i++) {
+    var b = document.createElement('b');
+    var mid = Math.abs(i - (many - 1) / 2) / ((many - 1) / 2);
+    var h = (18 + Math.random() * 78) * (1 - mid * 0.45);
+    b.style.setProperty('--h', h.toFixed(0) + '%');
+    b.style.animationDelay = (2.2 + Math.random() * 1.1).toFixed(2) + 's';
+    f.appendChild(b);
   }
 }
 
-/* ─── One card ─── */
-function cardHTML(item, i) {
-  var w = item.word;
-  var first = w.charAt(0), rest = w.slice(1, -1), last = w.charAt(w.length - 1);
-  var red = (i % 2 === 0);
+/* ─── the card screen ─── */
 
-  return '<div class="flip">' +
-      '<div class="face back"></div>' +
-      '<div class="face front">' +
-        '<span class="rank">' + (i + 1) + ' of 11</span>' +
-        '<span class="pip' + (red ? '' : ' black') + '">' + SUITS[i % 4] + '</span>' +
-        '<p class="word">' +
-          '<span class="edge slot" data-slot>' + first + '</span>' + rest +
-          '<span class="edge" data-tail>' + last + '</span>' +
-        '</p>' +
-        '<p class="note">' + item.note + '</p>' +
-        '<span class="when">' + item.when + '</span>' +
-        (item.stamp ? '<span class="stamp">' + item.stamp + '</span>' : '') +
-      '</div>' +
-    '</div>';
+function icon() {
+  return '<div class="icon"><i></i><i></i><i></i><i></i></div>';
 }
 
-/* ─── The letter that travels, with a tail and a burst on landing ─── */
-function carry(fromEl, toEl, letter, done) {
-  if (REDUCED || !fromEl || !toEl) { done(); return; }
-
-  var a = fromEl.getBoundingClientRect();
-  var b = toEl.getBoundingClientRect();
-  if (!a.width || !b.width) { done(); return; }
-
-  fromEl.style.opacity = '0.14';
-
-  var size = window.getComputedStyle(fromEl).fontSize;
-  var dx = b.left - a.left, dy = b.top - a.top;
-  var frames = [
-    { transform: 'translate(0,0) scale(1) rotate(0deg)', opacity: 1 },
-    { transform: 'translate(' + (dx * 0.42) + 'px,' + (dy * 0.5 - 110) + 'px) scale(2.8) rotate(12deg)', opacity: 1, offset: 0.55 },
-    { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(1) rotate(0deg)', opacity: 1 }
-  ];
-
-  /* three ghosts behind the real one make the tail */
-  for (var g = 1; g <= 3; g++) {
-    (function (n) {
-      var t = document.createElement('span');
-      t.className = 'carry';
-      t.textContent = letter;
-      t.style.cssText = 'left:' + a.left + 'px;top:' + a.top + 'px;font-size:' + size + ';opacity:' + (0.26 - n * 0.06);
-      document.body.appendChild(t);
-      t.animate(frames, { duration: 1040, delay: n * 55, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'forwards' })
-       .onfinish = function () { t.remove(); };
-    })(g);
-  }
-
-  var fly = document.createElement('span');
-  fly.className = 'carry';
-  fly.textContent = letter;
-  fly.style.cssText = 'left:' + a.left + 'px;top:' + a.top + 'px;font-size:' + size;
-  document.body.appendChild(fly);
-
-  var run = fly.animate(frames, { duration: 1040, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'forwards' });
-
-  run.onfinish = function () {
-    burst(b.left + b.width / 2, b.top + b.height / 2);
-    fly.remove();
-    done();
-  };
-  /* if the browser will not animate, do not strand her on a blank letter */
-  setTimeout(function () { if (fly.isConnected) { fly.remove(); done(); } }, 1500);
+/* a save with a picture shows it instead of the turning block. If the file
+   is missing the tile falls back rather than leaving a hole. */
+function thumb(src) {
+  return '<div class="thumb"><img src="' + src + '" alt="" loading="lazy"></div>';
 }
 
-function burst(x, y) {
-  if (REDUCED) return;
-  for (var i = 0; i < 16; i++) {
-    var s = document.createElement('span');
-    s.className = 'spark';
-    s.style.left = x + 'px';
-    s.style.top = y + 'px';
-    document.body.appendChild(s);
-    var ang = (Math.PI * 2 / 16) * i + Math.random() * 0.4;
-    var far = 50 + Math.random() * 70;
-    s.animate([
-      { transform: 'translate(0,0) scale(1)', opacity: 1 },
-      { transform: 'translate(' + Math.cos(ang) * far + 'px,' + Math.sin(ang) * far + 'px) scale(0)', opacity: 0 }
-    ], { duration: 700 + Math.random() * 350, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'forwards' })
-     .onfinish = function () { this.effect.target.remove(); };
+/* a missing file falls back to the turning block rather than leaving a hole */
+function catchMissing(root) {
+  Array.prototype.forEach.call(root.querySelectorAll('.thumb img, .shot img'), function (im) {
+    im.addEventListener('error', function () {
+      var box = im.closest('.thumb');
+      if (box) { box.outerHTML = icon(); return; }
+      var shot = im.closest('.shot');
+      if (shot) shot.remove();
+    });
+  });
+}
+
+function drawGrid() {
+  var g = $('#grid');
+  g.innerHTML = '';
+  SAVES.forEach(function (s, i) {
+    var d = document.createElement('div');
+    d.className = 'save' + (opened[s.no] ? ' on' : '');
+    d.style.animationDelay = beat(60 * i) + 'ms';
+    d.innerHTML = (s.img ? thumb(s.img) : icon()) +
+      '<b>' + s.name + '</b>' +
+      '<span>SAVE DATA ' + s.no + '</span>' +
+      '<span>' + s.date + '</span>';
+    d.addEventListener('click', function () { openSave(i); });
+    g.appendChild(d);
+  });
+  catchMissing(g);
+
+  var used = SAVES.reduce(function (n, s) { return n + s.blocks; }, 0);
+  var read = Object.keys(opened).length;
+  $('#freeSpace').textContent = used + ' BLOCKS USED' + (read ? '  ·  ' + read + '/11 READ' : '');
+}
+
+function openSave(i) {
+  current = i;
+  var s = SAVES[i];
+  $('#dTitle').textContent = s.name;
+  $('#dMeta').textContent = 'SAVE DATA ' + s.no + '  ·  ' + s.date + '  ·  ' + s.blocks + (s.blocks === 1 ? ' BLOCK' : ' BLOCKS');
+  $('#dShot').innerHTML = s.img
+    ? '<div class="shot"><img src="' + s.img + '" alt=""></div>'
+    : '';
+  catchMissing($('#dShot'));
+  $('#dBody').textContent = s.text;
+  $('#dDeny').textContent = '';
+  $('#dDeny').classList.remove('shake');
+  show('detail');
+}
+
+function closeSave() {
+  if (current !== null) opened[SAVES[current].no] = true;
+  current = null;
+  show('card');
+  drawGrid();
+
+  /* once she has been through all eleven, the console says goodnight */
+  if (Object.keys(opened).length === SAVES.length) {
+    setTimeout(function () { show('fin'); }, beat(700));
   }
 }
 
-function wave() {
-  if (REDUCED) return;
-  var w = document.createElement('span');
-  w.className = 'wave';
-  document.body.appendChild(w);
-  setTimeout(function () { w.remove(); }, 1200);
+/* ─── The load ───
+   What every disc did before it let you play: the licence line, the read,
+   the memory card check, then the title. She can skip it with a tap. */
+function runLoad() {
+  show('load');
 
-  var f = document.createElement('span');
-  f.className = 'flash';
-  document.body.appendChild(f);
-  setTimeout(function () { f.remove(); }, 640);
-}
+  var top   = $('#loadTop');
+  var stat  = $('#loadStat');
+  var meter = $('#meter');
+  var card  = $('#titlecard');
+  var read  = $('#reading');
+  var timers = [];
+  var ended = false;
 
-/* ─── Dealing ─── */
+  for (var i = 0; i < 24; i++) meter.appendChild(document.createElement('i'));
 
-var pile, hud, chips, ghost;
-var at = -1, busy = false;
+  function at(ms, fn) { timers.push(setTimeout(fn, beat(ms))); }
 
-function dealNext() {
-  if (busy) return;
-  if (at >= WORDS.length - 1) { finish(); return; }
-  busy = true;
+  function fill(pct) {
+    var bars = meter.children;
+    var upto = Math.round(bars.length * pct);
+    for (var i = 0; i < bars.length; i++) bars[i].classList.toggle('lit', i < upto);
+  }
 
-  var i = at + 1;
-  var item = WORDS[i];
-  var prev = pile.lastElementChild;
+  function finish() {
+    if (ended) return;
+    ended = true;
+    timers.forEach(clearTimeout);
+    show('card');
+    drawGrid();
+  }
 
-  Array.prototype.slice.call(pile.children).forEach(function (el, n) {
-    el.classList.remove('rest');
-    el.classList.add('under');
-    el.style.setProperty('--depth', (pile.children.length - n));
+  /* the licence screen nobody ever read */
+  at(700, function () {
+    top.innerHTML = 'LICENSED BY<br>SONY COMPUTER ENTERTAINMENT';
+  });
+  at(2500, function () { top.innerHTML = ''; });
+
+  /* reading the disc, with the stutter a scratched one always had */
+  at(2700, function () {
+    read.removeAttribute('hidden');
+    meter.removeAttribute('hidden');
+    stat.innerHTML = 'READING DISC';
   });
 
-  var el = document.createElement('article');
-  el.className = 'card landing' + (item.stamp ? ' major' : '');
-  el.style.setProperty('--tilt', (i % 2 ? 0.8 : -0.8) + 'deg');
-  el.style.zIndex = 10 + i;
-  el.innerHTML = cardHTML(item, i);
-  pile.appendChild(el);
+  var marks = [0.12, 0.26, 0.38, 0.44, 0.44, 0.58, 0.71, 0.79, 0.88, 1];
+  marks.forEach(function (m, n) {
+    at(2850 + n * 230, function () { fill(m); });
+  });
 
-  ghost.style.opacity = '0';
-  setTimeout(function () { ghost.textContent = (i + 1); ghost.style.opacity = '1'; }, beat(240));
+  /* the memory card check, which is the bit that matters here */
+  at(5300, function () {
+    stat.innerHTML = 'CHECKING MEMORY CARD (PS2) IN SLOT 1';
+  });
+  at(6600, function () {
+    stat.innerHTML = 'SAVE DATA FOUND <b>&middot;</b> 11 FILES <b>&middot;</b> 29 BLOCKS';
+  });
+  at(8000, function () {
+    stat.innerHTML = 'LOADING';
+    fill(1);
+  });
 
-  var slot = el.querySelector('[data-slot]');
-  var tail = prev ? prev.querySelector('[data-tail]') : null;
-  if (!prev) slot.classList.add('shown');
+  /* and then the title */
+  at(8900, function () {
+    top.innerHTML = '';
+    stat.innerHTML = '';
+    meter.setAttribute('hidden', '');
+    read.setAttribute('hidden', '');
+    card.removeAttribute('hidden');
+  });
 
-  setTimeout(function () {
-    el.classList.remove('landing');
-    el.classList.add('rest', 'turn');
-    wave();
+  at(12500, finish);
 
-    /* the letter only flies once the card has turned face up */
+  $('#load').addEventListener('click', finish);
+  document.addEventListener('keydown', function once(e) {
+    document.removeEventListener('keydown', once);
+    if (!$('#load').hasAttribute('hidden')) finish();
+  });
+}
+
+/* ─── Putting the disc in ───
+   She has to drag it into the console. Nothing opens until she does. */
+function insertDisc() {
+  var disc = $('#disc');
+  var box  = $('#console');
+  var tip  = $('#tip');
+  var done = false;
+
+  var held = false, startX = 0, startY = 0, dx = 0, dy = 0;
+
+  function overConsole() {
+    var d = disc.getBoundingClientRect();
+    var b = box.getBoundingClientRect();
+    var cx = d.left + d.width / 2, cy = d.top + d.height / 2;
+    return cx > b.left - 30 && cx < b.right + 30 && cy > b.top - 40 && cy < b.bottom + 40;
+  }
+
+  function grab(e) {
+    if (done) return;
+    held = true;
+    disc.classList.add('held');
+    startX = e.clientX - dx;
+    startY = e.clientY - dy;
+    disc.setPointerCapture && disc.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  }
+
+  function move(e) {
+    if (!held || done) return;
+    dx = e.clientX - startX;
+    dy = e.clientY - startY;
+    disc.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    box.classList.toggle('over', overConsole());
+  }
+
+  function drop() {
+    if (!held || done) return;
+    held = false;
+    disc.classList.remove('held');
+    box.classList.remove('over');
+
+    if (!overConsole()) {
+      /* it slides back and she tries again */
+      disc.style.transition = 'transform 0.45s cubic-bezier(0.22,1,0.36,1)';
+      disc.style.transform = 'translate(0,0)';
+      dx = dy = 0;
+      setTimeout(function () { disc.style.transition = ''; }, 500);
+      tip.textContent = 'Into the console sayangg';
+      return;
+    }
+
+    done = true;
+    swallow();
+  }
+
+  function swallow() {
+    var d = disc.getBoundingClientRect();
+    var lid = box.querySelector('.lid').getBoundingClientRect();
+    disc.style.setProperty('--tx', (dx + (lid.left + lid.width / 2) - (d.left + d.width / 2)) + 'px');
+    disc.style.setProperty('--ty', (dy + (lid.top + lid.height / 2) - (d.top + d.height / 2)) + 'px');
+    disc.classList.add('gone');
+
+    tip.textContent = '';
+    $('#discLabel').textContent = '';
+    $('#legendText').textContent = 'READING DISC';
+
     setTimeout(function () {
-      if (prev) {
-        carry(tail, slot, item.word.charAt(0), function () { slot.classList.add('shown'); });
-      }
-    }, beat(680));
+      box.classList.add('live');
+      $('#legendText').textContent = 'MEMORY CARD (PS2) FOUND IN SLOT 1';
+      $('#ejected').classList.add('out');
+      tip.textContent = '';
+    }, beat(900));
 
-    hud.children[i].classList.add('on');
-    addChip(i);
+    /* then the console hands over and the game loads */
+    setTimeout(runLoad, beat(2100));
+  }
 
-    at = i;
-    busy = false;
-    if (at === WORDS.length - 1) $('#hint').textContent = 'Tap once more';
-  }, beat(800));
-}
+  disc.addEventListener('pointerdown', grab);
+  window.addEventListener('pointermove', move);
+  window.addEventListener('pointerup', drop);
+  window.addEventListener('pointercancel', drop);
 
-function addChip(i) {
-  var c = document.createElement('span');
-  c.className = 'chip';
-  c.style.background = 'radial-gradient(circle at 50% 35%, ' + CHIPS[i % CHIPS.length] + ', rgba(0,0,0,0.45))';
-  c.style.bottom = (i * 9) + 'px';
-  chips.appendChild(c);
-}
-
-/* ─── The finish ─── */
-
-function finish() {
-  busy = true;
-  $('#table').setAttribute('hidden', '');
-  $('#ring').removeAttribute('hidden');
-
-  var wheel = $('#wheel');
-  var radius = Math.min(window.innerWidth, window.innerHeight) * 0.38;
-
-  WORDS.forEach(function (item, i) {
-    var m = document.createElement('div');
-    m.className = 'mini';
-    m.style.setProperty('--a', (i * (360 / WORDS.length)) + 'deg');
-    m.style.setProperty('--r', radius + 'px');
-    m.textContent = item.word;
-    wheel.appendChild(m);
-    setTimeout(function () { m.classList.add('out'); }, beat(95 * i + 140));
+  /* a tap on the console works too, for anyone who does not try dragging */
+  box.addEventListener('click', function () {
+    if (done) return;
+    tip.textContent = 'Drag the disc in first sayangg';
   });
-
-  setTimeout(function () { $('#core').classList.add('out'); }, beat(1250));
-  if (!REDUCED) {
-    setTimeout(wave, 1150);
-    setTimeout(rain, 1000);
-  }
 }
 
-function rain() {
-  for (var i = 0; i < 70; i++) {
-    (function (n) {
-      setTimeout(function () {
-        var b = document.createElement('span');
-        b.className = 'bit';
-        b.innerHTML = SUITS[n % 4];
-        b.style.left = Math.random() * 100 + 'vw';
-        b.style.color = (n % 4 < 2) ? '#b02a30' : '#f0e6cf';
-        b.style.fontSize = (11 + Math.random() * 15) + 'px';
-        b.style.setProperty('--spin', (Math.random() * 1000 - 500) + 'deg');
-        b.style.animationDuration = (2.6 + Math.random() * 2.6) + 's';
-        document.body.appendChild(b);
-        setTimeout(function () { b.remove(); }, 5800);
-      }, n * 55);
-    })(i);
-  }
-}
-
-/* ─── Start ─── */
+/* ─── wiring ─── */
 
 (function () {
-  if (!(EARLY || new Date() >= OPENS)) { $('#shut').removeAttribute('hidden'); return; }
+  if (!(EARLY || new Date() >= OPENS)) { show('shut'); return; }
 
-  dust();
+  towers();
+  show('boot');
 
-  pile = $('#pile'); hud = $('#hud'); chips = $('#chips'); ghost = $('#ghost');
+  var went = false;
+  function toBrowser() {
+    if (went) return;
+    went = true;
+    show('browser');
+  }
 
-  var title = $('#title');
-  var text = title.textContent;
-  title.innerHTML = '';
-  text.split('').forEach(function (ch, i) {
-    if (ch === ' ') { title.appendChild(document.createTextNode(' ')); return; }
-    var s = document.createElement('span');
-    s.className = 'ch';
-    s.textContent = ch;
-    s.style.animationDelay = (0.2 + i * 0.05) + 's';
-    title.appendChild(s);
+  setTimeout(toBrowser, beat(6200));
+  $('#boot').addEventListener('click', toBrowser);
+
+  insertDisc();
+
+  $('#dBack').addEventListener('click', closeSave);
+
+  $('#dCopy').addEventListener('click', function () {
+    $('#dDeny').textContent = 'There is only one of these sayangg. It is already yours.';
+    $('#dDeny').classList.remove('shake');
+    void $('#dDeny').offsetWidth;
+    $('#dDeny').classList.add('shake');
   });
 
-  for (var i = 0; i < WORDS.length; i++) hud.appendChild(document.createElement('i'));
+  $('#dDelete').addEventListener('click', function () {
+    var s = SAVES[current];
+    $('#dDeny').textContent = s.locked
+      ? 'This data cannot be deleted.'
+      : 'Deletion failed. I am keeping this one.';
+    $('#dDeny').classList.remove('shake');
+    void $('#dDeny').offsetWidth;
+    $('#dDeny').classList.add('shake');
+  });
 
-  $('#open').removeAttribute('hidden');
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.key === 'Backspace') {
+      if (!$('#detail').hasAttribute('hidden')) { e.preventDefault(); closeSave(); }
+    }
+  });
 
-  /* music, hers to turn on, never forced */
   var track = $('#track'), sound = $('#sound');
   sound.removeAttribute('hidden');
   sound.addEventListener('click', function (e) {
     e.stopPropagation();
     if (track.paused) {
-      track.volume = 0.5;
+      track.volume = 0.45;
       track.play().then(function () { sound.classList.add('on'); }).catch(function () {});
     } else {
       track.pause();
       sound.classList.remove('on');
     }
   });
-
-  function begin() {
-    $('#open').setAttribute('hidden', '');
-    $('#table').removeAttribute('hidden');
-    dealNext();
-  }
-
-  $('#dealBtn').addEventListener('click', begin);
-  $('#deck').addEventListener('click', begin);
-
-  $('#stage').addEventListener('click', function (e) {
-    if ($('#table').hasAttribute('hidden')) return;
-    if (e.target.closest('a') || e.target.closest('.sound')) return;
-    dealNext();
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key !== ' ' && e.key !== 'Enter' && e.key !== 'ArrowRight') return;
-    if ($('#table').hasAttribute('hidden')) return;
-    e.preventDefault();
-    dealNext();
-  });
-
-  /* the live card leans towards wherever she is touching */
-  if (!REDUCED) {
-    var lean = function (x, y) {
-      var card = pile.querySelector('.card.rest');
-      if (!card) return;
-      var cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-      card.style.setProperty('--px', ((x - cx) / cx * 7).toFixed(2) + 'deg');
-      card.style.setProperty('--py', ((cy - y) / cy * 7).toFixed(2) + 'deg');
-    };
-    window.addEventListener('pointermove', function (e) { lean(e.clientX, e.clientY); });
-    window.addEventListener('touchmove', function (e) {
-      if (e.touches[0]) lean(e.touches[0].clientX, e.touches[0].clientY);
-    }, { passive: true });
-  }
 })();
 </script>
 
