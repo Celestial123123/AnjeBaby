@@ -151,6 +151,7 @@ body::after {
   position: absolute; inset: 0;
   background: radial-gradient(60% 50% at 50% 110%, rgba(94,168,255,0.14), transparent 70%);
   animation: pulse 7s ease-in-out infinite;
+  pointer-events: none;     /* it sits over the whole screen, so without this it eats every tap on plain links */
 }
 
 @keyframes pulse { 0%,100% { opacity: 0.7; } 50% { opacity: 1; } }
@@ -437,43 +438,162 @@ body::after {
   97%  { opacity: 0; }
 }
 
-/* ════════ 3. the card ════════ */
 
-.grid {
+
+
+
+
+
+
+
+
+
+
+/* a save's picture, behind the same glass as everything else */
+.shot {
+  position: relative;
+  width: 100%;
+  margin: 14px 0 2px;
+  border: 1px solid rgba(94,168,255,0.45);
+  border-radius: 3px;
+  overflow: hidden;
+  background: #061018;
+  animation: shotIn 0.6s var(--ease) both;
+}
+
+@keyframes shotIn { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: none; } }
+
+/* the whole picture, whatever shape it is: it takes its own height, capped so a
+   tall one still leaves room for the words and buttons underneath */
+.shot img { width: 100%; height: auto; max-height: 44vh; object-fit: contain; display: block; }
+
+/* scanlines and a cold cast, so a phone photo still looks like it came off the card */
+.shot::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, rgba(94,168,255,0.12), rgba(6,16,28,0.34));
+  pointer-events: none;
+}
+
+
+
+
+
+/* ════════ 3. the card: one save at a time, the way the console's own menu went ════════ */
+
+.carousel {
   position: absolute;
-  left: 16px; right: 16px;
+  left: 0; right: 0;
   top: calc(58px + env(safe-area-inset-top));
   bottom: calc(46px + env(safe-area-inset-bottom));
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
-  grid-auto-rows: min-content;
-  gap: 10px;
-  overflow-y: auto;
-  padding-right: 4px;
-  scrollbar-width: thin;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: clamp(14px, 3.6vh, 28px);
+  overflow: hidden;
 }
 
-.save {
-  border: 1px solid rgba(47,93,142,0.6);
-  background: linear-gradient(170deg, rgba(22,49,79,0.85), rgba(9,21,36,0.9));
-  border-radius: 4px;
-  padding: 12px 10px 11px;
+.rack {
+  --tw: clamp(176px, 58vw, 250px);
+  --step: calc(var(--tw) * 0.7);
+  position: relative;
+  width: 100%;
+  height: calc(var(--tw) * 1.32);
+  perspective: 1100px;
+  touch-action: pan-y;
+  user-select: none; -webkit-user-select: none;
+}
+
+/* the light on the floor under whichever one is up front */
+.rack::after {
+  content: '';
+  position: absolute;
+  left: 50%; bottom: -4%;
+  width: calc(var(--tw) * 1.5); height: 34px;
+  transform: translateX(-50%);
+  background: radial-gradient(50% 50% at 50% 50%, rgba(94,168,255,0.38), transparent 72%);
+  pointer-events: none;
+}
+
+.rail { position: absolute; inset: 0; }
+
+.tile {
+  position: absolute; left: 50%; top: 50%;
+  width: var(--tw);
+  transform:
+    translate(-50%, -50%)
+    translateX(calc(var(--d) * var(--step)))
+    rotateY(calc(var(--d) * -26deg))
+    scale(calc(1 - var(--ad) * 0.15));
+  opacity: calc(1 - var(--ad) * 0.26);
+  filter: brightness(calc(1 - var(--ad) * 0.12));
+  transition: transform 0.7s var(--ease), opacity 0.55s linear, filter 0.55s linear;
   cursor: pointer;
-  display: grid; gap: 9px; justify-items: center;
-  transition: border-color 0.25s linear, background 0.25s linear, transform 0.25s var(--ease);
+}
+
+.tile.far { opacity: 0; pointer-events: none; }
+
+/* before she looks, they are all in one stack, and they fan out to place */
+.rack.stack .tile:not(.sel) {
+  transform: translate(-50%, -50%) scale(0.55);
   opacity: 0;
-  animation: fadeUp 0.5s var(--ease) both;
 }
 
-@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.face {
+  border: 1px solid rgba(47,93,142,0.7);
+  background: linear-gradient(170deg, rgba(24,54,88,0.96), rgba(8,19,33,0.97));
+  border-radius: 5px;
+  padding: 12px 12px 14px;
+  display: grid; gap: 8px; justify-items: center;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 22px 40px rgba(0,0,0,0.5);
+}
 
-.save:hover, .save.on {
+.tile.sel .face {
   border-color: var(--glow);
-  background: linear-gradient(170deg, rgba(36,80,128,0.95), rgba(13,31,52,0.95));
-  transform: translateY(-2px);
+  background: linear-gradient(170deg, rgba(38,84,134,0.98), rgba(10,26,44,0.98));
+  box-shadow: 0 0 0 1px rgba(94,168,255,0.55), 0 0 36px rgba(94,168,255,0.34), 0 26px 46px rgba(0,0,0,0.55);
+  animation: bob 4.6s ease-in-out infinite;
 }
 
-.save.on { box-shadow: 0 0 0 1px rgba(94,168,255,0.5), 0 0 22px rgba(94,168,255,0.28); }
+@keyframes bob { 0%,100% { translate: 0 0; } 50% { translate: 0 -7px; } }
+
+.pic {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px solid rgba(94,168,255,0.4);
+  border-radius: 2px;
+  background: #071219;
+  position: relative;
+  overflow: hidden;
+  display: grid; place-items: center;
+}
+
+.pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.85) brightness(0.94); }
+
+/* scanlines over the picture, so a phone photo reads as something off the card */
+.pic::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(180deg, rgba(0,0,0,0.3) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+}
+
+.face b { font-weight: 500; font-size: 12.5px; letter-spacing: 0.14em; color: var(--white); margin-top: 3px; }
+.face span { font-size: 9.5px; letter-spacing: 0.12em; color: var(--ice-dim); }
+
+.face .tag {
+  position: absolute; top: 8px; right: 9px;
+  font-style: normal; font-size: 8px; letter-spacing: 0.2em;
+  color: var(--glow);
+  opacity: 0;
+  z-index: 3;
+  text-shadow: 0 0 6px rgba(0,0,0,0.9);
+}
+
+.tile.read .tag { opacity: 1; }
 
 /* every save has a little icon that turns, the way they all did */
 .icon {
@@ -497,54 +617,51 @@ body::after {
 
 @keyframes turn { to { transform: rotateY(360deg); } }
 
-.save b { font-weight: 500; font-size: 11.5px; letter-spacing: 0.12em; color: var(--white); text-align: center; }
-.save span { font-size: 9.5px; letter-spacing: 0.1em; color: var(--ice-dim); }
+.pic .icon { scale: 1.5; }
 
-/* a save's picture, behind the same glass as everything else */
-.shot {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  margin: 14px 0 2px;
-  border: 1px solid rgba(94,168,255,0.45);
-  border-radius: 3px;
-  overflow: hidden;
-  background: #061018;
-  animation: shotIn 0.6s var(--ease) both;
+.arrow {
+  position: absolute; top: 50%;
+  width: 40px; height: 40px; margin-top: -20px;
+  border-radius: 50%;
+  border: 1px solid rgba(94,168,255,0.5);
+  background: rgba(6,16,28,0.72);
+  color: var(--ice);
+  font-family: inherit; font-size: 22px; line-height: 1;
+  cursor: pointer;
+  display: grid; place-items: center;
+  z-index: 40;
+  transition: background 0.2s linear, border-color 0.2s linear, opacity 0.2s linear;
 }
 
-@keyframes shotIn { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: none; } }
+.arrow.l { left: 10px; }
+.arrow.r { right: 10px; }
+.arrow:hover { background: rgba(94,168,255,0.22); border-color: var(--glow); }
+.arrow:disabled { opacity: 0.22; cursor: default; }
 
-.shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.readout { display: grid; gap: 7px; text-align: center; padding: 0 20px; }
 
-/* scanlines and a cold cast, so a phone photo still looks like it came off the card */
-.shot::after {
-  content: '';
-  position: absolute; inset: 0;
-  background:
-    repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0 1px, transparent 1px 3px),
-    linear-gradient(180deg, rgba(94,168,255,0.12), rgba(6,16,28,0.34));
-  pointer-events: none;
+.readout b {
+  font-weight: 400;
+  font-size: clamp(16px, 4.6vw, 22px);
+  letter-spacing: 0.22em;
+  color: var(--white);
+  text-shadow: 0 0 18px rgba(94,168,255,0.5);
 }
 
-/* the grid tile, when a save has a picture instead of the turning block */
-.save .thumb {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border: 1px solid rgba(94,168,255,0.4);
-  border-radius: 2px;
-  overflow: hidden;
-  background: #071219;
-  position: relative;
+.readout span { font-size: 10.5px; letter-spacing: 0.16em; color: var(--ice-dim); }
+.readout .count { color: var(--glow); }
+
+.pager { display: flex; gap: 7px; justify-content: center; flex-wrap: wrap; padding: 0 24px; }
+
+.pager i {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(143,179,212,0.22);
+  cursor: pointer;
+  transition: background 0.3s linear, transform 0.3s var(--ease), box-shadow 0.3s linear;
 }
 
-.save .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.85) brightness(0.92); }
-
-.save .thumb::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(180deg, rgba(0,0,0,0.3) 0 1px, transparent 1px 3px);
-}
+.pager i.read { background: rgba(94,168,255,0.6); }
+.pager i.on { background: var(--white); transform: scale(1.5); box-shadow: 0 0 10px rgba(94,168,255,0.9); }
 
 /* ════════ 4. the open save ════════ */
 
@@ -664,6 +781,39 @@ body::after {
 
 .sound.on { color: var(--glow); border-color: var(--glow); box-shadow: 0 0 14px rgba(94,168,255,0.4); }
 
+/* the card's name is also where the unlisted file is, so it must not select or call out on a long press */
+#cardTitle {
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+  padding: 6px 0;
+}
+
+.fin .quiet {
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  color: rgba(143,179,212,0.55);
+  animation: blink 3s ease-in-out infinite;
+}
+
+/* a letter keeps its paragraphs, and a long one scrolls inside the panel so the buttons stay in reach */
+.detail .sheet {
+  display: flex; flex-direction: column;
+  max-height: calc(100vh - 36px);
+  max-height: calc(100svh - 36px);
+}
+
+.sheet .head, .sheet .opts, #dShot, .deny { flex: none; }
+
+.sheet .body {
+  flex: 1 1 auto;
+  min-height: 96px;
+  overflow-y: auto;
+  white-space: pre-line;
+  padding-right: 8px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001s !important;
@@ -739,11 +889,24 @@ body::after {
 <!-- ══ the card ══ -->
 <section class="screen pane" id="card" hidden>
   <div class="bar">
-    <h1>Memory Card (PS2) &middot; Slot 1</h1>
+    <h1 id="cardTitle">Memory Card (PS2) &middot; Slot 1</h1>
     <span id="freeSpace">11 SAVES &middot; 8MB</span>
   </div>
-  <div class="grid" id="grid"></div>
+  <div class="carousel">
+    <div class="rack" id="rack">
+      <div class="rail" id="rail"></div>
+      <button class="arrow l" id="prev" aria-label="Previous save">&#8249;</button>
+      <button class="arrow r" id="next" aria-label="Next save">&#8250;</button>
+    </div>
+    <div class="readout">
+      <b id="rName"></b>
+      <span id="rMeta"></span>
+      <span class="count" id="rCount"></span>
+    </div>
+    <div class="pager" id="pager"></div>
+  </div>
   <div class="legend">
+    <span><b>&#9664; &#9654;</b> SELECT</span>
     <span><b>&#10005;</b> ENTER</span>
     <span><b>&#9675;</b> BACK</span>
   </div>
@@ -775,6 +938,8 @@ body::after {
   <div class="bars"><b style="animation-delay:0s"></b><b style="animation-delay:.18s"></b><b style="animation-delay:.36s"></b><b style="animation-delay:.54s"></b><b style="animation-delay:.72s"></b></div>
   <h2>11 MONTHS</h2>
   <p id="finLine">All data read. Nothing corrupted, nothing missing, nothing deleted.</p>
+  <p class="quiet">1 file is not listed.</p>
+  <p><a class="back" href="#" id="finReturn">Return to memory card</a></p>
   <p><a class="back" href="index.html">Back</a></p>
 </section>
 
@@ -796,36 +961,104 @@ var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: r
    `img` is optional: a save without one keeps the turning block instead,
    and a path that does not load falls back to the block too. */
 var SAVES = [
-  { no: '01', name: 'KLIA', img: 'images/A380.png',          date: '25/12/2025', blocks: 1,
-    text: 'Our first date. Of all the places in the country we picked an airport, and I would pick it again sayangg.' },
-  { no: '02', name: 'SHE SAID YES',  date: '31/01/2026', blocks: 1,
-    text: 'Engaged. Two months in and I already knew, and I still know.' },
-  { no: '03', name: 'GOOD MORNINGS', date: 'FEB 2026', blocks: 2,
-    text: 'Every day starts the same way and I never get bored of it. Good morning sayangg, every single morning.' },
-  { no: '04', name: 'THE CALL',      date: 'MAR 2026', blocks: 3,
-    text: 'We fall asleep on call. Neither of us hangs up first. That is the whole save file.' },
-  { no: '05', name: 'YOUR VOICE',    date: 'APR 2026', blocks: 1,
-    text: 'The best part of my day. It does not matter what you are saying. If I had a bad day, the moment you start talking it is gone.' },
-  { no: '06', name: 'SARAWAK',       date: 'MAY 2026', blocks: 2,
-    text: 'You are there, I am here, and somehow it still works. Not easy, but it works. We are going to close that gap.' },
-  { no: '07', name: 'STILL LEARNING', img: 'thumbs/tiktok-7655199251974098183.jpg',date: '25/06/2026', blocks: 1,
-    text: 'Your TikTok. I watch all of them, even the ones you think are bad. Especially those.' },
-  { no: '08', name: 'HAIRBAND',      date: 'JUL 2026', blocks: 1,
-    text: 'The one you gave me. I still play with it when I am thinking about you, which is most of the day sayangg.' },
-  { no: '09', name: 'HUMMING',       date: 'AUG 2026', blocks: 2,
-    text: 'You asked me to hum you to sleep. I would do that every night for the rest of my life if you let me.' },
+  { no: '01', name: 'KLIA', img: 'Imagess/image11.jpg',          date: '25/12/2025', blocks: 1,
+    text: `Of all the places we could have picked for a first date, we picked an airport. Arrivals, people hugging, bags everywhere, and somehow it was the right place for us to start.
+
+I remember not wanting that day to end sayangg. Eleven months later I still think about it a lot, and if I could go back I would pick KLIA again.` },
+  { no: '02', name: 'SHE SAID YES', img: 'ValentinesImages/picture1.png', pos: '50% 8%', date: '31/01/2026', blocks: 1,
+    text: `31 January. Two months in, I asked, and you said yes. Some people would say that is too fast. I did not care what anyone said, because I knew.
+
+I still know sayangg. Not the hard weeks, not the distance, nothing has made me doubt it. Every time something goes wrong I end up back at the same answer, which is you.` },
+  { no: '03', name: 'GOOD MORNINGS', img: 'ValentinesImages/picture2.png', pos: '50% 20%', date: 'FEB 2026', blocks: 2,
+    text: `Every day starts with you. Good morning sayangg is the first thing I say, and it is the part of the day I look forward to the most.
+
+It sounds small, but it is not. Thank you for being the first thing I think about when I wake up.` },
+  { no: '04', name: 'THE CALL', img: 'ValentinesImages/picture51.png',     date: 'MAR 2026', blocks: 3,
+    text: `We fall asleep on call. Neither of us wants to hang up first, so we just stay there until one of us is gone.
+
+Some nights it runs for hours and barely anyone says anything. That is the closest I get to being next to you for now, and I would not trade it. One day it will be a real room instead of a screen.` },
+  { no: '05', name: 'YOUR VOICE',  img : 'today/image1.jpg',  date: 'APR 2026', blocks: 1,
+    text: `Your voice is the best part of my whole day. It does not matter what you are saying. Complaining about class, telling me the same story twice, I would listen to all of it.
+
+If I had a bad day, the moment you start talking it is gone. And I will hum you to sleep for as long as you want me to babyy.` },
+  { no: '08', name: 'HAIRBAND',   img: 'Imagess/image24.jpeg', pos: '50% 60%',    date: 'JUL 2026', blocks: 1,
+    text: `You gave me your hairband and I never gave it back. I play with it when I am thinking, and I think about you most of the day, so it never really leaves my hand.
+
+It is a small thing, but it is yours, and it is with me through the long days. When you are far away it is the closest thing I have to holding your hand.` },
   { no: '10', name: 'MARRIED IN MC', img: 'Imagess/image13.png', date: '02/10/2026', blocks: 4,
-    text: 'Ten months. I married you in Minecraft and I meant every single word of those vows.' },
-  { no: '11', name: '11 MONTHS',     date: '02/11/2026', blocks: 11, locked: true,
-    text: 'Today. Eleven months with you sayangg, and this is the one I am not letting go of.' },
-  { no: '12', name: 'TEST',     date: '02/11/2026', blocks: 11, locked: true,
-    text: 'TESTING.' }
+    text: `2 October. I stood in front of you in Minecraft and said every word I wrote, and I meant all of it. It was a game, but I do not think the feeling was ever pretend.
+
+One day it will be a real ceremony, with a real ring and you walking in. Until then I have the vows, and I have the picture of us sitting there, and that is enough to keep going.` },
+  { no: '11', name: '11 MONTHS', img: 'ValentinesImages/picture15.png',    date: '02/11/2026', blocks: 11, locked: true,
+    text: `Sayangg,
+
+Eleven months. I have been trying to work out how to start this for days, and I still do not think I have the right words, so I am just going to say it the way I would if you were sitting here.
+
+We have done so much. A first date at KLIA, which was the most random place to pick and somehow perfect. Getting engaged on 31 January, two months in, when everyone else would have said it was too fast. Getting married in Minecraft on our ten months, and meaning every word. Getting diamond together, both of us, with those party names. And in between all of it, the small things. Good mornings. Falling asleep on call. Your hairband, which I still play with when I am thinking about you.
+
+I want to say sorry for the parts that were hard. There were weeks this year when we were not okay, and I know I was not always the boyfriend you needed. I was tired, or slow, or I said the wrong thing, or I went quiet when I should have spoken. I am still learning, and I am trying, and I would rather keep trying with you than get it right with anyone else.
+
+I also want to say thank you. You are doing vet, which is already hard enough, and then you were made Ketua Program on top of it, with the slides and the reports and the long days. And somehow you still ask about mine. You still make time for me. I see how much that costs you, even when you do not say it.
+
+I know the distance is the hardest part. We are far away and busy with our own lives, and some nights it feels like we are only getting the leftovers of each other. But I would still rather have the leftovers of you than the whole of anyone else. And one day this will be a real room instead of a screen. I am going to make sure of it.
+
+I do not have a big promise to make. I just want to keep showing up. Every day, with a letter, a good morning, a late call, whatever you need that day. That is the plan, and it is the only one I really have.
+
+I love you so much sayangg. Eleven months, and I would do every single one of them again.
+
+Happy 11 months, my love.` },
 ];
+
+/* The file that is not on the list. She finds it by holding the card's name
+   for a second. Write whatever you want here, it is only ever shown to her. */
+var SECRET = {
+  no: '00', name: 'UNLISTED', date: '02/11/2026', blocks: 1, locked: true,
+  text: 'If you found this hidden file, screenshot it and send it to me. You will receive a free gift aswell for finding this easter egg <3. I love you my babyy!',
+};
 
 function $(s) { return document.querySelector(s); }
 function beat(ms) { return REDUCED ? Math.min(ms, 50) : ms; }
 
+/* ─── Sound effects ───
+   Made on the spot with the browser's own audio, so there are no files.
+   They only ever fire from something she does, and they stay quiet. */
+var AC = null;
+
+function ctx() {
+  if (AC === null) {
+    try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { AC = false; }
+  }
+  if (AC && AC.state === 'suspended') AC.resume();
+  return AC || null;
+}
+
+function tone(freq, dur, type, vol, when, slideTo) {
+  var c = ctx();
+  if (!c) return;
+  var t = c.currentTime + (when || 0);
+  var o = c.createOscillator(), g = c.createGain();
+  o.type = type || 'sine';
+  o.frequency.setValueAtTime(freq, t);
+  if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(c.destination);
+  o.start(t); o.stop(t + dur + 0.03);
+}
+
+var SFX = {
+  move:  function () { tone(1180, 0.05, 'triangle', 0.045); },
+  open:  function () { tone(660, 0.09, 'sine', 0.07); tone(990, 0.17, 'sine', 0.07, 0.07); },
+  back:  function () { tone(740, 0.08, 'sine', 0.06); tone(494, 0.13, 'sine', 0.06, 0.06); },
+  deny:  function () { tone(150, 0.24, 'square', 0.045, 0, 105); },
+  thunk: function () { tone(120, 0.28, 'sine', 0.16, 0, 46); },
+  found: function () { [523, 659, 784, 1047].forEach(function (f, n) { tone(f, 0.34, 'sine', 0.06, n * 0.09); }); }
+};
+
 var opened = {};
+var shown = null;       /* the save on screen, which may be the unlisted one */
+var ended = false;      /* the goodnight screen only comes once */
 var current = null;
 
 function show(id) {
@@ -858,48 +1091,122 @@ function icon() {
   return '<div class="icon"><i></i><i></i><i></i><i></i></div>';
 }
 
-/* a save with a picture shows it instead of the turning block. If the file
-   is missing the tile falls back rather than leaving a hole. */
-function thumb(src) {
-  return '<div class="thumb"><img src="' + src + '" alt="" loading="lazy"></div>';
+/* a save's picture, or the turning block when it has none */
+function pic(sv) {
+  /* the crop starts from the top, so heads and the top of a screenshot are not the part that gets cut.
+     A save can set `pos` (for example '50% 40%') to move it for one picture. */
+  var at = sv.pos || '50% 0%';
+  return '<div class="pic">' + (sv.img ? '<img src="' + sv.img + '" alt="" style="object-position:' + at + '">' : icon()) + '</div>';
 }
 
 /* a missing file falls back to the turning block rather than leaving a hole */
 function catchMissing(root) {
-  Array.prototype.forEach.call(root.querySelectorAll('.thumb img, .shot img'), function (im) {
+  Array.prototype.forEach.call(root.querySelectorAll('.pic img, .shot img'), function (im) {
     im.addEventListener('error', function () {
-      var box = im.closest('.thumb');
-      if (box) { box.outerHTML = icon(); return; }
+      var box = im.closest('.pic');
+      if (box) { box.innerHTML = icon(); return; }
       var shot = im.closest('.shot');
       if (shot) shot.remove();
     });
   });
 }
 
-function drawGrid() {
-  var g = $('#grid');
-  g.innerHTML = '';
-  SAVES.forEach(function (s, i) {
-    var d = document.createElement('div');
-    d.className = 'save' + (opened[s.no] ? ' on' : '');
-    d.style.animationDelay = beat(60 * i) + 'ms';
-    d.innerHTML = (s.img ? thumb(s.img) : icon()) +
-      '<b>' + s.name + '</b>' +
-      '<span>SAVE DATA ' + s.no + '</span>' +
-      '<span>' + s.date + '</span>';
-    d.addEventListener('click', function () { openSave(i); });
-    g.appendChild(d);
-  });
-  catchMissing(g);
+var sel = 0;          /* which save is up front, kept between visits */
+var tiles = [];
+var dragged = false;
+var fanned = false;
 
-  var used = SAVES.reduce(function (n, s) { return n + s.blocks; }, 0);
+function drawDeck() {
+  var rail = $('#rail');
+  var pager = $('#pager');
+  rail.innerHTML = '';
+  pager.innerHTML = '';
+  tiles = [];
+
+  SAVES.forEach(function (sv, i) {
+    var t = document.createElement('div');
+    t.className = 'tile';
+    t.innerHTML = '<div class="face">' + pic(sv) +
+      '<b>' + sv.name + '</b>' +
+      '<span>SAVE DATA ' + sv.no + '</span>' +
+      '<span>' + sv.date + '</span>' +
+      '<em class="tag">READ</em></div>';
+    t.addEventListener('click', function () {
+      if (dragged) return;
+      if (i === sel) openSave(i); else go(i);
+    });
+    rail.appendChild(t);
+    tiles.push(t);
+
+    var dot = document.createElement('i');
+    dot.addEventListener('click', function () { go(i); });
+    pager.appendChild(dot);
+  });
+  catchMissing(rail);
+
+  var used = SAVES.reduce(function (n, sv) { return n + sv.blocks; }, 0);
   var read = Object.keys(opened).length;
-  $('#freeSpace').textContent = used + ' BLOCKS USED' + (read ? '  ·  ' + read + '/11 READ' : '');
+  $('#freeSpace').textContent = used + ' BLOCKS USED' + (read ? '  \u00b7  ' + read + '/' + SAVES.length + ' READ' : '');
+
+  place();
+
+  /* the first time, they start in a stack and fan out to where they belong */
+  if (!fanned) {
+    fanned = true;
+    if (!REDUCED) {
+      var rack = $('#rack');
+      rack.classList.add('stack');
+      tiles.forEach(function (t, i) { t.style.transitionDelay = (Math.abs(i - sel) * 90) + 'ms'; });
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          rack.classList.remove('stack');
+          setTimeout(function () { tiles.forEach(function (t) { t.style.transitionDelay = ''; }); }, 1400);
+        });
+      });
+    }
+  }
+}
+
+/* put every tile where it belongs relative to the one up front */
+function place() {
+  tiles.forEach(function (t, i) {
+    var d = i - sel, ad = Math.abs(d);
+    t.style.setProperty('--d', d);
+    t.style.setProperty('--ad', Math.min(ad, 4));
+    t.style.zIndex = 30 - ad;
+    t.classList.toggle('sel', d === 0);
+    t.classList.toggle('far', ad > 3);
+    t.classList.toggle('read', !!opened[SAVES[i].no]);
+  });
+
+  var sv = SAVES[sel];
+  $('#rName').textContent = sv.name;
+  $('#rMeta').textContent = 'SAVE DATA ' + sv.no + '  \u00b7  ' + sv.date + '  \u00b7  ' +
+                            sv.blocks + (sv.blocks === 1 ? ' BLOCK' : ' BLOCKS');
+  $('#rCount').textContent = (sel + 1 < 10 ? '0' : '') + (sel + 1) + ' / ' + SAVES.length;
+
+  Array.prototype.forEach.call($('#pager').children, function (dot, i) {
+    dot.classList.toggle('on', i === sel);
+    dot.classList.toggle('read', !!opened[SAVES[i].no]);
+  });
+
+  $('#prev').disabled = (sel === 0);
+  $('#next').disabled = (sel === SAVES.length - 1);
+}
+
+function go(i) {
+  var n = Math.max(0, Math.min(SAVES.length - 1, i));
+  if (n !== sel) SFX.move();
+  sel = n;
+  place();
 }
 
 function openSave(i) {
-  current = i;
-  var s = SAVES[i];
+  var secret = (i === 'secret');
+  var s = secret ? SECRET : SAVES[i];
+  current = secret ? null : i;
+  shown = s;
+  SFX.open();
   $('#dTitle').textContent = s.name;
   $('#dMeta').textContent = 'SAVE DATA ' + s.no + '  ·  ' + s.date + '  ·  ' + s.blocks + (s.blocks === 1 ? ' BLOCK' : ' BLOCKS');
   $('#dShot').innerHTML = s.img
@@ -913,13 +1220,16 @@ function openSave(i) {
 }
 
 function closeSave() {
+  SFX.back();
   if (current !== null) opened[SAVES[current].no] = true;
   current = null;
+  shown = null;
   show('card');
-  drawGrid();
+  drawDeck();
 
-  /* once she has been through all eleven, the console says goodnight */
-  if (Object.keys(opened).length === SAVES.length) {
+  /* once she has been through all of them, the console says goodnight, once */
+  if (!ended && Object.keys(opened).length === SAVES.length) {
+    ended = true;
     setTimeout(function () { show('fin'); }, beat(700));
   }
 }
@@ -953,7 +1263,7 @@ function runLoad() {
     ended = true;
     timers.forEach(clearTimeout);
     show('card');
-    drawGrid();
+    drawDeck();
   }
 
   /* the licence screen nobody ever read */
@@ -1065,6 +1375,7 @@ function insertDisc() {
     disc.style.setProperty('--tx', (dx + (lid.left + lid.width / 2) - (d.left + d.width / 2)) + 'px');
     disc.style.setProperty('--ty', (dy + (lid.top + lid.height / 2) - (d.top + d.height / 2)) + 'px');
     disc.classList.add('gone');
+    setTimeout(function () { SFX.thunk(); }, beat(420));
 
     tip.textContent = '';
     $('#discLabel').textContent = '';
@@ -1116,6 +1427,7 @@ function insertDisc() {
   $('#dBack').addEventListener('click', closeSave);
 
   $('#dCopy').addEventListener('click', function () {
+    SFX.deny();
     $('#dDeny').textContent = 'There is only one of these sayangg. It is already yours.';
     $('#dDeny').classList.remove('shake');
     void $('#dDeny').offsetWidth;
@@ -1123,13 +1435,61 @@ function insertDisc() {
   });
 
   $('#dDelete').addEventListener('click', function () {
-    var s = SAVES[current];
+    SFX.deny();
+    var s = shown || SAVES[current];
     $('#dDeny').textContent = s.locked
       ? 'This data cannot be deleted.'
       : 'Deletion failed. I am keeping this one.';
     $('#dDeny').classList.remove('shake');
     void $('#dDeny').offsetWidth;
     $('#dDeny').classList.add('shake');
+  });
+
+  /* browsers only let audio start from something she does, so the first touch wakes it */
+  ['pointerdown', 'keydown', 'touchend'].forEach(function (ev) {
+    window.addEventListener(ev, function () { ctx(); }, { passive: true });
+  });
+
+  /* hold the card's name for a second and the unlisted file opens */
+  var holdTimer = null, title = $('#cardTitle');
+  title.addEventListener('pointerdown', function () {
+    clearTimeout(holdTimer);
+    holdTimer = setTimeout(function () { SFX.found(); openSave('secret'); }, 1100);
+  });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) {
+    title.addEventListener(ev, function () { clearTimeout(holdTimer); });
+  });
+  title.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+  $('#finReturn').addEventListener('click', function (e) {
+    e.preventDefault();
+    SFX.back();
+    show('card');
+    drawDeck();
+  });
+
+  $('#prev').addEventListener('click', function () { go(sel - 1); });
+  $('#next').addEventListener('click', function () { go(sel + 1); });
+
+  /* swipe along the row */
+  var rack = $('#rack'), downX = 0, down = false;
+  rack.addEventListener('pointerdown', function (e) { down = true; dragged = false; downX = e.clientX; });
+  window.addEventListener('pointermove', function (e) {
+    if (down && Math.abs(e.clientX - downX) > 10) dragged = true;
+  });
+  window.addEventListener('pointerup', function (e) {
+    if (!down) return;
+    down = false;
+    var dx = e.clientX - downX;
+    if (Math.abs(dx) > 42) go(sel + (dx < 0 ? 1 : -1));
+    setTimeout(function () { dragged = false; }, 60);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if ($('#card').hasAttribute('hidden') || !$('#detail').hasAttribute('hidden')) return;
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); go(sel - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(sel + 1); }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSave(sel); }
   });
 
   document.addEventListener('keydown', function (e) {
