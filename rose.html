@@ -309,6 +309,7 @@ button.back { background: transparent; font: inherit; font-size: 0.74rem; cursor
       <path d="M152 238 L161 234 L152 230 Z" fill="#2c4f33"/>
       <g id="rsepals"></g>
       <circle cx="150" cy="150" r="7" fill="#4a0715"/>
+      <g id="rcore"></g>
       <g id="rpetals"></g>
     </g>
   </svg>
@@ -496,10 +497,21 @@ function growRose() {
   var cup = $('#rsepals');
   for (var c = 0; c < 5; c++) {
     var sp = document.createElementNS(SVGNS, 'path');
-    sp.setAttribute('d', 'M0 0 C-7 -14 -6 -36 0 -54 C6 -36 7 -14 0 0 Z');
+    sp.setAttribute('d', 'M0 0 C-10 -8 -9 -24 0 -35 C9 -24 10 -8 0 0 Z');
     sp.setAttribute('fill', c % 2 ? '#37613f' : '#406c48');
     sp.setAttribute('transform', 'translate(150 150) rotate(' + (c * 72 + 14) + ')');
     cup.appendChild(sp);
+  }
+
+  var core = $('#rcore');
+  for (var k = 0; k < 3; k++) {
+    var cp = document.createElementNS(SVGNS, 'path');
+    cp.setAttribute('d', RSHAPE);
+    cp.setAttribute('fill', 'hsl(348, 88%, ' + (15 + k * 2) + '%)');
+    cp.setAttribute('stroke', 'rgba(255, 176, 180, 0.2)');
+    cp.setAttribute('stroke-width', '0.9');
+    cp.setAttribute('transform', 'translate(150 150) rotate(' + (k * 120 + 10) + ') translate(0 -3) scale(0.44)');
+    core.appendChild(cp);
   }
 
   var made = [];
@@ -513,8 +525,8 @@ function growRose() {
     p.style.stroke = 'rgba(255, 176, 180, 0.2)';
     p.style.strokeWidth = '0.9px';
     var angle = (i * 137.5) % 360;
-    var out = 2 + i * 1.05;
-    var size = 0.3 + t * 0.68;
+    var out = 2 + i * 1.0;
+    var size = 0.52 + t * 0.5;
     p.style.setProperty('--place',
       'translate(150px, 150px) rotate(' + angle.toFixed(1) + 'deg) translate(0px, ' + (-out).toFixed(1) +
       'px) scale(' + size.toFixed(3) + ')');
