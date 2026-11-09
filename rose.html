@@ -197,6 +197,60 @@ body {
 .back:hover { color: var(--ink); border-color: var(--gold-dim); }
 .back:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
+/* ═══════════════ The red rose, from day 33 ═══════════════ */
+
+#rose.sprout { transform-origin: 150px 298px; animation: sprout 1.7s var(--ease) both; }
+@keyframes sprout {
+  from { opacity: 0; transform: scale(0.6); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* the first flower letting go, one petal after another. It comes after
+   .petal.open in the file so it wins over it. */
+.petal.drift {
+  transform: var(--place) translate(var(--dx, 0px), var(--dy, -60px)) scale(0.7);
+  opacity: 0 !important;
+  transition: transform 2.8s cubic-bezier(0.3, 0.1, 0.5, 1), opacity 2.3s ease-in;
+}
+
+.keepsake {
+  display: block;
+  width: 54px; height: 54px;
+  margin: 0 auto 12px;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--bg-lift);
+  cursor: pointer;
+  transition: border-color 0.25s, transform 0.25s var(--ease);
+}
+.keepsake:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
+.keepsake:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.keepsake svg { display: block; width: 100%; height: 100%; }
+
+.keep-overlay {
+  position: fixed; inset: 0; z-index: 30;
+  display: grid; place-items: center;
+  padding: 24px;
+  background: rgba(10, 13, 16, 0.88);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.keep-card { width: 100%; max-width: 360px; text-align: center; }
+.keep-card .bloom { width: min(78vw, 300px); }
+.keep-text {
+  margin: 14px 0 22px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+button.back { background: transparent; font: inherit; font-size: 0.74rem; cursor: pointer; }
+
+@media (prefers-reduced-motion: reduce) {
+  #rose.sprout { animation: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* the petals still open, just slowly and without the stagger */
   .petal { transition-duration: 2.6s !important; transition-delay: 0s !important; }
@@ -209,9 +263,15 @@ body {
 
 <main class="wrap">
 
+  <!-- from day 33, a small copy of the first flower, to tap -->
+  <button class="keepsake" id="keepsake" type="button" hidden aria-label="See the first flower again">
+    <svg viewBox="22 22 256 256" aria-hidden="true"></svg>
+  </button>
+
   <svg class="bloom" id="bloom" viewBox="0 0 300 300" role="img"
        aria-label="A flower, still a closed bud">
 
+    <g id="queen">
     <!-- the flat leaf it grows from, and the long tube the flower sits on -->
     <path d="M150 168 C150 206, 136 236, 112 262 C104 270, 96 276, 88 280"
           stroke="#465e4a" stroke-width="6" fill="none" stroke-linecap="round"/>
@@ -235,6 +295,22 @@ body {
       <!-- the crown of stamens, there from the very first day it opens -->
       <g id="centre"></g>
     </g>
+    </g>
+
+    <!-- The red rose, from day 33. Thirty petals, one a day, so it is fully
+         open on day 62. The first petal is a bud with its green cup showing. -->
+    <g id="rose" hidden>
+      <path d="M150 168 C153 208, 146 252, 150 298" stroke="#3b6644" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M149 254 C128 240, 104 246, 92 264 C114 276, 140 270, 149 258 Z" fill="#37613f"/>
+      <path d="M92 264 C114 276, 140 270, 149 258" stroke="#4f8058" stroke-width="1.4" fill="none"/>
+      <path d="M151 274 C172 260, 196 266, 208 284 C186 296, 160 290, 151 278 Z" fill="#305738"/>
+      <path d="M208 284 C186 296, 160 290, 151 278" stroke="#4a7a52" stroke-width="1.4" fill="none"/>
+      <path d="M148 218 L139 214 L148 210 Z" fill="#2c4f33"/>
+      <path d="M152 238 L161 234 L152 230 Z" fill="#2c4f33"/>
+      <g id="rsepals"></g>
+      <circle cx="150" cy="150" r="7" fill="#4a0715"/>
+      <g id="rpetals"></g>
+    </g>
   </svg>
 
   <p class="count" id="count"></p>
@@ -256,6 +332,14 @@ body {
   </footer>
 
 </main>
+
+<div class="keep-overlay" id="keepOverlay" hidden role="dialog" aria-label="The first flower">
+  <div class="keep-card">
+    <svg class="bloom" id="keepBloom" viewBox="0 0 300 300" aria-hidden="true"></svg>
+    <p class="keep-text">The first flower. Fully open since day 29.</p>
+    <button class="back" id="keepClose" type="button">Close</button>
+  </div>
+</div>
 
 <script>
 'use strict';
@@ -305,6 +389,13 @@ var FORCED = (function () {
    minute given, on its own day, so it lands at an hour that means something.
    The key is the letter number, the value is minutes past midnight. */
 var UNLOCK = { 10: 2 * 60 + 6 };    // day ten, 02:06
+
+/* ?rose=17 shows the red rose as it will be on its seventeenth day, so the
+   whole run can be looked at before any of it is hers. */
+var ROSE_TEST = (function () {
+  var n = parseInt(new URLSearchParams(location.search).get('rose'), 10);
+  return (!isNaN(n) && n >= 1) ? n : null;
+})();
 
 var $ = function (s) { return document.querySelector(s); };
 var SVGNS = 'http://www.w3.org/2000/svg';
@@ -390,6 +481,63 @@ function centre() {
 var PETALS = grow();
 centre();
 
+/* ─── The red rose ───
+   From letter 33 the flower is a rose. Thirty petals, one for each letter, so
+   it is fully open on letter 62. They are laid out the way a rose is: a
+   spiral, the small tight ones at the heart and the big ones on the outside,
+   each turned a golden angle from the last. The innermost opens first. */
+var SWITCH = 33;
+var ROSE_PETALS = 30;
+
+var RSHAPE = 'M0 0 C-20 -4 -30 -26 -24 -42 C-20 -54 -8 -58 0 -54 C8 -58 20 -54 24 -42 C30 -26 20 -4 0 0 Z';
+
+function growRose() {
+  /* the green cup under the bud, which is most of what a rose is at first */
+  var cup = $('#rsepals');
+  for (var c = 0; c < 5; c++) {
+    var sp = document.createElementNS(SVGNS, 'path');
+    sp.setAttribute('d', 'M0 0 C-7 -14 -6 -36 0 -54 C6 -36 7 -14 0 0 Z');
+    sp.setAttribute('fill', c % 2 ? '#37613f' : '#406c48');
+    sp.setAttribute('transform', 'translate(150 150) rotate(' + (c * 72 + 14) + ')');
+    cup.appendChild(sp);
+  }
+
+  var made = [];
+  for (var i = 0; i < ROSE_PETALS; i++) {
+    var t = i / (ROSE_PETALS - 1);
+    var p = document.createElementNS(SVGNS, 'path');
+    p.setAttribute('d', RSHAPE);
+    p.setAttribute('class', 'petal');
+    /* deep crimson at the heart, brighter red on the outside */
+    p.style.fill = 'hsl(348, ' + (86 - t * 14).toFixed(0) + '%, ' + (19 + t * 27).toFixed(0) + '%)';
+    p.style.stroke = 'rgba(255, 176, 180, 0.2)';
+    p.style.strokeWidth = '0.9px';
+    var angle = (i * 137.5) % 360;
+    var out = 2 + i * 1.05;
+    var size = 0.3 + t * 0.68;
+    p.style.setProperty('--place',
+      'translate(150px, 150px) rotate(' + angle.toFixed(1) + 'deg) translate(0px, ' + (-out).toFixed(1) +
+      'px) scale(' + size.toFixed(3) + ')');
+    made.push(p);
+  }
+
+  /* outermost painted first, so the heart of the rose lies on top */
+  var box = $('#rpetals');
+  made.slice().reverse().forEach(function (el) { box.appendChild(el); });
+  return made;
+}
+
+var RPETALS = growRose();
+
+function openRose(count) {
+  var n = Math.min(count, RPETALS.length);
+  RPETALS.forEach(function (el, i) {
+    if (i >= n) return;
+    el.style.transitionDelay = REDUCED ? '0s' : (0.3 + i * 0.05) + 's';
+    el.classList.add('open');
+  });
+}
+
 function open(count) {
   var many = Math.min(count, PETALS.length);
   PETALS.forEach(function (el, i) {
@@ -474,6 +622,93 @@ function nothingYet() {
   $('#note').textContent = 'Nothing here yet, sayang. There will be.';
 }
 
+
+/* ─── Day 33: the first flower lets go, and a rose starts ─── */
+function remembered(key) { try { return localStorage.getItem(key); } catch (e) { return 'unavailable'; } }
+function remember(key) { try { localStorage.setItem(key, '1'); } catch (e) {} }
+
+/* a copy of the first flower, fully open, with everything it is made of */
+function queenCopy() {
+  PETALS.forEach(function (p) {
+    p.classList.remove('drift');
+    p.style.transition = 'none';
+    p.style.transitionDelay = '0s';
+    p.classList.add('open');
+  });
+  $('#bud').setAttribute('hidden', '');
+  $('#flower').removeAttribute('hidden');
+  var c = $('#queen').cloneNode(true);
+  c.removeAttribute('hidden');
+  Array.prototype.forEach.call(c.querySelectorAll('[id]'), function (e) { e.removeAttribute('id'); });
+  c.removeAttribute('id');
+  return c;
+}
+
+function keepsake() {
+  var small = $('#keepsake').firstElementChild;
+  small.innerHTML = '';
+  small.appendChild(queenCopy());
+  var big = $('#keepBloom');
+  big.innerHTML = '';
+  big.appendChild(queenCopy());
+  $('#keepsake').removeAttribute('hidden');
+}
+
+(function () {
+  var ov = $('#keepOverlay');
+  function shut() { ov.hidden = true; }
+  $('#keepsake').addEventListener('click', function () { ov.hidden = false; $('#keepClose').focus(); });
+  $('#keepClose').addEventListener('click', shut);
+  ov.addEventListener('click', function (e) { if (e.target === ov) shut(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') shut(); });
+})();
+
+/* the first flower, in full, and then its petals going one after another */
+function handover(done) {
+  $('#bud').setAttribute('hidden', '');
+  $('#flower').removeAttribute('hidden');
+  PETALS.forEach(function (p) { p.style.transition = 'none'; p.classList.add('open'); });
+  $('#bloom').setAttribute('aria-label', 'The first flower, fully open');
+  $('#count').textContent = 'The first flower is fully open';
+
+  setTimeout(function () {
+    PETALS.forEach(function (p, i) {
+      p.style.transition = '';
+      p.style.transitionDelay = (i * 0.07) + 's';
+      p.style.setProperty('--dx', ((i % 2 ? 1 : -1) * (14 + (i * 7) % 38)) + 'px');
+      p.style.setProperty('--dy', (-(46 + (i * 11) % 70)) + 'px');
+      p.classList.add('drift');
+    });
+    setTimeout(done, 4200);
+  }, 1800);
+}
+
+function showRose(many, tag) {
+  var rd = ROSE_TEST !== null ? ROSE_TEST : many - (SWITCH - 1);
+  var text = rd >= ROSE_PETALS ? 'In full bloom' : 'Day ' + rd + ' of ' + ROSE_PETALS;
+
+  function ready() {
+    $('#queen').setAttribute('hidden', '');
+    $('#rose').removeAttribute('hidden');
+    $('#bloom').setAttribute('aria-label',
+      'A red rose, open by ' + Math.min(rd, ROSE_PETALS) + ' of its ' + ROSE_PETALS + ' petals');
+    openRose(rd);
+    $('#count').textContent = text + tag;
+    keepsake();
+  }
+
+  /* the handover plays once, on the first visit from day 33 (a few days of
+     grace if she is late), or any time with ?handover on the address */
+  var forced = new URLSearchParams(location.search).has('handover');
+  var natural = remembered('roseHandover') === null && many <= SWITCH + 2 &&
+                FORCED === null && !PREVIEW && ROSE_TEST === null;
+
+  if (REDUCED || !(natural || forced)) { ready(); return; }
+
+  remember('roseHandover');
+  handover(function () { $('#rose').classList.add('sprout'); ready(); });
+}
+
 (function () {
   if (!window.fetch) { nothingYet(); return; }
 
@@ -487,15 +722,21 @@ function nothingYet() {
     /* These two are SVG groups, not HTML elements, so the hidden property
        does not exist on them and assigning it does nothing. The attribute
        has to be set and removed by hand. */
-    $('#bud').setAttribute('hidden', '');
-    $('#flower').removeAttribute('hidden');
-    $('#bloom').setAttribute('aria-label',
-      'A flower, open by ' + many + ' of its 29 petals');
-    open(many);
-    $('#count').textContent = (many === 1
-      ? 'One petal so far'
-      : many + ' petals so far') +
-      (FORCED !== null ? '  ·  day ' + FORCED : PREVIEW ? '  ·  preview' : '');
+    var tag = FORCED !== null ? '  ·  day ' + FORCED : PREVIEW ? '  ·  preview' : '';
+
+    if (many >= SWITCH || ROSE_TEST !== null) {
+      showRose(many, tag);
+    } else {
+      $('#bud').setAttribute('hidden', '');
+      $('#flower').removeAttribute('hidden');
+      var full = many >= PETALS.length;
+      $('#bloom').setAttribute('aria-label',
+        full ? 'A flower, fully open' : 'A flower, open by ' + many + ' of its 29 petals');
+      open(many);
+      $('#count').textContent = (full ? 'In full bloom'
+        : many === 1 ? 'One petal so far'
+        : many + ' petals so far') + tag;
+    }
 
     // tonight's
     $('#when').textContent = label(dueOn(many));
