@@ -217,7 +217,7 @@ h2 em { color: var(--rose); }
   width: 20px; height: 20px; border-radius: 60% 0 60% 0; position: relative;
   animation: blink 5.5s infinite;
 }
-.eye:last-child { transform: scaleX(-1); }
+.eye:first-child { transform: scaleX(-1); }
 .dark  .eye { background: #9be15d; box-shadow: 0 0 14px rgba(155,225,93,.7); }
 .light .eye { background: #6fb7ff; box-shadow: 0 0 14px rgba(111,183,255,.7); }
 .eye::after {
@@ -226,7 +226,7 @@ h2 em { color: var(--rose); }
 }
 .light .eye { animation-delay: .4s; }
 @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.08); } }
-.eye:last-child { animation-name: blink-r; }
+.eye:first-child { animation-name: blink-r; }
 @keyframes blink-r { 0%, 92%, 100% { transform: scaleX(-1) scaleY(1); } 95% { transform: scaleX(-1) scaleY(.08); } }
 .furycard h3 { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 1.45rem; }
 .furycard p  { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .14em; opacity: .6; margin-top: 6px; }
