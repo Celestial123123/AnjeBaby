@@ -731,6 +731,15 @@ function showRose(many, tag) {
     var many = texts.length;
     if (!many) { nothingYet(); return; }
 
+    /* A file that holds only "=" means that day carries on the letter above
+       it, so one letter can take two days. It keeps its own petal, shows the
+       same letter, and is not listed twice in the drawer. */
+    var carries = [];
+    for (var c = 0; c < texts.length; c++) {
+      carries[c] = c > 0 && texts[c].trim() === '=';
+      if (carries[c]) texts[c] = texts[c - 1];
+    }
+
     /* These two are SVG groups, not HTML elements, so the hidden property
        does not exist on them and assigning it does nothing. The attribute
        has to be set and removed by hand. */
@@ -769,6 +778,8 @@ function showRose(many, tag) {
 
     var past = $('#past');
     for (var n = many - 1; n >= 1; n--) {
+      // a day that carries on the one above it, or whose letter is already today's
+      if (carries[n - 1] || texts[n - 1] === texts[many - 1]) continue;
       (function (num) {
         var wrap = document.createElement('div');
         wrap.className = 'old';

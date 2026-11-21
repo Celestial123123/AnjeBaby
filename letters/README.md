@@ -19,3 +19,7 @@ hidden until that day arrives.
 The flower gains a petal for each one. Twenty nine is a full bloom.
 
 Line breaks are kept exactly as you type them.
+
+One letter can take two days. Put the letter in the first day's file and put a
+single = in the next day's file. That day gets its own petal and shows the same
+letter, and the drawer lists it once.
